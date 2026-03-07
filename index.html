@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Life Planner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f9f7f4;color:#2d2d2d;min-height:100vh}
+nav{background:#2c3e50;display:flex;align-items:center;padding:0 20px;height:52px;gap:8px}
+nav h1{color:#fff;font-size:1.1rem;font-weight:700;margin-right:auto}
+nav button{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:.85rem}
+nav button:hover,nav button.active{background:rgba(255,255,255,.15);border-color:#fff}
+.page{display:none;padding:24px;max-width:980px;margin:0 auto}
+.page.active{display:block}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px}
+.cal-nav h2{font-size:1.4rem;font-weight:700;min-width:220px;text-align:center}
+.cal-nav button{background:#fff;border:1.5px solid #ddd;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:1.1rem}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-dow{text-align:center;font-size:.7rem;font-weight:700;color:#999;padding:4px 0;text-transform:uppercase}
+.cal-cell{background:#fff;border:1.5px solid #e0dcd6;border-radius:8px;min-height:95px;padding:6px;position:relative;cursor:pointer;vertical-align:top}
+.cal-cell:hover{border-color:#aaa}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-cell.today{background:#fef3cd;border-color:#f0a500}
+.cal-cell.past{position:relative}
+.cal-cell.past::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(to bottom right,transparent 0,transparent calc(50% - 0.7px),rgba(192,57,43,.4) calc(50% - 0.7px),rgba(192,57,43,.4) calc(50% + 0.7px),transparent calc(50% + 0.7px));border-radius:8px;pointer-events:none;z-index:1}
+.day-num{font-size:.82rem;font-weight:600;display:block;text-align:left;line-height:1;margin-bottom:2px}
+.cal-cell.today .day-num{color:#b7860b}
+.holiday-lbl{font-size:.62rem;font-weight:800;color:#2c3e50;text-align:center;display:block;margin-bottom:3px;line-height:1.2}
+.events-wrap{display:flex;flex-direction:column;gap:2px;position:relative;z-index:2}
+.ev-tab{font-size:.63rem;font-weight:600;color:#fff;border-radius:4px;padding:2px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;max-width:100%}
+.add-btn{position:absolute;bottom:3px;right:5px;font-size:.9rem;color:#bbb;background:none;border:none;cursor:pointer;z-index:2;line-height:1;padding:0}
+.add-btn:hover{color:#444}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;padding:26px;width:370px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal h3{margin-bottom:14px;font-size:1.05rem}
+.modal label{font-size:.78rem;font-weight:700;display:block;margin-top:11px;margin-bottom:3px;color:#888;text-transform:uppercase;letter-spacing:.4px}
+.modal input{width:100%;border:1.5px solid #ddd;border-radius:6px;padding:7px 10px;font-size:.88rem;background:#f9f7f4}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-btns{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
+.btn-save{background:#2c3e50;color:#fff;border:none;border-radius:6px;padding:8px 20px;cursor:pointer;font-size:.88rem}
+.btn-cancel{background:transparent;color:#333;border:1.5px solid #ddd;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:.88rem}
+.btn-del{background:#c0392b;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:.88rem}
+.swatches{display:flex;gap:7px;margin-top:6px;flex-wrap:wrap}
+.swatch{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:transform .12s}
+.swatch:hover,.swatch.sel{transform:scale(1.3);border-color:#333}
+
+/* TODO */
+.todo-section h2,.archive-section h2{font-size:1.15rem;font-weight:700;margin-bottom:14px}
+.add-row{display:flex;gap:8px;margin-bottom:14px}
+.add-row input{flex:1;border:1.5px solid #ddd;border-radius:6px;padding:8px 12px;font-size:.9rem}
+.add-row button{background:#2c3e50;color:#fff;border:none;border-radius:6px;padding:8px 16px;cursor:pointer}
+.todo-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.t-item{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e0dcd6;border-radius:8px;padding:10px 14px}
+.t-item input[type=checkbox]{width:17px;height:17px;accent-color:#2c3e50;cursor:pointer;flex-shrink:0}
+.t-text{flex:1;font-size:.9rem}
+.t-del{background:none;border:none;cursor:pointer;color:#bbb;font-size:1rem}
+.t-del:hover{color:#c0392b}
+.empty-msg{color:#aaa;font-size:.9rem;text-align:center;padding:24px 0}
+.arch-item{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e0dcd6;border-radius:8px;padding:10px 14px;margin-bottom:6px;opacity:.72}
+.arch-text{flex:1;font-size:.9rem;text-decoration:line-through;color:#aaa}
+.arch-date{font-size:.73rem;color:#bbb;white-space:nowrap}
+.btn-restore{background:none;border:1.5px solid #ddd;border-radius:5px;cursor:pointer;font-size:.73rem;padding:3px 8px}
+.btn-restore:hover{border-color:#2c3e50;color:#2c3e50}
+.btn-clear{background:#c0392b;color:#fff;border:none;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:.83rem;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>&#10022; Life Planner</h1>
+  <button id="btn-calendar" class="active" onclick="showPage('calendar',this)">&#128197; Calendar</button>
+  <button id="btn-todo" onclick="showPage('todo',this)">&#9989; To-Do</button>
+  <button id="btn-archive" onclick="showPage('archive',this)">&#128193; Archive</button>
+</nav>
+
+<div id="page-calendar" class="page active">
+  <div class="cal-nav">
+    <button onclick="changeMonth(-1)">&#8249;</button>
+    <h2 id="calTitle">Loading...</h2>
+    <button onclick="changeMonth(1)">&#8250;</button>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<div id="page-todo" class="page">
+  <div class="todo-section">
+    <h2>To-Do List</h2>
+    <div class="add-row">
+      <input type="text" id="todoInput" placeholder="Add a task..." maxlength="120"/>
+      <button onclick="addTodo()">Add</button>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+    <p class="empty-msg" id="todoEmpty" style="display:none">No tasks yet. Add one above!</p>
+  </div>
+</div>
+
+<div id="page-archive" class="page">
+  <div class="archive-section">
+    <h2>Archived Tasks</h2>
+    <button class="btn-clear" onclick="clearArchive()">Clear All</button>
+    <div id="archiveList"></div>
+    <p class="empty-msg" id="archiveEmpty" style="display:none">No archived tasks yet.</p>
+  </div>
+</div>
+
+<!-- Add/Edit Event Modal -->
+<div class="overlay" id="evModal">
+  <div class="modal">
+    <h3 id="evModalTitle">Add Event</h3>
+    <label>Event Name *</label>
+    <input type="text" id="evName" placeholder="e.g. Doctor Appointment" maxlength="60"/>
+    <div class="row2">
+      <div><label>Start Date *</label><input type="date" id="evStart"/></div>
+      <div><label>End Date</label><input type="date" id="evEnd"/></div>
+    </div>
+    <div class="row2">
+      <div><label>Start Time</label><input type="time" id="evStartT"/></div>
+      <div><label>End Time</label><input type="time" id="evEndT"/></div>
+    </div>
+    <label>Color</label>
+    <div class="swatches" id="swatches"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeOverlay('evModal')">Cancel</button>
+      <button class="btn-save" onclick="saveEvent()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Event Detail Modal -->
+<div class="overlay" id="detailModal">
+  <div class="modal">
+    <h3 id="dTitle"></h3>
+    <p id="dDate" style="margin-top:10px;font-size:.9rem"></p>
+    <p id="dTime" style="margin-top:6px;font-size:.9rem"></p>
+    <div class="modal-btns">
+      <button class="btn-del" onclick="deleteEvent()">Delete</button>
+      <button class="btn-cancel" onclick="openEditFromDetail()">Edit</button>
+      <button class="btn-cancel" onclick="closeOverlay('detailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var COLORS = ['#e74c3c','#e67e22','#f1c40f','#27ae60','#1abc9c','#2980b9','#8e44ad','#e91e63','#ff5722'];
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var HOLIDAYS = {
+  '01-01':"New Year's Day",'01-19':"MLK Day",'02-17':"Presidents' Day",
+  '05-26':"Memorial Day",'06-19':"Juneteenth",'07-04':"Independence Day",
+  '09-01':"Labor Day",'10-13':"Columbus Day",'11-11':"Veterans Day",
+  '11-27':"Thanksgiving",'12-25':"Christmas",'12-31':"New Year's Eve"
+};
+
+var curYear = 0, curMonth = 0;
+var pickedColor = COLORS[0];
+var editingId = null, detailId = null;
+
+function loadData(key, def){ try{ return JSON.parse(localStorage.getItem(key)||'null')||def; }catch(e){ return def; } }
+var events  = loadData('lp_ev', []);
+var todos   = loadData('lp_td', []);
+var archive = loadData('lp_ar', []);
+function save(){ localStorage.setItem('lp_ev',JSON.stringify(events)); localStorage.setItem('lp_td',JSON.stringify(todos)); localStorage.setItem('lp_ar',JSON.stringify(archive)); }
+
+/* ---- NAV ---- */
+function showPage(name, btn){
+  var pages = document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+  var btns = document.querySelectorAll('nav button');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  document.getElementById('page-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(name==='todo') renderTodo();
+  if(name==='archive') renderArchive();
+}
+
+/* ---- CALENDAR ---- */
+function initCalendar(){
+  var now = new Date();
+  curYear  = now.getFullYear();
+  curMonth = now.getMonth();
+  renderCalendar();
+}
+
+function changeMonth(d){
+  curMonth += d;
+  if(curMonth > 11){ curMonth=0; curYear++; }
+  if(curMonth < 0){ curMonth=11; curYear--; }
+  renderCalendar();
+}
+
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+
+function dateStr(y,m,d){ return y+'-'+pad2(m+1)+'-'+pad2(d); }
+
+function renderCalendar(){
+  document.getElementById('calTitle').textContent = MONTHS[curMonth] + ' ' + curYear;
+  var grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  for(var i=0;i<7;i++){
+    var h=document.createElement('div'); h.className='cal-dow'; h.textContent=days[i]; grid.appendChild(h);
+  }
+
+  var today = new Date();
+  var todayStr = dateStr(today.getFullYear(), today.getMonth(), today.getDate());
+  var firstDow = new Date(curYear, curMonth, 1).getDay();
+  var daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
+
+  for(var e=0; e<firstDow; e++){
+    var empty=document.createElement('div'); empty.className='cal-cell empty'; grid.appendChild(empty);
+  }
+
+  for(var d=1; d<=daysInMonth; d++){
+    var ds = dateStr(curYear, curMonth, d);
+    var cell = document.createElement('div');
+    cell.className = 'cal-cell';
+
+    var cellDate = new Date(curYear, curMonth, d);
+    var todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    if(ds === todayStr) cell.classList.add('today');
+    else if(cellDate < todayDate) cell.classList.add('past');
+
+    var mmdd = pad2(curMonth+1)+'-'+pad2(d);
+    var holiday = HOLIDAYS[mmdd];
+    if(holiday) cell.classList.add('holiday');
+
+    var numSpan = document.createElement('span');
+    numSpan.className = 'day-num';
+    numSpan.textContent = d;
+    cell.appendChild(numSpan);
+
+    if(holiday){
+      var hl = document.createElement('span');
+      hl.className = 'holiday-lbl';
+      hl.textContent = holiday;
+      cell.appendChild(hl);
+    }
+
+    var wrap = document.createElement('div');
+    wrap.className = 'events-wrap';
+
+    for(var ei=0; ei<events.length; ei++){
+      var ev = events[ei];
+      var endD = ev.endDate || ev.startDate;
+      if(ds >= ev.startDate && ds <= endD){
+        (function(evRef){
+          var tab = document.createElement('div');
+          tab.className = 'ev-tab';
+          tab.style.background = evRef.color || COLORS[0];
+          tab.textContent = (evRef.startTime ? evRef.startTime+' ' : '') + evRef.name;
+          tab.onclick = function(e){ e.stopPropagation(); openDetail(evRef.id); };
+          wrap.appendChild(tab);
+        })(ev);
+      }
+    }
+    cell.appendChild(wrap);
+
+    (function(dStr){
+      var ab = document.createElement('button');
+      ab.className = 'add-btn';
+      ab.textContent = '+';
+      ab.title = 'Add event';
+      ab.onclick = function(e){ e.stopPropagation(); openAddModal(dStr); };
+      cell.appendChild(ab);
+    })(ds);
+
+    grid.appendChild(cell);
+  }
+}
+
+/* ---- EVENT MODAL ---- */
+function buildSwatches(sel){
+  pickedColor = sel || COLORS[0];
+  var c = document.getElementById('swatches');
+  c.innerHTML = '';
+  for(var i=0;i<COLORS.length;i++){
+    (function(col){
+      var s = document.createElement('div');
+      s.className = 'swatch' + (col===pickedColor ? ' sel' : '');
+      s.style.background = col;
+      s.onclick = function(){ buildSwatches(col); };
+      c.appendChild(s);
+    })(COLORS[i]);
+  }
+}
+
+function openAddModal(ds){
+  editingId = null;
+  document.getElementById('evModalTitle').textContent = 'Add Event';
+  document.getElementById('evName').value = '';
+  document.getElementById('evStart').value = ds || '';
+  document.getElementById('evEnd').value = '';
+  document.getElementById('evStartT').value = '';
+  document.getElementById('evEndT').value = '';
+  buildSwatches(COLORS[0]);
+  openOverlay('evModal');
+}
+
+function openDetail(id){
+  detailId = id;
+  var ev = null;
+  for(var i=0;i<events.length;i++){ if(events[i].id===id){ ev=events[i]; break; } }
+  if(!ev) return;
+  document.getElementById('dTitle').textContent = ev.name;
+  document.getElementById('dDate').textContent = '📅 ' + ev.startDate + (ev.endDate && ev.endDate!==ev.startDate ? ' → '+ev.endDate : '');
+  document.getElementById('dTime').textContent = ev.startTime ? ('🕐 '+ev.startTime+(ev.endTime?' – '+ev.endTime:'')) : '';
+  openOverlay('detailModal');
+}
+
+function openEditFromDetail(){
+  var ev = null;
+  for(var i=0;i<events.length;i++){ if(events[i].id===detailId){ ev=events[i]; break; } }
+  if(!ev) return;
+  closeOverlay('detailModal');
+  editingId = detailId;
+  document.getElementById('evModalTitle').textContent = 'Edit Event';
+  document.getElementById('evName').value = ev.name;
+  document.getElementById('evStart').value = ev.startDate;
+  document.getElementById('evEnd').value = ev.endDate || '';
+  document.getElementById('evStartT').value = ev.startTime || '';
+  document.getElementById('evEndT').value = ev.endTime || '';
+  buildSwatches(ev.color);
+  openOverlay('evModal');
+}
+
+function deleteEvent(){
+  var newEvs = [];
+  for(var i=0;i<events.length;i++){ if(events[i].id!==detailId) newEvs.push(events[i]); }
+  events = newEvs;
+  save(); renderCalendar(); closeOverlay('detailModal');
+}
+
+function saveEvent(){
+  var name = document.getElementById('evName').value.trim();
+  var sd = document.getElementById('evStart').value;
+  if(!name || !sd){ alert('Event name and start date are required.'); return; }
+  var ev = {
+    id: editingId || ('' + Date.now() + Math.random()),
+    name: name,
+    startDate: sd,
+    endDate: document.getElementById('evEnd').value || null,
+    startTime: document.getElementById('evStartT').value || null,
+    endTime: document.getElementById('evEndT').value || null,
+    color: pickedColor
+  };
+  if(editingId){
+    for(var i=0;i<events.length;i++){ if(events[i].id===editingId){ events[i]=ev; break; } }
+  } else {
+    events.push(ev);
+  }
+  save(); renderCalendar(); closeOverlay('evModal');
+}
+
+function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
+
+var overlays = document.querySelectorAll('.overlay');
+for(var oi=0;oi<overlays.length;oi++){
+  overlays[oi].addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+}
+
+/* ---- TODO ---- */
+document.getElementById('todoInput').addEventListener('keydown', function(e){ if(e.key==='Enter') addTodo(); });
+
+function renderTodo(){
+  var list = document.getElementById('todoList');
+  var empty = document.getElementById('todoEmpty');
+  list.innerHTML = '';
+  var active = [];
+  for(var i=0;i<todos.length;i++){ if(!todos[i].done) active.push(todos[i]); }
+  empty.style.display = active.length ? 'none' : 'block';
+  var show = active.slice(0,7);
+  for(var i=0;i<show.length;i++){
+    (function(t){
+      var li = document.createElement('li');
+      li.className = 't-item';
+      var cb = document.createElement('input'); cb.type='checkbox';
+      cb.onchange = function(){ checkTodo(t.id); };
+      var sp = document.createElement('span'); sp.className='t-text'; sp.textContent=t.text;
+      var db = document.createElement('button'); db.className='t-del'; db.textContent='✕';
+      db.onclick = function(){ deleteTodo(t.id); };
+      li.appendChild(cb); li.appendChild(sp); li.appendChild(db);
+      list.appendChild(li);
+    })(show[i]);
+  }
+}
+
+function addTodo(){
+  var inp = document.getElementById('todoInput');
+  var text = inp.value.trim();
+  if(!text) return;
+  var active = 0;
+  for(var i=0;i<todos.length;i++){ if(!todos[i].done) active++; }
+  if(active >= 7){ alert('Max 7 active tasks. Complete or delete one first!'); return; }
+  todos.push({ id: ''+Date.now(), text: text, done: false });
+  inp.value = '';
+  save(); renderTodo();
+}
+
+function checkTodo(id){
+  for(var i=0;i<todos.length;i++){
+    if(todos[i].id===id){
+      var t = todos[i];
+      archive.push({ id:t.id, text:t.text, archived: new Date().toLocaleDateString() });
+      todos.splice(i,1);
+      break;
+    }
+  }
+  save(); renderTodo();
+}
+
+function deleteTodo(id){
+  for(var i=0;i<todos.length;i++){ if(todos[i].id===id){ todos.splice(i,1); break; } }
+  save(); renderTodo();
+}
+
+/* ---- ARCHIVE ---- */
+function renderArchive(){
+  var cont = document.getElementById('archiveList');
+  var empty = document.getElementById('archiveEmpty');
+  cont.innerHTML = '';
+  empty.style.display = archive.length ? 'none' : 'block';
+  for(var i=archive.length-1; i>=0; i--){
+    (function(t){
+      var div = document.createElement('div'); div.className='arch-item';
+      var sp = document.createElement('span'); sp.className='arch-text'; sp.textContent=t.text;
+      var dt = document.createElement('span'); dt.className='arch-date'; dt.textContent=t.archived||'';
+      var rb = document.createElement('button'); rb.className='btn-restore'; rb.textContent='↩ Restore';
+      rb.onclick = function(){ restoreTask(t.id); };
+      div.appendChild(sp); div.appendChild(dt); div.appendChild(rb);
+      cont.appendChild(div);
+    })(archive[i]);
+  }
+}
+
+function restoreTask(id){
+  var active=0; for(var i=0;i<todos.length;i++){ if(!todos[i].done) active++; }
+  if(active>=7){ alert('To-do list is full. Delete one first.'); return; }
+  for(var i=0;i<archive.length;i++){
+    if(archive[i].id===id){
+      var t=archive[i];
+      todos.push({id:t.id,text:t.text,done:false});
+      archive.splice(i,1); break;
+    }
+  }
+  save(); renderArchive();
+}
+
+function clearArchive(){
+  if(confirm('Clear all archived tasks?')){ archive=[]; save(); renderArchive(); }
+}
+
+/* ---- INIT ---- */
+initCalendar();
+renderTodo();
+</script>
+</body>
+</html>
