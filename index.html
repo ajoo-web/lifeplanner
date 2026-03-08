@@ -40,7 +40,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
   .cal-wrapper{width:100%;min-width:unset}
   .right-col{flex-basis:100% !important;width:100% !important;flex-direction:row !important;flex-wrap:wrap}
   .todo-panel{flex:1;min-width:200px}
-  .weight-panel{flex:1;min-width:200px}
+  .weight-panel{flex:1;min-width:200px;display:flex;flex-direction:column;}
 }
 
 /* CALENDAR */
@@ -66,7 +66,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
   transparent 0,transparent calc(50% - 1.5px),
   rgba(134,177,223,.65) calc(50% - 1.5px),rgba(134,177,223,.65) calc(50% + 1.5px),
   transparent calc(50% + 1.5px));pointer-events:none;z-index:1}
-.day-num{font-size:.8rem;font-weight:700;display:block;text-align:left;line-height:1;margin-bottom:1px;color:#1a3a6b}
+.day-num{font-size:1rem;font-weight:700;display:block;text-align:left;line-height:1;margin-bottom:2px;color:#1a3a6b}
 .cal-cell.today .day-num{color:#0d6eb5;font-weight:800}
 .cal-cell.past .day-num{color:#86b1df}
 .holiday-lbl{font-size:.58rem;font-weight:800;color:#1a3a6b;text-align:center;display:block;margin-bottom:2px;line-height:1.2;letter-spacing:.2px}
@@ -182,13 +182,13 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .habit-colored{filter:grayscale(0%) opacity(1) !important;transform:scale(1.1)}
 
 /* MINI CALENDAR */
-.mini-cal-wrap{flex-shrink:0;align-self:center;margin-left:auto}
-.mini-cal{background:transparent;border:none;padding:2px 0;min-width:150px;font-size:.6rem}
+.mini-cal-wrap{flex-shrink:0;align-self:center;margin-left:auto;}
+.mini-cal{background:transparent;border:none;padding:2px 0;font-size:.6rem;width:100%;}
 .mc-month-lbl{font-size:.6rem;font-weight:800;color:#1a3a6b;text-align:center;margin-bottom:2px;letter-spacing:.5px}
-.mc-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px}
+.mc-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px;}
 .mc-row-highlighted{background:#e0f2f6;border-radius:20px;outline:2px solid #4aabf7;outline-offset:-1px}
-.mc-dow{text-align:center;font-size:.55rem;font-weight:800;color:#86b1df;padding:1px 0}
-.mc-day{text-align:center;padding:1px;border-radius:50%;font-size:.6rem;color:#1a3a6b;cursor:default;line-height:1.4}
+.mc-dow{text-align:center;font-size:.55rem;font-weight:800;color:#86b1df;padding:1px 0;}
+.mc-day{text-align:center;padding:2px 0;border-radius:50%;font-size:.6rem;color:#1a3a6b;cursor:default;line-height:1.6;}
 .mc-empty{visibility:hidden}
 .mc-today{background:#4aabf7;color:#fff;border-radius:50%;font-weight:800}
 .mc-in-week{font-weight:700;color:#0d6eb5}
@@ -289,15 +289,15 @@ h2.unav-title{margin:0;min-width:unset}
 /* WEIGHT PANEL */
 
 .weight-title{font-size:.8rem;font-weight:800;color:#1a3a6b;margin:0 0 8px 0;letter-spacing:.6px}
-.weight-date-row{margin-bottom:8px}
+.weight-date-row{margin-bottom:8px;text-align:center;}
 .weight-date{font-size:.72rem;color:#86b1df;font-weight:700}
-.weight-input-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.weight-input-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:8px;}
 .weight-input{width:80px;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.85rem;color:#1a3a6b;background:#f5f0e8;outline:none}
 .weight-input:focus{border-color:#4aabf7}
 
 .wdelta-up{color:#e05c5c;font-weight:800;font-size:.78rem}
 .wdelta-down{color:#4caf50;font-weight:800;font-size:.78rem}
-.weight-delta{font-size:.78rem;min-height:18px}
+.weight-delta{font-size:.78rem;min-height:18px;text-align:center;}
 
 
 .right-col{display:flex;flex-direction:column;gap:12px;flex-shrink:0;flex-basis:260px;width:260px;align-self:flex-start}
@@ -451,7 +451,13 @@ h2.unav-title{margin:0;min-width:unset}
   white-space:normal;
   word-break:break-word;
   flex:1;
+  outline:none;
+  cursor:text;
+  border-radius:3px;
+  padding:1px 3px;
+  transition:background .15s;
 }
+.wday-wev-lbl:hover,.wday-wev-lbl:focus{background:#f0f4ff;}
 .wday-wev-trash{
   background:none;border:none;cursor:pointer;
   font-size:.7rem;opacity:0;
@@ -507,6 +513,8 @@ h2.unav-title{margin:0;min-width:unset}
 
 .cal-cell.next-month{ background:#f9f7ff; }
 .next-month-num{ color:#c0b8d8; font-weight:600; }
+
+
 
 </style>
 </head>
@@ -616,7 +624,7 @@ h2.unav-title{margin:0;min-width:unset}
     <div class="todo-lines" id="todoLines"></div>
   </div>
   <div class="weight-panel" id="weightTracker" style="display:none">
-    <h2 class="weight-title">&#9878; WEIGHT</h2>
+    <h2 class="weight-title">🩺 WEIGHT</h2>
     <div class="weight-date-row">
       <span id="weightDate" class="weight-date"></span>
     </div>
@@ -745,7 +753,7 @@ function goMonth(m, btn){
   if(inWeekMode){
     curMonth = m;
     curWeekStart = getWeekStart(new Date(curYear, m, 1));
-    miniCalYear = null; miniCalMonth = null;
+    miniCalYear = curYear; miniCalMonth = m;
     renderWeek();
   } else {
     var pages=document.querySelectorAll('.page');
@@ -810,8 +818,7 @@ function renderCalendar(){
   var daysInPrevMonth=new Date(prevYr,prevMo+1,0).getDate();
   for(var e=0;e<firstDow;e++) cells.push('prev_'+(daysInPrevMonth-firstDow+1+e));
   for(var d=1;d<=daysInMonth;d++) cells.push(d);
-  var nextMonthDay=1;
-  while(cells.length%7!==0){ cells.push('next_'+nextMonthDay); nextMonthDay++; }
+  while(cells.length%7!==0){ cells.push(null); }
 
   var BAR_H=20, BAR_GAP=2, TOP_OFF=26;
 
@@ -1591,7 +1598,20 @@ function renderWeek(){
           (function(wevRef){
             var row=document.createElement('div'); row.className='wday-wev-row';
             var lbl=document.createElement('span'); lbl.className='wday-wev-lbl';
+            lbl.contentEditable='true';
+            lbl.spellcheck=false;
             lbl.textContent=(wevRef.time?wevRef.time+' ':'')+wevRef.name;
+            lbl.onblur=(function(evRef){
+              return function(){
+                var newName=lbl.textContent.trim();
+                if(newName){ evRef.name=newName; saveWeek(); }
+                else{ lbl.textContent=(evRef.time?evRef.time+' ':'')+evRef.name; }
+              };
+            })(wevRef);
+            lbl.onkeydown=function(e){
+              if(e.key==='Enter'){e.preventDefault();lbl.blur();}
+              if(e.key==='Escape'){lbl.textContent=(wevRef.time?wevRef.time+' ':'')+wevRef.name;lbl.blur();}
+            };
             var trash=document.createElement('button'); trash.className='wday-wev-trash'; trash.innerHTML='&#128465;';
             trash.title='Delete';
             trash.onclick=(function(id,fn){
@@ -1802,12 +1822,21 @@ function renderMiniCal(){
   }
   var mcYear = miniCalYear, mcMonth = miniCalMonth;
 
-  // Update nav title
   var titleEl = document.getElementById('miniCalTitle');
   if(titleEl) titleEl.textContent = MONTHS[mcMonth].substring(0,3).toUpperCase()+' '+mcYear;
 
-  // Day headers
-  var dowRow = document.createElement('div'); dowRow.className='mc-row';
+  var firstDow = new Date(mcYear,mcMonth,1).getDay();
+  var daysIn   = new Date(mcYear,mcMonth+1,0).getDate();
+  var cells=[]; for(var i=0;i<firstDow;i++) cells.push(null);
+  for(var d=1;d<=daysIn;d++) cells.push(d);
+  while(cells.length%7!==0) cells.push(null);
+
+  var ws=new Date(curWeekStart); ws.setHours(0,0,0,0);
+  var we=new Date(curWeekStart); we.setDate(we.getDate()+6); we.setHours(23,59,59);
+  var today=new Date(); today.setHours(0,0,0,0);
+
+  // Day-of-week headers
+  var dowRow=document.createElement('div'); dowRow.className='mc-row';
   var dows=['S','M','T','W','T','F','S'];
   for(var i=0;i<7;i++){
     var dh=document.createElement('span'); dh.className='mc-dow'; dh.textContent=dows[i];
@@ -1815,40 +1844,24 @@ function renderMiniCal(){
   }
   mc.appendChild(dowRow);
 
-  var firstDow = new Date(mcYear,mcMonth,1).getDay();
-  var daysIn   = new Date(mcYear,mcMonth+1,0).getDate();
-  var cells=[]; for(var i=0;i<firstDow;i++) cells.push(null);
-  for(var d=1;d<=daysIn;d++) cells.push(d);
-  var nextMonthDay=1;
-  while(cells.length%7!==0){ cells.push('next_'+nextMonthDay); nextMonthDay++; }
-
-  // Determine which dates are in the current week
-  var ws=new Date(curWeekStart); ws.setHours(0,0,0,0);
-  var we=new Date(curWeekStart); we.setDate(we.getDate()+6); we.setHours(23,59,59);
-
   for(var r=0;r<cells.length/7;r++){
     var row=document.createElement('div'); row.className='mc-row';
     var weekHasDay=false;
     for(var c=0;c<7;c++){
       var day=cells[r*7+c];
       if(day){
-        var dt=new Date(mcYear,mcMonth,day);
-        if(dt>=ws && dt<=we) weekHasDay=true;
+        var dt=new Date(mcYear,mcMonth,day); dt.setHours(0,0,0,0);
+        if(dt>=ws&&dt<=we) weekHasDay=true;
       }
     }
     if(weekHasDay) row.classList.add('mc-row-highlighted');
-    // Make all week rows clickable to jump to that week
-    (function(rowEl, rowIdx){
-      // find first non-null day in this row
-      var firstDay = null;
-      for(var ci=0;ci<7;ci++){
-        if(cells[rowIdx*7+ci]){ firstDay=cells[rowIdx*7+ci]; break; }
-      }
+    (function(rowEl,rowIdx){
+      var firstDay=null;
+      for(var ci=0;ci<7;ci++){if(cells[rowIdx*7+ci]){firstDay=cells[rowIdx*7+ci];break;}}
       if(firstDay){
         rowEl.style.cursor='pointer';
-        rowEl.title='Go to this week';
         rowEl.onclick=function(){
-          curWeekStart = getWeekStart(new Date(mcYear,mcMonth,firstDay));
+          curWeekStart=getWeekStart(new Date(mcYear,mcMonth,firstDay));
           var sun=new Date(curWeekStart);
           curYear=sun.getFullYear(); curMonth=sun.getMonth();
           document.getElementById('tab-year').textContent=curYear;
@@ -1858,17 +1871,29 @@ function renderMiniCal(){
           renderWeek();
         };
       }
-    })(row, r);
+    })(row,r);
     for(var c=0;c<7;c++){
       var day=cells[r*7+c];
       var sp=document.createElement('span');
       sp.className='mc-day'+(day?'':' mc-empty');
       if(day){
         sp.textContent=day;
-        var dt=new Date(mcYear,mcMonth,day);
-        var today=new Date(); today.setHours(0,0,0,0);
+        var dt=new Date(mcYear,mcMonth,day); dt.setHours(0,0,0,0);
         if(dt.getTime()===today.getTime()) sp.classList.add('mc-today');
-        if(dt>=ws && dt<=we) sp.classList.add('mc-in-week');
+        if(dt>=ws&&dt<=we) sp.classList.add('mc-in-week');
+        (function(d2){
+          sp.onclick=function(e){e.stopPropagation();
+            curWeekStart=getWeekStart(new Date(mcYear,mcMonth,d2));
+            var sun=new Date(curWeekStart);
+            curYear=sun.getFullYear(); curMonth=sun.getMonth();
+            document.getElementById('tab-year').textContent=curYear;
+            clearTabActive();
+            document.getElementById('tab-home').classList.add('active');
+            highlightMonthTab(curMonth);
+            renderWeek();
+          };
+          sp.style.cursor='pointer';
+        })(day);
       }
       row.appendChild(sp);
     }
@@ -1876,7 +1901,7 @@ function renderMiniCal(){
   }
 }
 
-/* ---- VIEW SWITCH ---- */
+
 function switchView(view, btn){
   // Sync M/W toggle across both navbars
   var isWeek=(view==='week');
@@ -1954,7 +1979,7 @@ function renderWeightTracker(){
   if(!dateEl||!inp) return;
   if(curWeekStart){
     var d=new Date(curWeekStart);
-    dateEl.textContent=MONTHS[d.getMonth()].substring(0,3)+' '+d.getDate()+', '+d.getFullYear();
+    dateEl.textContent='Week of '+MONTHS[d.getMonth()].substring(0,3)+' '+d.getDate()+', '+d.getFullYear();
   }
   inp.value = weightData[wk]!==undefined ? weightData[wk] : '';
   calcWeight(); // show live delta immediately
@@ -1980,12 +2005,12 @@ function calcWeight(){
   if(inp.value==='' || isNaN(val)){
     delta.innerHTML = prevW!==undefined
       ? '<span style="color:#86b1df;font-size:.72rem">Last week: '+prevW+' lbs</span>'
-      : '<span style="color:#d5ceeb;font-size:.72rem">—</span>';
+      : '<span style="color:#d5ceeb;font-size:.72rem">--</span>';
     return;
   }
 
   if(prevW===undefined){
-    delta.innerHTML='<span style="color:#d5ceeb;font-size:.72rem">—</span>';
+    delta.innerHTML='<span style="color:#d5ceeb;font-size:.72rem">--</span>';
     return;
   }
 
