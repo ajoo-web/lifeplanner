@@ -26,25 +26,25 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 @media(max-width:700px){.tab-btn{padding:5px 8px;font-size:.7rem}.tab-home{padding:6px 10px}}
 
 /* MAIN LAYOUT */
-.main-wrap{display:flex;gap:12px;align-items:flex-start;max-width:1200px;margin:0 auto;padding:20px}
-.pages-area{flex:1;min-width:0}
+.main-wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;padding:20px}
+.pages-area{flex:1;min-width:300px}
 .page{display:none}
 .page.active{display:block}
 #page-calendar.active{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
 #page-archive.active{display:block}
 .cal-wrapper{flex:1;min-width:300px}
-.todo-panel{width:260px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start}
+
 /* Hide todo on archive */
 .archive-visible .todo-panel{display:none}
-@media(max-width:900px){
-  .main-wrap{flex-wrap:wrap}
+@media(max-width:700px){
   .cal-wrapper{width:100%;min-width:unset}
-  .todo-panel{width:100%;position:static;flex-shrink:unset}
-  .view-toggle{flex-direction:row;width:auto}
+  .right-col{flex-basis:100% !important;width:100% !important;flex-direction:row !important;flex-wrap:wrap}
+  .todo-panel{flex:1;min-width:200px}
+  .weight-panel{flex:1;min-width:200px}
 }
 
 /* CALENDAR */
-.cal-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px}
+
 .cal-nav h2{font-size:1.3rem;font-weight:800;min-width:200px;text-align:center;color:#1a3a6b;text-transform:uppercase;letter-spacing:.5px}
 .cal-nav button{background:#fff;border:2px solid #87dbfd;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;color:#1a3a6b;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .cal-nav button:hover{background:#4aabf7;color:#fff;border-color:#4aabf7}
@@ -125,19 +125,15 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .yr-btn:hover{background:#87dbfd;border-color:#4aabf7}
 .yr-active{background:#4aabf7 !important;color:#fff !important;border-color:#4aabf7 !important}
 
-/* VIEW TOGGLE */
-.view-toggle{display:flex;flex-direction:column;gap:6px;padding:8px 0 0 0;margin-right:4px;flex-shrink:0;position:sticky;top:80px}
-.vt-btn{width:34px;height:34px;border-radius:50%;border:2.5px solid #d5ceeb;background:#f5f0e8;color:#7b6faa;font-weight:800;font-size:.9rem;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center}
-.vt-btn:hover{border-color:#4aabf7;color:#1a3a6b}
-.vt-active{background:#1a3a6b !important;color:#fff !important;border-color:#1a3a6b !important}
+
 
 /* WEEKLY PAGE */
-.week-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.cal-nav-btn{background:#fff;border:2px solid #87dbfd;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;color:#1a3a6b;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+
+.cal-nav-btn{background:#fff;border:2px solid #87dbfd;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;color:#1a3a6b;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .cal-nav-btn:hover{background:#4aabf7;color:#fff;border-color:#4aabf7}
-.week-title{flex:1;text-align:center}
-.week-num-badge{background:#4aabf7;color:#fff;font-size:.72rem;font-weight:800;border-radius:20px;padding:3px 10px;margin-right:8px;letter-spacing:.5px}
-#weekRange{font-weight:700;color:#1a3a6b;font-size:.95rem}
+
+
+
 .week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #d5ceeb;border-top:1.5px solid #d5ceeb;margin-bottom:0}
 .wday-col{border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:220px;display:flex;flex-direction:column;background:#fff}
 .wday-col.wday-today{background:#e0f2f6}
@@ -186,13 +182,13 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .habit-colored{filter:grayscale(0%) opacity(1) !important;transform:scale(1.1)}
 
 /* MINI CALENDAR */
-.mini-cal-wrap{margin-left:auto;flex-shrink:0}
-.mini-cal{background:#fff;border:1.5px solid #d5ceeb;border-radius:10px;padding:8px 10px;min-width:160px;font-size:.7rem}
-.mc-month-lbl{font-size:.68rem;font-weight:800;color:#1a3a6b;text-align:center;margin-bottom:4px;letter-spacing:.5px}
+.mini-cal-wrap{flex-shrink:0;align-self:center;margin-left:auto}
+.mini-cal{background:transparent;border:none;padding:2px 0;min-width:150px;font-size:.6rem}
+.mc-month-lbl{font-size:.6rem;font-weight:800;color:#1a3a6b;text-align:center;margin-bottom:2px;letter-spacing:.5px}
 .mc-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px}
 .mc-row-highlighted{background:#e0f2f6;border-radius:20px;outline:2px solid #4aabf7;outline-offset:-1px}
-.mc-dow{text-align:center;font-size:.6rem;font-weight:800;color:#86b1df;padding:1px 0}
-.mc-day{text-align:center;padding:2px 1px;border-radius:50%;font-size:.68rem;color:#1a3a6b;cursor:default;line-height:1.4}
+.mc-dow{text-align:center;font-size:.55rem;font-weight:800;color:#86b1df;padding:1px 0}
+.mc-day{text-align:center;padding:1px;border-radius:50%;font-size:.6rem;color:#1a3a6b;cursor:default;line-height:1.4}
 .mc-empty{visibility:hidden}
 .mc-today{background:#4aabf7;color:#fff;border-radius:50%;font-weight:800}
 .mc-in-week{font-weight:700;color:#0d6eb5}
@@ -209,6 +205,103 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .todo-input.done-text{text-decoration:line-through;color:#86b1df;pointer-events:none}
 .todo-done-row .todo-cb{accent-color:#86b1df}
 
+
+/* MULTI-DAY EVENT BARS */
+.multi-spacer{height:16px;margin-bottom:1px;visibility:hidden}
+.ev-multiday{position:absolute;left:3px;z-index:4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0}
+.ev-multiday.span-start{border-radius:20px 0 0 20px;padding-left:8px}
+.ev-multiday.span-end{border-radius:0 20px 20px 0;padding-right:8px}
+.ev-multiday.span-start.span-end{border-radius:20px}
+
+
+
+
+
+
+
+
+
+/* MINI CAL NAV */
+.mini-cal-nav{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:2px}
+.mc-nav-btn{background:none;border:none;cursor:pointer;color:#1a3a6b;font-size:1rem;font-weight:800;padding:0 4px;line-height:1;transition:color .15s}
+.mc-nav-btn:hover{color:#4aabf7}
+.mc-nav-title{font-size:.62rem;font-weight:800;color:#1a3a6b;letter-spacing:.5px;text-align:center;flex:1}
+
+/* Hoverable week rows */
+.mc-row:not(:first-child):hover{background:#e0f2f6;border-radius:20px;cursor:pointer}
+
+
+/* UNIFIED 3-COL NAV */
+.unified-nav{display:flex;align-items:center;margin-bottom:14px;gap:8px;min-height:168px}
+.unav-left{display:flex;gap:6px;flex-shrink:0;min-width:80px}
+.unav-center{display:flex;align-items:center;gap:16px;flex:1;justify-content:center}
+.unav-right{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:170px}
+.unav-title{font-size:1.3rem;font-weight:800;color:#1a3a6b;text-transform:uppercase;letter-spacing:1px;text-align:center}
+h2.unav-title{margin:0;min-width:unset}
+
+/* WEEK NUMBER ROW */
+.week-num-row{margin-bottom:6px}
+.week-num-badge{background:#4aabf7;color:#fff;font-size:.78rem;font-weight:800;border-radius:20px;padding:4px 12px;letter-spacing:.5px;display:inline-block}
+
+
+/* M/W TOGGLE SWITCH */
+.mw-toggle{display:inline-flex;background:#e8e4f4;border-radius:20px;padding:2px;gap:0;border:1.5px solid #d5ceeb}
+.mw-opt{padding:5px 12px;border-radius:18px;font-size:.78rem;font-weight:800;cursor:pointer;color:#7b6faa;transition:all .18s;user-select:none;letter-spacing:.3px}
+.mw-opt:hover{color:#1a3a6b}
+.mw-active{background:#1a3a6b;color:#fff !important;border-radius:18px}
+
+/* Remove old vt-pill styles */
+
+
+/* WEEKLY NOTES */
+.week-notes-section{margin-top:16px;border-top:2px dashed #d5ceeb;padding-top:12px;position:relative}
+.week-notes-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px}
+.week-notes-section{position:relative}
+.week-notes-textarea{
+  width:100%;
+  min-height:224px;
+  border:1.5px solid #d5ceeb;
+  border-radius:10px;
+  padding:6px 12px 10px 14px;
+  font-family:inherit;
+  font-size:.85rem;
+  color:#1a3a6b;
+  line-height:32px;
+  background-color:#f5f0e8;
+  background-image:repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 30px,
+    #d5ceeb 30px,
+    #d5ceeb 31.5px
+  );
+  background-attachment:local;
+  resize:vertical;
+  box-sizing:border-box;
+  outline:none;
+  transition:border-color .2s;
+  overflow:auto;
+  vertical-align:bottom;
+}
+.week-notes-textarea:focus{border-color:#4aabf7}
+
+/* WEIGHT PANEL */
+
+.weight-title{font-size:.8rem;font-weight:800;color:#1a3a6b;margin:0 0 8px 0;letter-spacing:.6px}
+.weight-date-row{margin-bottom:8px}
+.weight-date{font-size:.72rem;color:#86b1df;font-weight:700}
+.weight-input-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.weight-input{width:80px;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.85rem;color:#1a3a6b;background:#f5f0e8;outline:none}
+.weight-input:focus{border-color:#4aabf7}
+
+.wdelta-up{color:#e05c5c;font-weight:800;font-size:.78rem}
+.wdelta-down{color:#4caf50;font-weight:800;font-size:.78rem}
+.weight-delta{font-size:.78rem;min-height:18px}
+
+
+.right-col{display:flex;flex-direction:column;gap:12px;flex-shrink:0;flex-basis:260px;width:260px;align-self:flex-start}
+.todo-panel{width:100%;position:static}
+.weight-panel{width:100%;background:#fff;border:1.5px solid #d5ceeb;border-radius:14px;padding:14px 16px;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -238,20 +331,24 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 <!-- MAIN WRAPPER: calendar/other pages + persistent todo -->
 <div class="main-wrap">
 
-<!-- VIEW TOGGLE -->
-<div class="view-toggle">
-  <button class="vt-btn vt-active" id="vt-month" onclick="switchView('month',this)" title="Monthly View">M</button>
-  <button class="vt-btn" id="vt-week" onclick="switchView('week',this)" title="Weekly View">W</button>
-</div>
-
 <div class="pages-area">
+
 <!-- CALENDAR -->
 <div id="page-calendar" class="page active">
   <div class="cal-wrapper">
-    <div class="cal-nav">
-      <button onclick="changeMonth(-1)">&#8249;</button>
-      <h2 id="calTitle">Loading...</h2>
-      <button onclick="changeMonth(1)">&#8250;</button>
+    <div class="unified-nav">
+      <div class="unav-left">
+        <div class="mw-toggle" id="mw-toggle-m">
+          <span class="mw-opt mw-active" id="vt-month-m" onclick="switchView('month', this)">M</span>
+          <span class="mw-opt" id="vt-week-m" onclick="switchView('week', this)">W</span>
+        </div>
+      </div>
+      <div class="unav-center">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <h2 id="calTitle" class="unav-title">Loading...</h2>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="unav-right"><!-- placeholder --></div>
     </div>
     <div class="cal-grid" id="calGrid"></div>
   </div>
@@ -260,18 +357,36 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 <!-- WEEKLY PAGE -->
 <div id="page-week" class="page">
-  <div class="week-header">
-    <button class="cal-nav-btn" onclick="changeWeek(-1)">&#8249;</button>
-    <div class="week-title">
-      <span id="weekNum" class="week-num-badge"></span>
-      <span id="weekRange"></span>
+  <!-- Unified 3-col nav bar for week mode -->
+  <div class="unified-nav">
+    <div class="unav-left">
+      <div class="mw-toggle" id="mw-toggle-w">
+        <span class="mw-opt" id="vt-month-w" onclick="switchView('month', this)">M</span>
+        <span class="mw-opt mw-active" id="vt-week-w" onclick="switchView('week', this)">W</span>
+      </div>
     </div>
-    <button class="cal-nav-btn" onclick="changeWeek(1)">&#8250;</button>
-    <div class="mini-cal-wrap">
+    <div class="unav-center">
+      <button class="cal-nav-btn" onclick="changeWeek(-1)">&#8249;</button>
+      <span id="weekRange" class="unav-title"></span>
+      <button class="cal-nav-btn" onclick="changeWeek(1)">&#8250;</button>
+    </div>
+    <div class="unav-right">
+      <div class="mini-cal-nav">
+        <button class="mc-nav-btn" onclick="miniCalChange(-1)">&#8249;</button>
+        <span id="miniCalTitle" class="mc-nav-title"></span>
+        <button class="mc-nav-btn" onclick="miniCalChange(1)">&#8250;</button>
+      </div>
       <div class="mini-cal" id="miniCal"></div>
     </div>
   </div>
+  <!-- Week number row above grid -->
+  <div class="week-num-row"><span id="weekNum" class="week-num-badge"></span></div>
   <div class="week-grid" id="weekGrid"></div>
+  <!-- WEEKLY NOTES -->
+  <div class="week-notes-section">
+    <div class="week-notes-label">📝 NOTE</div>
+    <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
+  </div>
 </div>
 
 <!-- ARCHIVE PAGE -->
@@ -286,9 +401,21 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 </div><!-- end pages-area -->
 
 <!-- PERSISTENT TODO PANEL (hidden on archive) -->
-<div class="todo-panel" id="todoPanelGlobal">
-  <h2>&#9998; To-Do</h2>
-  <div class="todo-lines" id="todoLines"></div>
+<div class="right-col">
+  <div class="todo-panel" id="todoPanelGlobal">
+    <h2>&#9998; To-Do</h2>
+    <div class="todo-lines" id="todoLines"></div>
+  </div>
+  <div class="weight-panel" id="weightTracker" style="display:none">
+    <h2 class="weight-title">&#9878; WEIGHT</h2>
+    <div class="weight-date-row">
+      <span id="weightDate" class="weight-date"></span>
+    </div>
+    <div class="weight-input-row">
+      <input type="number" id="weightInput" class="weight-input" placeholder="lbs" step="0.1" min="0" onkeydown="if(event.key==='Enter') calcWeight()"/>
+    </div>
+    <div id="weightDelta" class="weight-delta"></div>
+  </div>
 </div>
 
 </div><!-- end main-wrap -->
@@ -387,26 +514,38 @@ function goHome(btn){
   var now=new Date();
   curYear=now.getFullYear();
   curMonth=now.getMonth();
+  // Ensure month mode is active
+  document.querySelectorAll('.mw-opt').forEach(function(b){ b.classList.remove('mw-active'); });
+  document.querySelectorAll('[id^="vt-month"]').forEach(function(b){ b.classList.add('mw-active'); });
   var pages=document.querySelectorAll('.page');
   for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
   document.getElementById('page-calendar').classList.add('active');
   clearTabActive();
   document.getElementById('tab-home').classList.add('active');
+  document.getElementById('tab-year').textContent=curYear;
   highlightMonthTab(curMonth);
   renderCalendar();
   showTodo(true);
 }
 
 function goMonth(m, btn){
-  var pages=document.querySelectorAll('.page');
-  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
-  document.getElementById('page-calendar').classList.add('active');
-  curMonth=m;
+  var inWeekMode = document.getElementById('page-week').classList.contains('active');
   clearTabActive();
   document.getElementById('tab-home').classList.add('active');
   highlightMonthTab(m);
-  renderCalendar();
-  showTodo(true);
+  if(inWeekMode){
+    curMonth = m;
+    curWeekStart = getWeekStart(new Date(curYear, m, 1));
+    miniCalYear = null; miniCalMonth = null;
+    renderWeek();
+  } else {
+    var pages=document.querySelectorAll('.page');
+    for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+    document.getElementById('page-calendar').classList.add('active');
+    curMonth=m;
+    renderCalendar();
+    showTodo(true);
+  }
 }
 
 function clearTabActive(){
@@ -471,28 +610,19 @@ function renderCalendar(){
     // Compute date strings for this week
     var weekDates=[];
     for(var c=0;c<7;c++){
-      if(weekCells[c]!==null){
-        weekDates.push(mkDateStr(curYear,curMonth,weekCells[c]));
-      } else {
-        weekDates.push(null);
-      }
+      if(weekCells[c]!==null) weekDates.push(mkDateStr(curYear,curMonth,weekCells[c]));
+      else weekDates.push(null);
     }
 
-    // Find events active this week and assign to rows (to avoid overlap)
     var weekStart=null,weekEnd=null;
     for(var c=0;c<7;c++){if(weekDates[c]){if(!weekStart)weekStart=weekDates[c];weekEnd=weekDates[c];}}
 
-    // Get events that overlap this week, sorted by start date
-    var weekEvents=[];
-    for(var ei=0;ei<events.length;ei++){
-      var ev=events[ei];
-      var evEnd=ev.endDate||ev.startDate;
-      if(ev.startDate<=weekEnd && evEnd>=weekStart){
-        weekEvents.push(ev);
-      }
-    }
+    // Week row wrapper (relative positioned for overlay)
+    var rowWrap=document.createElement('div');
+    rowWrap.className='week-row-wrap';
+    rowWrap.style.display='contents'; // keep grid layout intact
 
-    // Create day cells for this week first
+    // Create day cells
     var dayCells=[];
     for(var c=0;c<7;c++){
       var cell=document.createElement('div');
@@ -517,10 +647,8 @@ function renderCalendar(){
         var numSpan=document.createElement('span');
         numSpan.className='day-num';
         numSpan.textContent=d;
-        // Prepend day number before holiday
         cell.insertBefore(numSpan,cell.firstChild);
 
-        // Events wrap for single-day events only
         var wrap=document.createElement('div');
         wrap.className='events-wrap';
         wrap.id='ewrap_'+ds;
@@ -537,27 +665,34 @@ function renderCalendar(){
       grid.appendChild(cell);
     }
 
-    // Now render event bars into the correct cells
-    // For multi-day events spanning this week, find start col and end col within week
+    // Collect events overlapping this week
+    var weekEvents=[];
+    for(var ei=0;ei<events.length;ei++){
+      var ev=events[ei];
+      var evEnd=ev.endDate||ev.startDate;
+      if(weekStart && weekEnd && ev.startDate<=weekEnd && evEnd>=weekStart)
+        weekEvents.push(ev);
+    }
+
+    // Render events: multi-day as overlay bars, single-day into cell wrap
     for(var ei=0;ei<weekEvents.length;ei++){
       (function(ev){
         var evEnd=ev.endDate||ev.startDate;
         var isMulti=(ev.endDate && ev.endDate!==ev.startDate);
 
         if(!isMulti){
-          // Single day - inject into that day's wrap
           var wrap=document.getElementById('ewrap_'+ev.startDate);
           if(wrap){
             var tab=document.createElement('div');
-            tab.className='ev-tab span-start span-end';
+            tab.className='ev-tab';
             tab.style.background=ev.color||COLORS[0];
             tab.textContent=(ev.startTime?ev.startTime+' ':'')+ev.name;
             tab.onclick=function(e){e.stopPropagation();openDetail(ev.id);};
             wrap.appendChild(tab);
           }
         } else {
-          // Multi-day: find which columns in this week are covered
-          var startCol=-1,endCol=-1;
+          // Find which columns (0-6) are covered in THIS week
+          var startCol=-1, endCol=-1;
           for(var c=0;c<7;c++){
             if(weekDates[c] && weekDates[c]>=ev.startDate && weekDates[c]<=evEnd){
               if(startCol===-1) startCol=c;
@@ -566,78 +701,78 @@ function renderCalendar(){
           }
           if(startCol===-1) return;
 
-          // Inject a spanning tab into the startCol cell's wrap,
-          // and invisible placeholder spacers in mid/end cells to push content down
+          // Reserve height in ALL covered cells (including middle ones)
           for(var c=startCol;c<=endCol;c++){
             var wrap=document.getElementById('ewrap_'+weekDates[c]);
-            if(!wrap) continue;
-            if(c===startCol){
-              // The real visible bar - use negative margin-right to visually span
-              var tab=document.createElement('div');
-              tab.className='ev-tab span-start'+(c===endCol?' span-end':'');
-              tab.style.background=ev.color||COLORS[0];
-              tab.style.position='relative';
-              tab.style.zIndex='3';
-              // Calculate pixel span: each cell is equal width
-              // We'll use a data attribute and resize after render
-              tab.setAttribute('data-span-start',c);
-              tab.setAttribute('data-span-end',endCol);
-              tab.setAttribute('data-span-week',w);
-              tab.textContent=(ev.startTime?ev.startTime+' ':'')+ev.name;
-              tab.onclick=function(e){e.stopPropagation();openDetail(ev.id);};
-              wrap.appendChild(tab);
-            } else {
-              // Invisible spacer to reserve height in mid/end cells
+            if(wrap){
               var sp=document.createElement('div');
-              sp.style.height='16px';
-              sp.style.marginBottom='1px';
-              sp.style.visibility='hidden';
+              sp.className='multi-spacer';
               wrap.appendChild(sp);
             }
           }
+
+          // Place a single bar spanning startCol -> endCol using % positioning
+          // Attach to the startCol cell's events-wrap with absolute overflow
+          var startWrap=document.getElementById('ewrap_'+weekDates[startCol]);
+          if(!startWrap) return;
+
+          var bar=document.createElement('div');
+          bar.className='ev-tab ev-multiday';
+          // isStart / isEnd for rounded corners
+          var isStart=(ev.startDate>=weekStart);
+          var isEnd=(evEnd<=weekEnd);
+          if(isStart) bar.classList.add('span-start');
+          if(isEnd) bar.classList.add('span-end');
+          bar.style.background=ev.color||COLORS[0];
+          bar.textContent=(ev.startTime?ev.startTime+' ':'')+ev.name;
+          bar.setAttribute('data-sc',startCol);
+          bar.setAttribute('data-ec',endCol);
+          bar.onclick=function(e){e.stopPropagation();openDetail(ev.id);};
+          startWrap.appendChild(bar);
         }
       })(weekEvents[ei]);
     }
   }
 
-  // After render, fix spanning tab widths
-  setTimeout(fixSpanWidths, 0);
+  // After render, use requestAnimationFrame to fix multi-day bar widths
+  requestAnimationFrame(fixMultidayBars);
 }
 
-function fixSpanWidths(){
-  var tabs=document.querySelectorAll('[data-span-start]');
-  for(var i=0;i<tabs.length;i++){
-    var tab=tabs[i];
-    var startCol=parseInt(tab.getAttribute('data-span-start'));
-    var endCol=parseInt(tab.getAttribute('data-span-end'));
-    var weekNum=parseInt(tab.getAttribute('data-span-week'));
-    var span=endCol-startCol+1;
-    if(span<=1) continue;
+function fixMultidayBars(){
+  var bars=document.querySelectorAll('.ev-multiday');
+  bars.forEach(function(bar){
+    var sc=parseInt(bar.getAttribute('data-sc'));
+    var ec=parseInt(bar.getAttribute('data-ec'));
+    var span=ec-sc+1;
+    var wrap=bar.parentElement; // events-wrap inside startCol cell
+    var cell=wrap.closest('.cal-cell');
+    if(!cell) return;
 
-    // Get parent cell rect and next sibling cells
-    var parentCell=tab.closest('.cal-cell');
-    if(!parentCell) continue;
-    var parentRect=parentCell.getBoundingClientRect();
-    // Find the end cell - it's (span-1) siblings after parent in the grid
-    var allCells=document.querySelectorAll('.cal-cell:not(.empty)');
-    // easier: use grid and offset
-    var gridCells=document.querySelectorAll('#calGrid .cal-cell');
-    // find index of parentCell
-    var pIdx=-1;
-    for(var j=0;j<gridCells.length;j++){if(gridCells[j]===parentCell){pIdx=j;break;}}
-    if(pIdx===-1) continue;
-    var endCell=gridCells[pIdx+(span-1)];
-    if(!endCell) continue;
+    // Find the endCol cell by walking grid siblings
+    var grid=cell.parentElement;
+    var cells=Array.from(grid.children).filter(function(el){return el.classList.contains('cal-cell')||el.classList.contains('empty');});
+    var cellIdx=cells.indexOf(cell);
+    if(cellIdx===-1) return;
+    var endCell=cells[cellIdx+(ec-sc)];
+    if(!endCell) return;
+
+    // Calculate pixel width from startCell left edge to endCell right edge
+    var cellRect=cell.getBoundingClientRect();
     var endRect=endCell.getBoundingClientRect();
-    var totalWidth=(endRect.right-parentRect.left)-10; // -10 for padding
-    tab.style.width=totalWidth+'px';
-    tab.style.position='absolute';
-    tab.style.left='5px';
-    // position within the events-wrap - make wrap relative
-    var wrap=tab.parentElement;
+    var totalW=(endRect.right - cellRect.left) - 6; // 3px inset each side
+
+    bar.style.position='absolute';
+    bar.style.left='3px';
+    bar.style.right='auto';
+    bar.style.width=totalW+'px';
+    bar.style.zIndex='4';
+    bar.style.whiteSpace='nowrap';
+    bar.style.overflow='hidden';
+    bar.style.textOverflow='ellipsis';
     wrap.style.position='relative';
-  }
+  });
 }
+
 
 /* ---- TODO (notepad style) ---- */
 function renderTodo(){
@@ -866,7 +1001,14 @@ function openYearPicker(){
           curYear=yr;
           document.getElementById('tab-year').textContent=yr;
           closeOverlay('yearPickerOverlay');
-          renderCalendar();
+          var inWeekMode=document.getElementById('page-week').classList.contains('active');
+          if(inWeekMode){
+            curWeekStart=getWeekStart(new Date(curYear,curMonth,1));
+            miniCalYear=null; miniCalMonth=null;
+            renderWeek();
+          } else {
+            renderCalendar();
+          }
           // Scroll to show selected
         };
         list.appendChild(btn);
@@ -930,12 +1072,21 @@ function getWeekNumber(date){
 
 function initWeek(){
   curWeekStart = getWeekStart(new Date());
+  miniCalYear=null; miniCalMonth=null;
   renderWeek();
 }
 
 function changeWeek(d){
   curWeekStart = new Date(curWeekStart);
   curWeekStart.setDate(curWeekStart.getDate() + d*7);
+  // Use the week's Sunday to determine displayed month/year for tab sync
+  var sun = new Date(curWeekStart);
+  curYear  = sun.getFullYear();
+  curMonth = sun.getMonth();
+  document.getElementById('tab-year').textContent = curYear;
+  clearTabActive();
+  document.getElementById('tab-home').classList.add('active');
+  highlightMonthTab(curMonth);
   renderWeek();
 }
 
@@ -947,8 +1098,8 @@ function renderWeek(){
   var endDate = new Date(curWeekStart); endDate.setDate(endDate.getDate()+6);
   var mo1=MONTHS[curWeekStart.getMonth()], mo2=MONTHS[endDate.getMonth()];
   var rangeStr = mo1.substring(0,3)+' '+curWeekStart.getDate();
-  if(mo1!==mo2) rangeStr += ' – '+mo2.substring(0,3)+' '+endDate.getDate()+', '+endDate.getFullYear();
-  else rangeStr += ' – '+endDate.getDate()+', '+endDate.getFullYear();
+  if(mo1!==mo2) rangeStr += ' – '+mo2.substring(0,3)+' '+endDate.getDate();
+  else rangeStr += ' – '+endDate.getDate();
   document.getElementById('weekRange').textContent = rangeStr;
   renderMiniCal();
 
@@ -1078,6 +1229,9 @@ function renderWeek(){
       grid.appendChild(col_el);
     })(c);
   }
+  loadWeekNotes();
+  showWeightTracker(true);
+  renderWeightTracker();
 }
 
 function renderHabitTracker(){
@@ -1177,18 +1331,30 @@ function buildWeekSwatches(sel){
 }
 
 
+var miniCalYear = null, miniCalMonth = null;
+
+function miniCalChange(d){
+  miniCalMonth += d;
+  if(miniCalMonth < 0){ miniCalMonth = 11; miniCalYear--; }
+  if(miniCalMonth > 11){ miniCalMonth = 0; miniCalYear++; }
+  renderMiniCal();
+}
+
 function renderMiniCal(){
   var mc = document.getElementById('miniCal');
   if(!mc) return;
   mc.innerHTML='';
-  // Use the month of the week's Thursday (ISO standard for week's month)
-  var thu = new Date(curWeekStart); thu.setDate(thu.getDate()+4);
-  var mcYear = thu.getFullYear(), mcMonth = thu.getMonth();
 
-  // Month label
-  var mlbl = document.createElement('div'); mlbl.className='mc-month-lbl';
-  mlbl.textContent = MONTHS[mcMonth].substring(0,3).toUpperCase()+' '+mcYear;
-  mc.appendChild(mlbl);
+  // Init mini-cal to current week's month if not set
+  if(miniCalYear===null){
+    var thu = new Date(curWeekStart); thu.setDate(thu.getDate()+4);
+    miniCalYear = thu.getFullYear(); miniCalMonth = thu.getMonth();
+  }
+  var mcYear = miniCalYear, mcMonth = miniCalMonth;
+
+  // Update nav title
+  var titleEl = document.getElementById('miniCalTitle');
+  if(titleEl) titleEl.textContent = MONTHS[mcMonth].substring(0,3).toUpperCase()+' '+mcYear;
 
   // Day headers
   var dowRow = document.createElement('div'); dowRow.className='mc-row';
@@ -1220,6 +1386,28 @@ function renderMiniCal(){
       }
     }
     if(weekHasDay) row.classList.add('mc-row-highlighted');
+    // Make all week rows clickable to jump to that week
+    (function(rowEl, rowIdx){
+      // find first non-null day in this row
+      var firstDay = null;
+      for(var ci=0;ci<7;ci++){
+        if(cells[rowIdx*7+ci]){ firstDay=cells[rowIdx*7+ci]; break; }
+      }
+      if(firstDay){
+        rowEl.style.cursor='pointer';
+        rowEl.title='Go to this week';
+        rowEl.onclick=function(){
+          curWeekStart = getWeekStart(new Date(mcYear,mcMonth,firstDay));
+          var sun=new Date(curWeekStart);
+          curYear=sun.getFullYear(); curMonth=sun.getMonth();
+          document.getElementById('tab-year').textContent=curYear;
+          clearTabActive();
+          document.getElementById('tab-home').classList.add('active');
+          highlightMonthTab(curMonth);
+          renderWeek();
+        };
+      }
+    })(row, r);
     for(var c=0;c<7;c++){
       var day=cells[r*7+c];
       var sp=document.createElement('span');
@@ -1239,18 +1427,135 @@ function renderMiniCal(){
 
 /* ---- VIEW SWITCH ---- */
 function switchView(view, btn){
-  var allVt=document.querySelectorAll('.vt-btn');
-  for(var i=0;i<allVt.length;i++) allVt[i].classList.remove('vt-active');
-  btn.classList.add('vt-active');
+  // Sync M/W toggle across both navbars
+  var isWeek=(view==='week');
+  document.querySelectorAll('.mw-opt').forEach(function(b){ b.classList.remove('mw-active'); });
+  document.querySelectorAll('[id^="vt-week"]').forEach(function(b){ b.classList.toggle('mw-active',isWeek); });
+  document.querySelectorAll('[id^="vt-month"]').forEach(function(b){ b.classList.toggle('mw-active',!isWeek); });
   var pages=document.querySelectorAll('.page');
   for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+  var now=new Date();
+  var todayYear=now.getFullYear(), todayMonth=now.getMonth();
   if(view==='month'){
+    // switching TO month: show month matching curWeekStart's month (if week was active)
+    var wasWeek=document.getElementById('page-week').classList.contains('active');
+    if(wasWeek && curWeekStart){
+      var sun=new Date(curWeekStart);
+      curYear=sun.getFullYear(); curMonth=sun.getMonth();
+      document.getElementById('tab-year').textContent=curYear;
+      highlightMonthTab(curMonth);
+    }
+    var pages=document.querySelectorAll('.page');
+    for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
     document.getElementById('page-calendar').classList.add('active');
+    renderCalendar();
     showTodo(true);
+    showWeightTracker(false);
   } else {
+    var pages=document.querySelectorAll('.page');
+    for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
     document.getElementById('page-week').classList.add('active');
-    if(!curWeekStart) initWeek(); else renderWeek();
+    // If curMonth+curYear == today → show current week, else show first week of curMonth
+    if(curYear===todayYear && curMonth===todayMonth){
+      curWeekStart=getWeekStart(now);
+    } else {
+      curWeekStart=getWeekStart(new Date(curYear,curMonth,1));
+    }
+    miniCalYear=null; miniCalMonth=null;
+    renderWeek();
     showTodo(true);
+  }
+}
+
+
+/* ---- WEEKLY NOTES ---- */
+var weekNotesData = loadData('lp_week_notes', {});
+
+function getWeekKey(){
+  if(!curWeekStart) return 'none';
+  return curWeekStart.getFullYear()+'-'+pad2(curWeekStart.getMonth()+1)+'-'+pad2(curWeekStart.getDate());
+}
+
+function loadWeekNotes(){
+  var ta=document.getElementById('weekNotesArea');
+  if(ta) ta.value = weekNotesData[getWeekKey()]||'';
+}
+
+function saveWeekNotes(){
+  var ta=document.getElementById('weekNotesArea');
+  if(ta){ weekNotesData[getWeekKey()]=ta.value; localStorage.setItem('lp_week_notes',JSON.stringify(weekNotesData)); }
+}
+
+/* ---- WEIGHT TRACKER ---- */
+var weightData = loadData('lp_weight', {});  // key: weekKey, val: number
+
+function showWeightTracker(show){
+  var wt=document.getElementById('weightTracker');
+  if(wt) wt.style.display=show?'block':'none';
+}
+
+function renderWeightTracker(){
+  weightData = loadData('lp_weight', {});
+  var wk=getWeekKey();
+  var dateEl=document.getElementById('weightDate');
+  var inp=document.getElementById('weightInput');
+  var delta=document.getElementById('weightDelta');
+  if(!dateEl||!inp||!delta) return;
+  if(curWeekStart){
+    var d=new Date(curWeekStart);
+    dateEl.textContent=MONTHS[d.getMonth()].substring(0,3)+' '+d.getDate()+', '+d.getFullYear();
+  }
+  inp.value = weightData[wk]!==undefined ? weightData[wk] : '';
+
+  // Show previous week's weight as reference
+  var prevStart=new Date(curWeekStart); prevStart.setDate(prevStart.getDate()-7);
+  var prevKey=prevStart.getFullYear()+'-'+pad2(prevStart.getMonth()+1)+'-'+pad2(prevStart.getDate());
+  var prevW=weightData[prevKey];
+  if(prevW!==undefined){
+    delta.innerHTML='<span style="color:#86b1df;font-size:.72rem">Last week: '+prevW+' lbs — press Enter to calculate</span>';
+  } else {
+    delta.innerHTML='<span style="color:#d5ceeb;font-size:.72rem">No prior week on record</span>';
+  }
+}
+
+function saveWeight(){
+  var inp=document.getElementById('weightInput');
+  if(!inp) return;
+  var val=parseFloat(inp.value);
+  if(!isNaN(val)) weightData[getWeekKey()]=val;
+  else delete weightData[getWeekKey()];
+  localStorage.setItem('lp_weight',JSON.stringify(weightData));
+}
+
+function calcWeight(){
+  var inp = document.getElementById('weightInput');
+  if(!inp || inp.value==='') return; // nothing to calculate
+  saveWeight(); // persist current week's weight
+  var wk = getWeekKey();
+  var delta = document.getElementById('weightDelta');
+  if(!delta) return;
+  if(!curWeekStart){ delta.innerHTML='<span style="color:#e05c5c">No week selected</span>'; return; }
+
+  var curW = parseFloat(inp.value);
+
+  var prevStart = new Date(curWeekStart);
+  prevStart.setDate(prevStart.getDate() - 7);
+  var prevKey = prevStart.getFullYear()+'-'+pad2(prevStart.getMonth()+1)+'-'+pad2(prevStart.getDate());
+  var prevW = weightData[prevKey];
+
+  if(curW !== undefined && !isNaN(curW) && prevW !== undefined && !isNaN(prevW)){
+    var diff = (parseFloat(curW) - parseFloat(prevW)).toFixed(1);
+    var n = parseFloat(diff);
+    if(n === 0)
+      delta.innerHTML = '<span style="color:#86b1df;font-weight:800">— no change</span>';
+    else if(n > 0)
+      delta.innerHTML = '<span class="wdelta-up">▲ +'+diff+' lbs vs last week</span>';
+    else
+      delta.innerHTML = '<span class="wdelta-down">▼ '+diff+' lbs vs last week</span>';
+  } else if(curW !== undefined && !isNaN(curW)){
+    delta.innerHTML = '<span style="color:#86b1df;font-size:.75rem">No data for prior week ('+prevKey+')</span>';
+  } else {
+    delta.innerHTML = '<span style="color:#86b1df;font-size:.75rem">Enter a weight value above</span>';
   }
 }
 
