@@ -563,13 +563,13 @@ h2.unav-title{margin:0;min-width:unset}
 .week-notes-section{flex:1;min-width:0;}
 .week-notes-section .week-notes-label,.week-budget-section .week-notes-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px;}
 .week-budget-section{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
-.budget-add-row{display:flex;gap:6px;align-items:center;}
-.budget-name-input{flex:1;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.75rem;color:#1a3a6b;background:#f5f0e8;outline:none;}
-.budget-amt-input{width:72px;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.75rem;color:#1a3a6b;background:#f5f0e8;outline:none;text-align:right;}
+.budget-add-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.budget-name-input{flex:1;min-width:80px;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.75rem;color:#1a3a6b;background:#f5f0e8;outline:none;}
+.budget-amt-input{width:72px;min-width:0;flex-shrink:1;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.75rem;color:#1a3a6b;background:#f5f0e8;outline:none;text-align:right;}
 .budget-add-btn{background:#87dbfd;color:#fff;border:none;border-radius:8px;width:28px;height:28px;font-size:1rem;font-weight:800;cursor:pointer;flex-shrink:0;line-height:1;}
 .budget-add-btn:hover{background:#4aabf7;}
-.budget-lists-row{display:flex;gap:8px;}
-.budget-col{flex:1;min-width:0;}
+.budget-lists-row{display:flex;gap:8px;flex-wrap:wrap;}
+.budget-col{flex:1;min-width:80px;}
 .budget-col-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
 .budget-pos-col .budget-col-label{color:#3db86b;}
 .budget-neg-col .budget-col-label{color:#e05555;}
@@ -582,13 +582,17 @@ h2.unav-title{margin:0;min-width:unset}
 .budget-pos-col .budget-entry-amt{color:#3db86b;}
 .budget-neg-col .budget-entry-amt{color:#e05555;}
 .budget-entry-del{background:none;border:none;cursor:pointer;font-size:.65rem;opacity:0;transition:opacity .15s;padding:0 2px;flex-shrink:0;}
-.budget-totals-row{display:flex;align-items:center;gap:8px;padding-top:6px;border-top:1px solid #d5ceeb;}
+.budget-totals-row{display:flex;align-items:center;gap:8px;padding-top:6px;border-top:1px solid #d5ceeb;flex-wrap:wrap;}
 .budget-total{font-size:.8rem;font-weight:800;}
 .budget-total-pos{color:#3db86b;}
 .budget-total-neg{color:#e05555;}
 .budget-net{}
 .budget-total-sep{color:#d5ceeb;font-size:.8rem;}
 
+.budget-toggle{width:26px;height:26px;border:1.5px solid;border-radius:6px;font-size:.85rem;font-weight:800;cursor:pointer;flex-shrink:0;line-height:1;padding:0;transition:all .15s;}
+.budget-toggle-pos{background:#e8faf0;color:#3db86b;border-color:#3db86b;}
+.budget-toggle-neg{background:#fef0f0;color:#e05555;border-color:#e05555;}
+.budget-net-spacer{flex:1;min-width:8px;}
 </style>
 </head>
 <body>
@@ -684,6 +688,7 @@ h2.unav-title{margin:0;min-width:unset}
       <!-- Row 1: Add entry -->
       <div class="budget-add-row">
         <input type="text" id="budgetItemName" class="budget-name-input" placeholder="Item description..."/>
+        <button id="budgetToggle" class="budget-toggle budget-toggle-pos" onclick="toggleBudgetSign()">+</button>
         <input type="number" id="budgetItemAmt" class="budget-amt-input" placeholder="±$" step="0.01"/>
         <button class="budget-add-btn" onclick="addBudgetEntry()">+</button>
       </div>
@@ -703,7 +708,7 @@ h2.unav-title{margin:0;min-width:unset}
         <span id="budgetPosTotal" class="budget-total budget-total-pos">+$0.00</span>
         <span class="budget-total-sep">/</span>
         <span id="budgetNegTotal" class="budget-total budget-total-neg">-$0.00</span>
-        <span class="budget-total-sep">|</span>
+        <span class="budget-net-spacer"></span>
         <span id="budgetNet" class="budget-total budget-net">$0.00</span>
       </div>
     </div>
@@ -834,9 +839,9 @@ function showPage(name,btn){
   clearTabActive();
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(name==='archive'){ renderArchive(); showTodo(false); }
-  else if(name==='search'){ showTodo(false); document.getElementById('searchInput').focus(); runSearch(); }
-  else showTodo(true);
+  if(name==='archive'){ renderArchive(); showTodo(false); showWeightTracker(false); }
+  else if(name==='search'){ showTodo(false); showWeightTracker(false); document.getElementById('searchInput').focus(); runSearch(); }
+  else{ showTodo(true); showWeightTracker(false); }
 }
 
 /* ---- CALENDAR ---- */
@@ -865,6 +870,7 @@ function goHome(btn){
   highlightMonthTab(curMonth);
   renderCalendar();
   showTodo(true);
+  showWeightTracker(false);
 }
 
 function goMonth(m, btn){
@@ -873,16 +879,26 @@ function goMonth(m, btn){
   document.getElementById('tab-home').classList.add('active');
   highlightMonthTab(m);
   if(inWeekMode){
+    var now=new Date();
     curMonth = m;
-    curWeekStart = getWeekStart(new Date(curYear, m, 1));
-    miniCalYear = curYear; miniCalMonth = m;
+    if(m===now.getMonth() && curYear===now.getFullYear()){
+      curWeekStart=getWeekStart(now);
+      miniCalYear=null; miniCalMonth=null;
+    } else {
+      curWeekStart=getWeekStart(new Date(curYear, m, 1));
+      miniCalYear=curYear; miniCalMonth=m;
+    }
     renderWeek();
   } else {
     var pages=document.querySelectorAll('.page');
     for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
     document.getElementById('page-calendar').classList.add('active');
+    // Ensure M/W toggle shows M when landing on month view
+    document.querySelectorAll('.mw-opt').forEach(function(b){ b.classList.remove('mw-active'); });
+    document.querySelectorAll('[id^="vt-month"]').forEach(function(b){ b.classList.add('mw-active'); });
     curMonth=m;
     renderCalendar();
+    showWeightTracker(false);
     showTodo(true);
   }
 }
@@ -1301,14 +1317,21 @@ function todayDateStr(){
 function archiveExpiredTodos(){
   var today=todayDateStr();
   var changed=false;
+  var remaining=[];
   for(var i=0;i<todos.length;i++){
     if(todos[i].done && todos[i].doneDate && todos[i].doneDate < today){
       archive.push({id:todos[i].id, text:todos[i].text, archived:todos[i].doneDate});
-      todos[i]={id:'td_'+Date.now()+'_'+i, text:'', done:false};
       changed=true;
+    } else {
+      remaining.push(todos[i]);
     }
   }
-  if(changed){ normalizeTodos(); save(); renderTodo(); }
+  if(changed){
+    todos=remaining;
+    normalizeTodos();
+    save();
+    renderTodo();
+  }
 }
 
 // Check for day rollover every minute
@@ -2212,24 +2235,41 @@ function runSearch(){
 
 
 /* ---- BUDGET ---- */
-var budgetEntries = loadData('lp_budget', []);
+var budgetEntries = []; // loaded per-year in loadBudgetForYear()
+
+function budgetKey(){ return 'lp_budget_' + curYear; }
+
+function loadBudgetForYear(){
+  budgetEntries = loadData(budgetKey(), []);
+}
 
 function saveBudget(){
-  localStorage.setItem('lp_budget', JSON.stringify(budgetEntries));
+  localStorage.setItem(budgetKey(), JSON.stringify(budgetEntries));
+}
+
+var budgetSign = 1;
+
+function toggleBudgetSign(){
+  budgetSign = budgetSign===1 ? -1 : 1;
+  var btn=document.getElementById('budgetToggle');
+  if(budgetSign===1){ btn.textContent='+'; btn.className='budget-toggle budget-toggle-pos'; }
+  else{ btn.textContent='−'; btn.className='budget-toggle budget-toggle-neg'; }
 }
 
 function addBudgetEntry(){
   var name = document.getElementById('budgetItemName').value.trim();
-  var amt  = parseFloat(document.getElementById('budgetItemAmt').value);
-  if(!name || isNaN(amt)) return;
-  budgetEntries.unshift({id:'bgt_'+Date.now(), name:name, amt:amt});
+  var raw  = parseFloat(document.getElementById('budgetItemAmt').value);
+  if(!name || isNaN(raw)) return;
+  budgetEntries.unshift({id:'bgt_'+Date.now(), name:name, amt:budgetSign*Math.abs(raw)});
   saveBudget();
   document.getElementById('budgetItemName').value='';
   document.getElementById('budgetItemAmt').value='';
   renderBudget();
+  setTimeout(function(){ document.getElementById('budgetItemName').focus(); }, 0);
 }
 
 function renderBudget(){
+  loadBudgetForYear();
   var posList = document.getElementById('budgetPosList');
   var negList = document.getElementById('budgetNegList');
   if(!posList||!negList) return;
