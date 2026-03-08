@@ -134,7 +134,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 
 
-.week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #d5ceeb;border-top:1.5px solid #d5ceeb;margin-bottom:0}
+.week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #d5ceeb;border-top:none;margin-bottom:0}
 .wday-col{border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:180px;display:flex;flex-direction:column;background:#fff;min-width:0;overflow:hidden}
 .wday-col.wday-today{background:#e0f2f6}
 .wday-head{padding:6px 7px 4px;border-bottom:1.5px solid #d5ceeb;background:#f5f0e8}
@@ -235,14 +235,14 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 /* UNIFIED 3-COL NAV */
 .unified-nav{display:flex;align-items:center;margin-bottom:14px;gap:8px;min-height:168px}
 .unav-left{display:flex;gap:6px;flex-shrink:0;min-width:80px}
-.unav-center{display:flex;align-items:center;gap:16px;flex:1;justify-content:center}
+.unav-center{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;flex:1;gap:6px}
 .unav-right{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:170px}
-.unav-title{font-size:1.3rem;font-weight:800;color:#1a3a6b;text-transform:uppercase;letter-spacing:1px;text-align:center}
+.unav-title{font-size:1.3rem;font-weight:800;color:#1a3a6b;text-transform:uppercase;letter-spacing:1px;text-align:center;min-width:0;word-break:break-word}
 h2.unav-title{margin:0;min-width:unset}
 
 /* WEEK NUMBER ROW */
-.week-num-row{margin-bottom:6px}
-.week-num-badge{background:#4aabf7;color:#fff;font-size:.78rem;font-weight:800;border-radius:20px;padding:4px 12px;letter-spacing:.5px;display:inline-block}
+.week-num-row{margin-bottom:0;width:100%}
+.week-num-badge{background:#4aabf7;color:#fff;font-size:.78rem;font-weight:800;border-radius:6px 6px 0 0;padding:5px 12px;letter-spacing:.5px;display:block;width:100%;text-align:left;box-sizing:border-box}
 
 
 /* M/W TOGGLE SWITCH */
@@ -671,9 +671,8 @@ h2.unav-title{margin:0;min-width:unset}
       <div class="mini-cal" id="miniCal"></div>
     </div>
   </div>
-  <!-- Week number row above grid -->
   <div class="week-num-row"><span id="weekNum" class="week-num-badge"></span></div>
-  <div class="week-scroll-wrap">
+  <div class="week-scroll-wrap" style="border:1.5px solid #4aabf7;border-top:none;border-radius:0 0 8px 8px;overflow:hidden;margin-bottom:8px">
     <div class="week-grid" id="weekGrid"></div>
     <div class="habit-section" id="habitSection"><div class="habit-grid" id="habitGrid"></div></div>
   </div>
@@ -684,7 +683,7 @@ h2.unav-title{margin:0;min-width:unset}
       <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
     </div>
     <div class="week-budget-section">
-      <div class="week-notes-label">💰 BUDGET</div>
+      <div class="week-notes-label">💰 <span id="budgetYearLabel">2026</span> Budget</div>
       <!-- Row 1: Add entry -->
       <div class="budget-add-row">
         <input type="text" id="budgetItemName" class="budget-name-input" placeholder="Item description..."/>
@@ -764,7 +763,7 @@ h2.unav-title{margin:0;min-width:unset}
 </div><!-- end main-wrap -->
 
 <!-- Add/Edit Event Modal -->
-<div class="overlay" id="evModal">
+<div class="overlay" id="evModal" onclick="if(event.target===this)closeOverlay('evModal')">
   <div class="modal">
     <h3 id="evModalTitle">Add Event</h3>
     <label>Event Name *</label>
@@ -779,7 +778,31 @@ h2.unav-title{margin:0;min-width:unset}
     </div>
     <label>Color</label>
     <div class="swatches" id="swatches"></div>
+    <!-- Recurrence -->
+    <div style="margin-top:10px;border-top:1px solid #d5ceeb;padding-top:10px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+        <label style="margin:0;font-size:.78rem">Repeat every</label>
+        <input type="number" id="evRecurEvery" min="1" max="52" placeholder="—" style="width:52px;border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none"/>
+        <label style="margin:0;font-size:.78rem">week(s) on</label>
+        <select id="evRecurDay" style="border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none">
+          <option value="">—</option>
+          <option value="0">Sunday</option><option value="1">Monday</option>
+          <option value="2">Tuesday</option><option value="3">Wednesday</option>
+          <option value="4">Thursday</option><option value="5">Friday</option>
+          <option value="6">Saturday</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <label style="margin:0;font-size:.78rem">Ends:</label>
+        <select id="evRecurEndsType" onchange="toggleRecurEnd()" style="border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none">
+          <option value="never">Never</option>
+          <option value="on">On date</option>
+        </select>
+        <input type="date" id="evRecurEndsOn" style="display:none;border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none"/>
+      </div>
+    </div>
     <div class="modal-btns">
+      <button class="btn-del" id="evDeleteBtn" style="display:none" onclick="deleteEventFromEdit()">Delete</button>
       <button class="btn-cancel" onclick="closeOverlay('evModal')">Cancel</button>
       <button class="btn-save" onclick="saveEvent()">Save</button>
     </div>
@@ -893,7 +916,6 @@ function goMonth(m, btn){
     var pages=document.querySelectorAll('.page');
     for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
     document.getElementById('page-calendar').classList.add('active');
-    // Ensure M/W toggle shows M when landing on month view
     document.querySelectorAll('.mw-opt').forEach(function(b){ b.classList.remove('mw-active'); });
     document.querySelectorAll('[id^="vt-month"]').forEach(function(b){ b.classList.add('mw-active'); });
     curMonth=m;
@@ -1356,6 +1378,12 @@ function buildSwatches(sel){
 function openAddModal(ds){
   editingId=null;
   document.getElementById('evModalTitle').textContent='Add Event';
+  document.getElementById('evRecurEvery').value='';
+  document.getElementById('evRecurDay').value='';
+  document.getElementById('evRecurEndsType').value='never';
+  document.getElementById('evRecurEndsOn').value='';
+  document.getElementById('evRecurEndsOn').style.display='none';
+  document.getElementById('evDeleteBtn').style.display='none';
   document.getElementById('evName').value='';
   document.getElementById('evStart').value=ds||'';
   document.getElementById('evEnd').value='';
@@ -1366,16 +1394,25 @@ function openAddModal(ds){
 }
 
 function openDetail(id){
-  detailId=id;
+  // Go straight to edit view
+  detailId=id; editingId=id;
   var ev=null;
   for(var i=0;i<events.length;i++){if(events[i].id===id){ev=events[i];break;}}
   if(!ev)return;
-  document.getElementById('dTitle').textContent=ev.name;
-  var dateStr='📅 '+ev.startDate+(ev.endDate&&ev.endDate!==ev.startDate?' → '+ev.endDate:'');
-  document.getElementById('dDate').textContent=dateStr;
-  document.getElementById('dTime').textContent=ev.startTime?('🕐 '+ev.startTime+(ev.endTime?' – '+ev.endTime:'')):
-'';
-  openOverlay('detailModal');
+  document.getElementById('evModalTitle').textContent='Edit Event';
+  document.getElementById('evName').value=ev.name;
+  document.getElementById('evStart').value=ev.startDate;
+  document.getElementById('evEnd').value=ev.endDate||'';
+  document.getElementById('evStartT').value=ev.startTime||'';
+  document.getElementById('evEndT').value=ev.endTime||'';
+  document.getElementById('evRecurEvery').value=ev.recurEvery||'';
+  document.getElementById('evRecurDay').value=ev.recurDay!==undefined?ev.recurDay:'';
+  document.getElementById('evRecurEndsType').value=ev.recurEndsType||'never';
+  document.getElementById('evRecurEndsOn').value=ev.recurEndsOn||'';
+  toggleRecurEnd();
+  buildSwatches(ev.color);
+  document.getElementById('evDeleteBtn').style.display='inline-block';
+  openOverlay('evModal');
 }
 
 function openEditFromDetail(){
@@ -1390,8 +1427,29 @@ function openEditFromDetail(){
   document.getElementById('evEnd').value=ev.endDate||'';
   document.getElementById('evStartT').value=ev.startTime||'';
   document.getElementById('evEndT').value=ev.endTime||'';
+  document.getElementById('evRecurEvery').value=ev.recurEvery||'';
+  document.getElementById('evRecurDay').value=ev.recurDay!==undefined?ev.recurDay:'';
+  document.getElementById('evRecurEndsType').value=ev.recurEndsType||'never';
+  document.getElementById('evRecurEndsOn').value=ev.recurEndsOn||'';
+  toggleRecurEnd();
+  document.getElementById('evDeleteBtn').style.display='inline-block';
   buildSwatches(ev.color);
   openOverlay('evModal');
+}
+
+function toggleRecurEnd(){
+  var t=document.getElementById('evRecurEndsType').value;
+  document.getElementById('evRecurEndsOn').style.display=t==='on'?'inline-block':'none';
+}
+
+function deleteEventFromEdit(){
+  if(!editingId)return;
+  var newEvs=[];
+  for(var i=0;i<events.length;i++){if(events[i].id!==editingId)newEvs.push(events[i]);}
+  events=newEvs; save();
+  if(document.getElementById('page-week').classList.contains('active'))renderWeek();
+  else renderCalendar();
+  closeOverlay('evModal');
 }
 
 function deleteEvent(){
@@ -1405,13 +1463,19 @@ function saveEvent(){
   var name=document.getElementById('evName').value.trim();
   var sd=document.getElementById('evStart').value;
   if(!name||!sd){alert('Event name and start date are required.');return;}
+  var recurEvery=parseInt(document.getElementById('evRecurEvery').value)||null;
+  var recurDay=document.getElementById('evRecurDay').value!==''?parseInt(document.getElementById('evRecurDay').value):null;
+  var recurEndsType=document.getElementById('evRecurEndsType').value||'never';
+  var recurEndsOn=document.getElementById('evRecurEndsOn').value||null;
   var ev={
     id:editingId||(''+ Date.now()+Math.random()),
     name:name,startDate:sd,
     endDate:document.getElementById('evEnd').value||null,
     startTime:document.getElementById('evStartT').value||null,
     endTime:document.getElementById('evEndT').value||null,
-    color:pickedColor
+    color:pickedColor,
+    recurEvery:recurEvery,recurDay:recurDay,
+    recurEndsType:recurEndsType,recurEndsOn:recurEndsOn
   };
   if(editingId){
     for(var i=0;i<events.length;i++){if(events[i].id===editingId){events[i]=ev;break;}}
@@ -1467,6 +1531,16 @@ function clearArchive(){
 
 
 /* ---- YEAR PICKER ---- */
+function pickCurrentYear(){
+  var now=new Date(); curYear=now.getFullYear();
+  document.getElementById('tab-year').textContent=curYear;
+  var byl=document.getElementById('budgetYearLabel'); if(byl) byl.textContent=curYear;
+  closeOverlay('yearPickerOverlay');
+  var inWeekMode=document.getElementById('page-week').classList.contains('active');
+  if(inWeekMode){ curWeekStart=getWeekStart(new Date(curYear,curMonth,1)); miniCalYear=null; miniCalMonth=null; renderWeek(); }
+  else{ renderCalendar(); }
+}
+
 function openYearPicker(){
   var overlay=document.getElementById('yearPickerOverlay');
   // Build list if empty
@@ -1480,6 +1554,7 @@ function openYearPicker(){
         btn.onclick=function(){
           curYear=yr;
           document.getElementById('tab-year').textContent=yr;
+          var byl=document.getElementById('budgetYearLabel'); if(byl) byl.textContent=yr;
           closeOverlay('yearPickerOverlay');
           var inWeekMode=document.getElementById('page-week').classList.contains('active');
           if(inWeekMode){
@@ -1564,6 +1639,8 @@ function changeWeek(d){
   curYear  = sun.getFullYear();
   curMonth = sun.getMonth();
   document.getElementById('tab-year').textContent = curYear;
+  var byl=document.getElementById('budgetYearLabel'); if(byl) byl.textContent=curYear;
+  miniCalYear = null; miniCalMonth = null;
   clearTabActive();
   document.getElementById('tab-home').classList.add('active');
   highlightMonthTab(curMonth);
@@ -2235,17 +2312,11 @@ function runSearch(){
 
 
 /* ---- BUDGET ---- */
-var budgetEntries = []; // loaded per-year in loadBudgetForYear()
+var budgetEntries = [];
 
 function budgetKey(){ return 'lp_budget_' + curYear; }
-
-function loadBudgetForYear(){
-  budgetEntries = loadData(budgetKey(), []);
-}
-
-function saveBudget(){
-  localStorage.setItem(budgetKey(), JSON.stringify(budgetEntries));
-}
+function loadBudgetForYear(){ budgetEntries = loadData(budgetKey(), []); }
+function saveBudget(){ localStorage.setItem(budgetKey(), JSON.stringify(budgetEntries)); }
 
 var budgetSign = 1;
 
@@ -2270,6 +2341,8 @@ function addBudgetEntry(){
 
 function renderBudget(){
   loadBudgetForYear();
+  var yl=document.getElementById('budgetYearLabel');
+  if(yl) yl.textContent=curYear;
   var posList = document.getElementById('budgetPosList');
   var negList = document.getElementById('budgetNegList');
   if(!posList||!negList) return;
@@ -2324,11 +2397,14 @@ renderTodo();
 </script>
 
 <!-- Year Picker Overlay -->
-<div class="overlay" id="yearPickerOverlay">
-  <div class="modal" style="width:300px;max-height:70vh;overflow:hidden;display:flex;flex-direction:column;padding:20px">
+<div class="overlay" id="yearPickerOverlay" onclick="if(event.target===this)closeOverlay('yearPickerOverlay')">
+  <div class="modal" style="width:340px;max-height:70vh;overflow:hidden;display:flex;flex-direction:column;padding:20px">
     <h3 style="margin-bottom:12px">Select Year</h3>
-    <div id="yearList" style="overflow-y:auto;flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding-right:4px"></div>
-    <button class="btn-cancel" style="margin-top:12px;width:100%;text-align:center" onclick="closeOverlay('yearPickerOverlay')">Cancel</button>
+    <div id="yearList" style="overflow-y:auto;flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding-right:4px"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn-cancel" style="flex:1;text-align:center" onclick="closeOverlay('yearPickerOverlay')">Cancel</button>
+      <button class="btn-save" style="flex:1;text-align:center" onclick="pickCurrentYear()">Current Year</button>
+    </div>
   </div>
 </div>
 
