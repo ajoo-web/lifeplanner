@@ -207,7 +207,8 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 
 /* MULTI-DAY EVENT BARS */
-.multi-spacer{height:20px;margin-bottom:3px;visibility:hidden;display:block;}
+.multi-spacer{height:20px;margin-bottom:2px;visibility:hidden;display:block;}
+.multi-gap{height:4px;display:block;}
 .ev-multiday{position:absolute;z-index:4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0;height:20px;line-height:20px;display:flex;align-items:center;padding:0 6px;font-size:.72rem;font-weight:700;color:#fff;cursor:pointer;transition:opacity .15s;}
 .ev-multiday.span-start{border-radius:20px 0 0 20px;padding-left:8px}
 .ev-multiday.span-end{border-radius:0 20px 20px 0;padding-right:8px}
@@ -632,7 +633,7 @@ function renderCalendar(){
   for(var d=1;d<=daysInMonth;d++) cells.push(d);
   while(cells.length%7!==0) cells.push(null);
 
-  var BAR_H=20, BAR_GAP=3, TOP_OFF=26;
+  var BAR_H=20, BAR_GAP=2, TOP_OFF=26;
 
   for(var w=0;w<cells.length/7;w++){
     var weekCells=cells.slice(w*7,(w+1)*7);
@@ -778,6 +779,18 @@ function renderCalendar(){
         bar.onclick=function(e){e.stopPropagation();openDetail(ev.id);};
         overlay.appendChild(bar);
       })(multiEvs[mi], evLane[mi]);
+    }
+
+    // Add a gap spacer after multi-spacers before single-day events
+    for(var c=0;c<7;c++){
+      if(spacerCount[c]>0 && weekDates[c]){
+        var wrap=document.getElementById('ewrap_'+weekDates[c]);
+        if(wrap){
+          var gsp=document.createElement('div');
+          gsp.className='multi-gap';
+          wrap.appendChild(gsp);
+        }
+      }
     }
 
     // Render single-day events
