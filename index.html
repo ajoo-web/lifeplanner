@@ -55,7 +55,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 /* Week row wrapper for spanning events */
 .week-row{display:contents}
 
-.cal-cell{background:#fff;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:90px;padding:5px 5px 22px 5px;position:relative;cursor:pointer;transition:background .15s;}
+.cal-cell{background:#fff;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:90px;padding:5px 5px 22px 5px;position:relative;cursor:pointer;transition:background .15s;overflow:hidden;min-width:0;}
 .cal-cell:hover{background:#f0f8ff}
 .cal-cell.empty{background:#f9f6f0;cursor:default}
 .cal-cell.empty:hover{background:#f9f6f0}
@@ -267,15 +267,9 @@ h2.unav-title{margin:0;min-width:unset}
   font-family:inherit;
   font-size:.85rem;
   color:#1a3a6b;
-  line-height:32px;
+  line-height:1.6;
   background-color:#f5f0e8;
-  background-image:repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 30px,
-    #d5ceeb 30px,
-    #d5ceeb 31.5px
-  );
+  background-image:none;
   background-attachment:local;
   resize:vertical;
   box-sizing:border-box;
@@ -779,18 +773,24 @@ h2.unav-title{margin:0;min-width:unset}
     <label>Color</label>
     <div class="swatches" id="swatches"></div>
     <div style="margin-top:10px;border-top:1px solid #d5ceeb;padding-top:10px">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
-        <label style="margin:0;font-size:.78rem">Repeat every</label>
-        <input type="number" id="evRecurEvery" min="1" max="52" placeholder="—" style="width:52px;border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none"/>
-        <label style="margin:0;font-size:.78rem">week(s)</label>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <input type="checkbox" id="evBirthday" onchange="toggleBirthdayMode()" style="width:15px;height:15px;accent-color:#e06090;cursor:pointer"/>
+        <label for="evBirthday" style="margin:0;font-size:.78rem;cursor:pointer">🎂 Birthday (repeats yearly)</label>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <label style="margin:0;font-size:.78rem">Ends:</label>
-        <select id="evRecurEndsType" onchange="toggleRecurEnd()" style="border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none">
-          <option value="never">Never</option>
-          <option value="on">On date</option>
-        </select>
-        <input type="date" id="evRecurEndsOn" style="display:none;border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none"/>
+      <div id="evRecurSection">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+          <label style="margin:0;font-size:.78rem">Repeat every</label>
+          <input type="number" id="evRecurEvery" min="1" max="52" placeholder="—" style="width:52px;border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none"/>
+          <label style="margin:0;font-size:.78rem">week(s)</label>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <label style="margin:0;font-size:.78rem">Ends:</label>
+          <select id="evRecurEndsType" onchange="toggleRecurEnd()" style="border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none">
+            <option value="never">Never</option>
+            <option value="on">On date</option>
+          </select>
+          <input type="date" id="evRecurEndsOn" style="display:none;border:1.5px solid #d5ceeb;border-radius:6px;padding:3px 6px;font-size:.78rem;color:#1a3a6b;background:#f5f0e8;outline:none"/>
+        </div>
       </div>
     </div>
     <div class="modal-btns">
@@ -948,7 +948,22 @@ function getEffectiveEvents(rangeStart,rangeEnd){
   var result=[];
   for(var i=0;i<events.length;i++){
     var ev=events[i];
-    if(!ev.recurEvery){
+    if(ev.recurYearly){
+      var base=new Date(ev.startDate+'T00:00:00');
+      var rs=new Date(rangeStart+'T00:00:00');
+      var re=new Date(rangeEnd+'T00:00:00');
+      for(var yr=rs.getFullYear();yr<=re.getFullYear();yr++){
+        var d=new Date(yr,base.getMonth(),base.getDate());
+        if(d>=rs&&d<=re){
+          var ds=d.toISOString().slice(0,10);
+          var clone={}; for(var k in ev) clone[k]=ev[k];
+          clone.startDate=ds; clone.endDate=ds;
+          clone.id=ev.id+'_'+ds;
+          clone.name='🎂 '+ev.name;
+          result.push(clone);
+        }
+      }
+    } else if(!ev.recurEvery){
       var evEnd=ev.endDate||ev.startDate;
       if(ev.startDate<=rangeEnd&&evEnd>=rangeStart) result.push(ev);
     } else {
@@ -1398,16 +1413,18 @@ function buildSwatches(sel){
 function openAddModal(ds){
   editingId=null;
   document.getElementById('evModalTitle').textContent='Add Event';
-  document.getElementById('evRecurEvery').value='';
-  document.getElementById('evRecurEndsType').value='never';
-  document.getElementById('evRecurEndsOn').value='';
-  document.getElementById('evRecurEndsOn').style.display='none';
-  document.getElementById('evDeleteBtn').style.display='none';
   document.getElementById('evName').value='';
   document.getElementById('evStart').value=ds||'';
   document.getElementById('evEnd').value='';
   document.getElementById('evStartT').value='';
   document.getElementById('evEndT').value='';
+  document.getElementById('evBirthday').checked=false;
+  document.getElementById('evRecurSection').style.display='block';
+  document.getElementById('evRecurEvery').value='';
+  document.getElementById('evRecurEndsType').value='never';
+  document.getElementById('evRecurEndsOn').value='';
+  document.getElementById('evRecurEndsOn').style.display='none';
+  document.getElementById('evDeleteBtn').style.display='none';
   buildSwatches(COLORS[0]);
   openOverlay('evModal');
 }
@@ -1424,6 +1441,8 @@ function openDetail(id){
   document.getElementById('evEnd').value=ev.endDate||'';
   document.getElementById('evStartT').value=ev.startTime||'';
   document.getElementById('evEndT').value=ev.endTime||'';
+  document.getElementById('evBirthday').checked=!!ev.recurYearly;
+  document.getElementById('evRecurSection').style.display=ev.recurYearly?'none':'block';
   document.getElementById('evRecurEvery').value=ev.recurEvery||'';
   document.getElementById('evRecurEndsType').value=ev.recurEndsType||'never';
   document.getElementById('evRecurEndsOn').value=ev.recurEndsOn||'';
@@ -1447,6 +1466,11 @@ function openEditFromDetail(){
   document.getElementById('evEndT').value=ev.endTime||'';
   buildSwatches(ev.color);
   openOverlay('evModal');
+}
+
+function toggleBirthdayMode(){
+  var cb=document.getElementById('evBirthday');
+  document.getElementById('evRecurSection').style.display=cb.checked?'none':'block';
 }
 
 function toggleRecurEnd(){
@@ -1475,9 +1499,10 @@ function saveEvent(){
   var name=document.getElementById('evName').value.trim();
   var sd=document.getElementById('evStart').value;
   if(!name||!sd){alert('Event name and start date are required.');return;}
-  var recurEvery=parseInt(document.getElementById('evRecurEvery').value)||null;
-  var recurEndsType=document.getElementById('evRecurEndsType').value||'never';
-  var recurEndsOn=document.getElementById('evRecurEndsOn').value||null;
+  var isBirthday=document.getElementById('evBirthday').checked;
+  var recurEvery=isBirthday?null:(parseInt(document.getElementById('evRecurEvery').value)||null);
+  var recurEndsType=isBirthday?'never':(document.getElementById('evRecurEndsType').value||'never');
+  var recurEndsOn=isBirthday?null:(document.getElementById('evRecurEndsOn').value||null);
   var ev={
     id:editingId||(''+ Date.now()+Math.random()),
     name:name,startDate:sd,
@@ -1485,7 +1510,8 @@ function saveEvent(){
     startTime:document.getElementById('evStartT').value||null,
     endTime:document.getElementById('evEndT').value||null,
     color:pickedColor,
-    recurEvery:recurEvery,recurEndsType:recurEndsType,recurEndsOn:recurEndsOn
+    recurEvery:recurEvery,recurEndsType:recurEndsType,recurEndsOn:recurEndsOn,
+    recurYearly:isBirthday
   };
   if(editingId){
     for(var i=0;i<events.length;i++){if(events[i].id===editingId){events[i]=ev;break;}}
