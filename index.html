@@ -135,7 +135,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 
 .week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #d5ceeb;border-top:1.5px solid #d5ceeb;margin-bottom:0}
-.wday-col{border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:220px;display:flex;flex-direction:column;background:#fff}
+.wday-col{border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:220px;display:flex;flex-direction:column;background:#fff;overflow:hidden;min-width:0}
 .wday-col.wday-today{background:#e0f2f6}
 .wday-head{padding:6px 7px 4px;border-bottom:1.5px solid #d5ceeb;background:#f5f0e8}
 .wday-dow{font-size:.65rem;font-weight:800;color:#86b1df;text-transform:uppercase;letter-spacing:.5px}
@@ -152,18 +152,18 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .wev-tab.week-only{opacity:.85}
 
 /* HABIT TRACKER */
-.habit-section{border:1.5px solid #d5ceeb;border-radius:12px;overflow:hidden;margin-top:0;background:#fff}
+.habit-section{border:1.5px solid #d5ceeb;border-radius:12px;overflow-x:auto;margin-top:0;background:#fff}
 .habit-title{background:#1a3a6b;color:#e0f2f6;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:6px 12px}
 .habit-grid{display:grid}
-.habit-row{display:grid;grid-template-columns:90px repeat(7,1fr);border-bottom:1.5px solid #d5ceeb}
+.habit-row{display:grid;grid-template-columns:60px repeat(7,minmax(28px,1fr));border-bottom:1.5px solid #d5ceeb;min-width:0}
 .habit-row:last-child{border-bottom:none}
-.habit-label{padding:8px 10px;font-size:.78rem;font-weight:700;color:#1a3a6b;display:flex;align-items:center;gap:5px;background:#f5f0e8;border-right:1.5px solid #d5ceeb}
+.habit-label{padding:6px 6px;font-size:.7rem;font-weight:700;color:#1a3a6b;display:flex;align-items:center;gap:3px;background:#f5f0e8;border-right:1.5px solid #d5ceeb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .habit-cell{display:flex;align-items:center;justify-content:center;border-right:1.5px solid #d5ceeb;padding:6px 0;cursor:pointer}
 .habit-cell:last-child{border-right:none}
-.habit-dot{width:22px;height:22px;border-radius:50%;border:2px solid #d5ceeb;background:#f5f0e8;transition:all .18s;cursor:pointer}
+.habit-dot{width:18px;height:18px;border-radius:50%;border:2px solid #d5ceeb;background:#f5f0e8;transition:all .18s;cursor:pointer}
 .habit-dot.filled{border-color:#4aabf7;background:#4aabf7}
 .habit-dot:hover{border-color:#87dbfd;transform:scale(1.15)}
-.habit-header-row{display:grid;grid-template-columns:90px repeat(7,1fr);background:#e8f4fd;border-bottom:1.5px solid #d5ceeb}
+.habit-header-row{display:grid;grid-template-columns:60px repeat(7,minmax(28px,1fr));background:#e8f4fd;border-bottom:1.5px solid #d5ceeb;min-width:0}
 .habit-day-head{font-size:.65rem;font-weight:800;color:#86b1df;text-align:center;padding:4px 0;border-right:1.5px solid #d5ceeb;text-transform:uppercase}
 .habit-day-head:last-child{border-right:none}
 .habit-day-head.hd-first{background:#f5f0e8;border-right:1.5px solid #d5ceeb}
@@ -176,8 +176,8 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .weather-active{filter:grayscale(0%) opacity(1) !important;transform:scale(1.15)}
 
 /* HABIT ICONS IN COLUMN */
-.habit-icons-row{display:flex;justify-content:space-around;padding:5px 4px 6px;gap:2px}
-.habit-icon-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;filter:grayscale(100%) opacity(0.3);transition:filter .18s,transform .15s;padding:2px}
+.habit-icons-row{display:flex;flex-wrap:wrap;justify-content:center;padding:4px 2px 5px;gap:1px}
+.habit-icon-btn{background:none;border:none;cursor:pointer;font-size:clamp(.65rem,2.5vw,1rem);filter:grayscale(100%) opacity(0.3);transition:filter .18s,transform .15s;padding:1px;line-height:1}
 .habit-icon-btn:hover{filter:grayscale(30%) opacity(0.7);transform:scale(1.2)}
 .habit-colored{filter:grayscale(0%) opacity(1) !important;transform:scale(1.1)}
 
@@ -302,6 +302,14 @@ h2.unav-title{margin:0;min-width:unset}
 .right-col{display:flex;flex-direction:column;gap:12px;flex-shrink:0;flex-basis:260px;width:260px;align-self:flex-start}
 .todo-panel{width:100%;position:static}
 .weight-panel{width:100%;background:#fff;border:1.5px solid #d5ceeb;border-radius:14px;padding:14px 16px;box-sizing:border-box}
+.week-scroll-wrap{overflow-x:auto;width:100%}
+
+@media(max-width:480px){
+  .habit-icon-btn{font-size:.6rem;padding:0}
+  .habit-icons-row{gap:0;padding:3px 1px 4px}
+  .wday-num{font-size:1.1rem}
+}
+
 </style>
 </head>
 <body>
@@ -381,7 +389,10 @@ h2.unav-title{margin:0;min-width:unset}
   </div>
   <!-- Week number row above grid -->
   <div class="week-num-row"><span id="weekNum" class="week-num-badge"></span></div>
-  <div class="week-grid" id="weekGrid"></div>
+  <div class="week-scroll-wrap">
+    <div class="week-grid" id="weekGrid"></div>
+    <div class="habit-section" id="habitSection"><div class="habit-grid" id="habitGrid"></div></div>
+  </div>
   <!-- WEEKLY NOTES -->
   <div class="week-notes-section">
     <div class="week-notes-label">📝 NOTE</div>
@@ -412,7 +423,7 @@ h2.unav-title{margin:0;min-width:unset}
       <span id="weightDate" class="weight-date"></span>
     </div>
     <div class="weight-input-row">
-      <input type="number" id="weightInput" class="weight-input" placeholder="lbs" step="0.1" min="0" onkeydown="if(event.key==='Enter') calcWeight()"/>
+      <input type="number" id="weightInput" class="weight-input" placeholder="lbs" step="0.1" min="0" oninput="calcWeight()"/>
     </div>
     <div id="weightDelta" class="weight-delta"></div>
   </div>
@@ -1499,64 +1510,52 @@ function renderWeightTracker(){
   var wk=getWeekKey();
   var dateEl=document.getElementById('weightDate');
   var inp=document.getElementById('weightInput');
-  var delta=document.getElementById('weightDelta');
-  if(!dateEl||!inp||!delta) return;
+  if(!dateEl||!inp) return;
   if(curWeekStart){
     var d=new Date(curWeekStart);
     dateEl.textContent=MONTHS[d.getMonth()].substring(0,3)+' '+d.getDate()+', '+d.getFullYear();
   }
   inp.value = weightData[wk]!==undefined ? weightData[wk] : '';
-
-  // Show previous week's weight as reference
-  var prevStart=new Date(curWeekStart); prevStart.setDate(prevStart.getDate()-7);
-  var prevKey=prevStart.getFullYear()+'-'+pad2(prevStart.getMonth()+1)+'-'+pad2(prevStart.getDate());
-  var prevW=weightData[prevKey];
-  if(prevW!==undefined){
-    delta.innerHTML='<span style="color:#86b1df;font-size:.72rem">Last week: '+prevW+' lbs — press Enter to calculate</span>';
-  } else {
-    delta.innerHTML='<span style="color:#d5ceeb;font-size:.72rem">No prior week on record</span>';
-  }
+  calcWeight(); // show live delta immediately
 }
 
-function saveWeight(){
-  var inp=document.getElementById('weightInput');
-  if(!inp) return;
-  var val=parseFloat(inp.value);
-  if(!isNaN(val)) weightData[getWeekKey()]=val;
-  else delete weightData[getWeekKey()];
-  localStorage.setItem('lp_weight',JSON.stringify(weightData));
-}
+
 
 function calcWeight(){
   var inp = document.getElementById('weightInput');
-  if(!inp || inp.value==='') return; // nothing to calculate
-  saveWeight(); // persist current week's weight
-  var wk = getWeekKey();
   var delta = document.getElementById('weightDelta');
-  if(!delta) return;
-  if(!curWeekStart){ delta.innerHTML='<span style="color:#e05c5c">No week selected</span>'; return; }
+  if(!inp || !delta || !curWeekStart) return;
 
-  var curW = parseFloat(inp.value);
+  // Save current value
+  var val = inp.value !== '' ? parseFloat(inp.value) : NaN;
+  if(!isNaN(val)){ weightData[getWeekKey()]=val; localStorage.setItem('lp_weight',JSON.stringify(weightData)); }
+  else { delete weightData[getWeekKey()]; localStorage.setItem('lp_weight',JSON.stringify(weightData)); }
 
-  var prevStart = new Date(curWeekStart);
-  prevStart.setDate(prevStart.getDate() - 7);
-  var prevKey = prevStart.getFullYear()+'-'+pad2(prevStart.getMonth()+1)+'-'+pad2(prevStart.getDate());
-  var prevW = weightData[prevKey];
+  // Get prev week weight
+  var prevStart=new Date(curWeekStart); prevStart.setDate(prevStart.getDate()-7);
+  var prevKey=prevStart.getFullYear()+'-'+pad2(prevStart.getMonth()+1)+'-'+pad2(prevStart.getDate());
+  var prevW=weightData[prevKey];
 
-  if(curW !== undefined && !isNaN(curW) && prevW !== undefined && !isNaN(prevW)){
-    var diff = (parseFloat(curW) - parseFloat(prevW)).toFixed(1);
-    var n = parseFloat(diff);
-    if(n === 0)
-      delta.innerHTML = '<span style="color:#86b1df;font-weight:800">— no change</span>';
-    else if(n > 0)
-      delta.innerHTML = '<span class="wdelta-up">▲ +'+diff+' lbs vs last week</span>';
-    else
-      delta.innerHTML = '<span class="wdelta-down">▼ '+diff+' lbs vs last week</span>';
-  } else if(curW !== undefined && !isNaN(curW)){
-    delta.innerHTML = '<span style="color:#86b1df;font-size:.75rem">No data for prior week ('+prevKey+')</span>';
-  } else {
-    delta.innerHTML = '<span style="color:#86b1df;font-size:.75rem">Enter a weight value above</span>';
+  if(inp.value==='' || isNaN(val)){
+    delta.innerHTML = prevW!==undefined
+      ? '<span style="color:#86b1df;font-size:.72rem">Last week: '+prevW+' lbs</span>'
+      : '<span style="color:#d5ceeb;font-size:.72rem">—</span>';
+    return;
   }
+
+  if(prevW===undefined){
+    delta.innerHTML='<span style="color:#d5ceeb;font-size:.72rem">—</span>';
+    return;
+  }
+
+  var diff=(val - parseFloat(prevW)).toFixed(1);
+  var n=parseFloat(diff);
+  if(n===0)
+    delta.innerHTML='<span style="color:#86b1df;font-weight:800">— no change</span>';
+  else if(n>0)
+    delta.innerHTML='<span class="wdelta-up">▲ +'+diff+' lbs</span>';
+  else
+    delta.innerHTML='<span class="wdelta-down">▼ '+diff+' lbs</span>';
 }
 
 /* ---- INIT ---- */
