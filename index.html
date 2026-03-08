@@ -344,6 +344,24 @@ h2.unav-title{margin:0;min-width:unset}
 }
 .wk-md-slot{min-height:4px;}
 
+
+/* Week view inline multi-day bars */
+.wk-inline-multi{
+  border-radius:0 !important;
+  margin-bottom:2px;
+  opacity:1;
+}
+.wk-inline-multi.span-start{ border-radius:20px 0 0 20px !important; }
+.wk-inline-multi.span-end{ border-radius:0 20px 20px 0 !important; }
+.wk-inline-multi.span-start.span-end{ border-radius:20px !important; }
+.wk-lane-empty{
+  background:transparent !important;
+  border:none;
+  margin-bottom:2px;
+  pointer-events:none;
+  visibility:hidden;
+}
+
 </style>
 </head>
 <body>
@@ -1204,7 +1222,7 @@ function renderWeek(){
   }
   var weekStart=weekDates[0], weekEnd=weekDates[6];
 
-  // Separate multi-day vs single-day events for this week
+  // Separate multi-day vs single-day
   var multiEvs=[], singleMap={};
   for(var ei=0;ei<events.length;ei++){
     var ev=events[ei];
@@ -1217,20 +1235,20 @@ function renderWeek(){
     }
   }
 
-  // Lane assignment for multi-day events
+  // Lane assignment for multi-day events (greedy)
   var lanes=[], evLane=[];
   for(var mi=0;mi<multiEvs.length;mi++){
-    var ev=multiEvs[mi];
-    var evEnd=ev.endDate||ev.startDate;
+    var ev=multiEvs[mi], evEnd=ev.endDate||ev.startDate;
     var lane=-1;
     for(var li=0;li<lanes.length;li++){if(ev.startDate>lanes[li]){lane=li;break;}}
     if(lane===-1){lane=lanes.length;lanes.push(null);}
     lanes[lane]=evEnd;
     evLane.push(lane);
   }
-  var numLanes=lanes.length;
 
-  // spacerCount[col] = number of multi-day lanes covering that column
+  // For each column, build ordered event list:
+  // slot[lane] = multi-day ev or null, then single-day evs after
+  // spacerCount[col] = max lane+1 covering that col
   var spacerCount=[];
   for(var c=0;c<7;c++) spacerCount.push(0);
   for(var mi=0;mi<multiEvs.length;mi++){
@@ -1239,46 +1257,6 @@ function renderWeek(){
       if(weekDates[c]>=ev.startDate&&weekDates[c]<=evEnd)
         spacerCount[c]=Math.max(spacerCount[c],evLane[mi]+1);
     }
-  }
-
-  // Multi-day banner row
-  if(numLanes>0){
-    var bannerRow=document.createElement('div');
-    bannerRow.className='wk-multiday-banner';
-    bannerRow.style.height=(numLanes*(BAR_H+BAR_GAP)+4)+'px';
-    // 7 slot divs for column alignment
-    for(var c=0;c<7;c++){
-      var slot=document.createElement('div'); slot.className='wk-md-slot';
-      bannerRow.appendChild(slot);
-    }
-    // Place bars
-    for(var mi=0;mi<multiEvs.length;mi++){
-      (function(ev,lane){
-        var evEnd=ev.endDate||ev.startDate;
-        var startCol=-1,endCol=-1;
-        for(var c=0;c<7;c++){
-          if(weekDates[c]>=ev.startDate&&weekDates[c]<=evEnd){
-            if(startCol===-1) startCol=c;
-            endCol=c;
-          }
-        }
-        if(startCol===-1) return;
-        var isStart=(ev.startDate>=weekStart);
-        var isEnd=(evEnd<=weekEnd);
-        var bar=document.createElement('div');
-        bar.className='ev-tab ev-multiday'+(isStart?' span-start':'')+(isEnd?' span-end':'');
-        bar.style.background=ev.color||COLORS[0];
-        bar.textContent=(ev.startTime?ev.startTime+' ':'')+ev.name;
-        bar.style.left=(startCol/7*100)+'%';
-        bar.style.width=((endCol-startCol+1)/7*100)+'%';
-        bar.style.top=(lane*(BAR_H+BAR_GAP)+2)+'px';
-        bar.style.position='absolute';
-        bar.style.boxSizing='border-box';
-        bar.onclick=function(e){e.stopPropagation();openDetail(ev.id);};
-        bannerRow.appendChild(bar);
-      })(multiEvs[mi],evLane[mi]);
-    }
-    grid.appendChild(bannerRow);
   }
 
   // Render 7 day columns
@@ -1291,7 +1269,7 @@ function renderWeek(){
       var col_el = document.createElement('div');
       col_el.className = 'wday-col' + (isToday?' wday-today':'');
 
-      // Header
+      // Header: day name + date
       var head = document.createElement('div'); head.className='wday-head';
       var dow = document.createElement('div'); dow.className='wday-dow'; dow.textContent=days[col];
       var dateNum = document.createElement('div'); dateNum.className='wday-date';
@@ -1323,16 +1301,45 @@ function renderWeek(){
       head.appendChild(wRow);
       col_el.appendChild(head);
 
-      // Event area: spacers for multi-day lanes + gap + single-day events
+      // Event area: multi-day bars (by lane) then single-day events
       var evWrap = document.createElement('div'); evWrap.className='wday-events';
-      // Multi-day spacers
-      for(var li=0;li<spacerCount[col];li++){
-        var sp=document.createElement('div'); sp.className='multi-spacer'; evWrap.appendChild(sp);
-      }
-      // Gap between multi-day spacers and single-day events
-      if(spacerCount[col]>0){
+
+      // Render multi-day bars for this column, one per lane slot
+      var numLanes = spacerCount[col];
+      if(numLanes > 0){
+        // Build lane->ev map for this col
+        var laneMap={};
+        for(var mi=0;mi<multiEvs.length;mi++){
+          var ev=multiEvs[mi]; var evEnd=ev.endDate||ev.startDate;
+          if(ds>=ev.startDate&&ds<=evEnd) laneMap[evLane[mi]]=ev;
+        }
+        for(var li=0;li<numLanes;li++){
+          if(laneMap[li]){
+            (function(evRef, laneIdx){
+              var evEnd=evRef.endDate||evRef.startDate;
+              var isStart=(ds===evRef.startDate);
+              var isEnd=(ds===evEnd);
+              var bar=document.createElement('div');
+              bar.className='ev-tab wk-inline-multi'
+                +(isStart?' span-start':'')
+                +(isEnd?' span-end':'')
+                +(!isStart&&!isEnd?' span-mid':'');
+              bar.style.background=evRef.color||COLORS[0];
+              // Only show text on start day
+              bar.textContent=isStart?(evRef.startTime?evRef.startTime+' ':'')+evRef.name:'';
+              bar.onclick=function(e){e.stopPropagation();openDetail(evRef.id);};
+              evWrap.appendChild(bar);
+            })(laneMap[li], li);
+          } else {
+            // Empty lane slot (another event is in this lane but not covering this col)
+            var empty=document.createElement('div'); empty.className='ev-tab wk-lane-empty';
+            evWrap.appendChild(empty);
+          }
+        }
+        // Gap before single-day events
         var gsp=document.createElement('div'); gsp.className='multi-gap'; evWrap.appendChild(gsp);
       }
+
       // Single-day events
       var dayEvs=singleMap[ds]||[];
       for(var ei=0;ei<dayEvs.length;ei++){
