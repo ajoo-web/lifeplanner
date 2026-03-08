@@ -504,6 +504,10 @@ h2.unav-title{margin:0;min-width:unset}
 
 /* row cell borders handled above */
 
+
+.cal-cell.next-month{ background:#f9f7ff; }
+.next-month-num{ color:#c0b8d8; font-weight:600; }
+
 </style>
 </head>
 <body>
@@ -801,9 +805,13 @@ function renderCalendar(){
   var daysInMonth=new Date(curYear,curMonth+1,0).getDate();
 
   var cells=[];
-  for(var e=0;e<firstDow;e++) cells.push(null);
+  var prevMo=curMonth===0?11:curMonth-1;
+  var prevYr=curMonth===0?curYear-1:curYear;
+  var daysInPrevMonth=new Date(prevYr,prevMo+1,0).getDate();
+  for(var e=0;e<firstDow;e++) cells.push('prev_'+(daysInPrevMonth-firstDow+1+e));
   for(var d=1;d<=daysInMonth;d++) cells.push(d);
-  while(cells.length%7!==0) cells.push(null);
+  var nextMonthDay=1;
+  while(cells.length%7!==0){ cells.push('next_'+nextMonthDay); nextMonthDay++; }
 
   var BAR_H=20, BAR_GAP=2, TOP_OFF=26;
 
@@ -811,7 +819,17 @@ function renderCalendar(){
     var weekCells=cells.slice(w*7,(w+1)*7);
     var weekDates=[];
     for(var c=0;c<7;c++){
-      weekDates.push(weekCells[c]!==null ? mkDateStr(curYear,curMonth,weekCells[c]) : null);
+      var wc=weekCells[c];
+      if(wc===null) weekDates.push(null);
+      else if(typeof wc==='string'&&wc.indexOf('prev_')===0){
+        var pd=parseInt(wc.replace('prev_',''));
+        var pm=curMonth===0?11:curMonth-1, py=curMonth===0?curYear-1:curYear;
+        weekDates.push(mkDateStr(py,pm,pd));
+      } else if(typeof wc==='string'&&wc.indexOf('next_')===0){
+        var nd=parseInt(wc.replace('next_',''));
+        var nm=(curMonth+1)%12, ny=curMonth===11?curYear+1:curYear;
+        weekDates.push(mkDateStr(ny,nm,nd));
+      } else weekDates.push(mkDateStr(curYear,curMonth,wc));
     }
     var weekStart=null, weekEnd=null;
     for(var c=0;c<7;c++){if(weekDates[c]){if(!weekStart)weekStart=weekDates[c];weekEnd=weekDates[c];}}
@@ -829,9 +847,72 @@ function renderCalendar(){
       var cell=document.createElement('div');
       if(weekCells[c]===null){
         cell.className='cal-cell empty';
+      } else if(typeof weekCells[c]==='string'&&weekCells[c].indexOf('prev_')===0){
+        var prevDay=parseInt(weekCells[c].replace('prev_',''));
+        var prevMo2=curMonth===0?11:curMonth-1;
+        var prevYr2=curMonth===0?curYear-1:curYear;
+        cell.className='cal-cell next-month';
+        var numSpan=document.createElement('span');
+        numSpan.className='day-num next-month-num';
+        numSpan.textContent=prevDay;
+        cell.appendChild(numSpan);
+        (function(yr,mo,dy){
+          cell.onclick=function(e){
+            if(e.target.classList.contains('add-btn')||e.target.classList.contains('ev-tab')) return;
+            curWeekStart=getWeekStart(new Date(yr,mo,dy));
+            document.querySelectorAll('.mw-opt').forEach(function(b){b.classList.remove('mw-active');});
+            document.querySelectorAll('[id^="vt-week"]').forEach(function(b){b.classList.add('mw-active');});
+            document.querySelectorAll('[id^="vt-month"]').forEach(function(b){b.classList.remove('mw-active');});
+            document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+            document.getElementById('page-week').classList.add('active');
+            miniCalYear=null; miniCalMonth=null;
+            renderWeek(); showTodo(true); showWeightTracker(true);
+          };
+        })(prevYr2,prevMo2,prevDay);
+      } else if(typeof weekCells[c]==='string'&&weekCells[c].indexOf('next_')===0){
+        var nextDay=parseInt(weekCells[c].replace('next_',''));
+        var nextMo=(curMonth+1)%12;
+        var nextYr=curMonth===11?curYear+1:curYear;
+        var nextDs=mkDateStr(nextYr,nextMo,nextDay);
+        cell.className='cal-cell next-month';
+        var numSpan=document.createElement('span');
+        numSpan.className='day-num next-month-num';
+        numSpan.textContent=nextDay;
+        cell.appendChild(numSpan);
+        // clicking navigates to that week
+        (function(yr,mo,dy){
+          cell.onclick=function(e){
+            if(e.target.classList.contains('add-btn')||e.target.classList.contains('ev-tab')) return;
+            curWeekStart=getWeekStart(new Date(yr,mo,dy));
+            document.querySelectorAll('.mw-opt').forEach(function(b){b.classList.remove('mw-active');});
+            document.querySelectorAll('[id^="vt-week"]').forEach(function(b){b.classList.add('mw-active');});
+            document.querySelectorAll('[id^="vt-month"]').forEach(function(b){b.classList.remove('mw-active');});
+            document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+            document.getElementById('page-week').classList.add('active');
+            miniCalYear=null; miniCalMonth=null;
+            renderWeek(); showTodo(true); showWeightTracker(true);
+          };
+        })(nextYr,nextMo,nextDay);
       } else {
         var d=weekCells[c], ds=weekDates[c];
         cell.className='cal-cell';
+        (function(dStr,yr,mo,dy){
+          cell.onclick=function(e){
+            if(e.target.classList.contains('add-btn')||e.target.classList.contains('ev-tab')||e.target.classList.contains('ev-multiday')) return;
+            curWeekStart=getWeekStart(new Date(yr,mo,dy));
+            // Switch to week view without switchView recalculating curWeekStart
+            var isWeek=true;
+            document.querySelectorAll('.mw-opt').forEach(function(b){b.classList.remove('mw-active');});
+            document.querySelectorAll('[id^="vt-week"]').forEach(function(b){b.classList.add('mw-active');});
+            document.querySelectorAll('[id^="vt-month"]').forEach(function(b){b.classList.remove('mw-active');});
+            document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+            document.getElementById('page-week').classList.add('active');
+            miniCalYear=null; miniCalMonth=null;
+            renderWeek();
+            showTodo(true);
+            showWeightTracker(true);
+          };
+        })(ds,curYear,curMonth,d);
         var cellDate=new Date(curYear,curMonth,d);
         var todayDate=new Date(today.getFullYear(),today.getMonth(),today.getDate());
         if(ds===todayStr) cell.classList.add('today');
@@ -1738,7 +1819,8 @@ function renderMiniCal(){
   var daysIn   = new Date(mcYear,mcMonth+1,0).getDate();
   var cells=[]; for(var i=0;i<firstDow;i++) cells.push(null);
   for(var d=1;d<=daysIn;d++) cells.push(d);
-  while(cells.length%7!==0) cells.push(null);
+  var nextMonthDay=1;
+  while(cells.length%7!==0){ cells.push('next_'+nextMonthDay); nextMonthDay++; }
 
   // Determine which dates are in the current week
   var ws=new Date(curWeekStart); ws.setHours(0,0,0,0);
@@ -1827,10 +1909,11 @@ function switchView(view, btn){
     // If curMonth+curYear == today → show current week, else show first week of curMonth
     if(curYear===todayYear && curMonth===todayMonth){
       curWeekStart=getWeekStart(now);
+      miniCalYear=null; miniCalMonth=null;
     } else {
       curWeekStart=getWeekStart(new Date(curYear,curMonth,1));
+      miniCalYear=curYear; miniCalMonth=curMonth;
     }
-    miniCalYear=null; miniCalMonth=null;
     renderWeek();
     showTodo(true);
   }
