@@ -516,6 +516,31 @@ h2.unav-title{margin:0;min-width:unset}
 
 
 
+
+/* SEARCH PAGE */
+.tab-search{background:#e8f4e8;color:#4a8c4a;font-size:1rem;padding:4px 10px;border-radius:8px;}
+.search-section{padding:16px 0;}
+.search-bar-wrap{margin-bottom:16px;}
+.search-input{
+  width:100%;box-sizing:border-box;
+  border:1.5px solid #d5ceeb;border-radius:20px;
+  padding:8px 16px;font-size:.9rem;color:#1a3a6b;
+  background:#f5f0e8;outline:none;
+  transition:border .15s;
+}
+.search-input:focus{border-color:#87dbfd;}
+.search-results{display:flex;flex-direction:column;gap:10px;}
+.search-result-item{
+  background:#fff;border:1.5px solid #d5ceeb;border-radius:10px;
+  padding:10px 14px;cursor:pointer;transition:box-shadow .15s;
+}
+.search-result-item:hover{box-shadow:0 2px 8px #d5ceeb;}
+.sr-type{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#86b1df;margin-bottom:3px;}
+.sr-title{font-size:.85rem;font-weight:700;color:#1a3a6b;margin-bottom:2px;}
+.sr-date{font-size:.7rem;color:#86b1df;}
+.sr-highlight{background:#fff3a3;border-radius:2px;padding:0 1px;}
+.search-empty{color:#86b1df;font-size:.8rem;text-align:center;padding:20px 0;}
+
 </style>
 </head>
 <body>
@@ -539,6 +564,7 @@ h2.unav-title{margin:0;min-width:unset}
     <button class="tab-btn tab-month" id="tab-dec" onclick="goMonth(11,this)">DEC</button>
     <span class="tab-divider"></span>
     <button class="tab-btn tab-archive" id="tab-archive" onclick="showPage('archive',this)">🗂</button>
+    <button class="tab-btn tab-search" id="tab-search" onclick="showPage('search',this)">🔎</button>
   </div>
 </div>
 
@@ -603,6 +629,16 @@ h2.unav-title{margin:0;min-width:unset}
   <div class="week-notes-section">
     <div class="week-notes-label">📝 NOTE</div>
     <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
+  </div>
+</div>
+
+<!-- SEARCH PAGE -->
+<div id="page-search" class="page">
+  <div class="search-section">
+    <div class="search-bar-wrap">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search events, notes..." oninput="runSearch()"/>
+    </div>
+    <div id="searchResults" class="search-results"></div>
   </div>
 </div>
 
@@ -714,6 +750,7 @@ function showPage(name,btn){
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
   if(name==='archive'){ renderArchive(); showTodo(false); }
+  else if(name==='search'){ showTodo(false); document.getElementById('searchInput').focus(); runSearch(); }
   else showTodo(true);
 }
 
@@ -2022,6 +2059,65 @@ function calcWeight(){
     delta.innerHTML='<span class="wdelta-up">▲ +'+diff+' lbs</span>';
   else
     delta.innerHTML='<span class="wdelta-down">▼ '+diff+' lbs</span>';
+}
+
+
+function highlight(text, query){
+  if(!query) return text;
+  var re=new RegExp('('+query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return text.replace(re,'<span class="sr-highlight">$1</span>');
+}
+
+function runSearch(){
+  var q=document.getElementById('searchInput').value.trim();
+  var res=document.getElementById('searchResults');
+  res.innerHTML='';
+  if(!q){ res.innerHTML='<div class="search-empty">Type to search events and notes.</div>'; return; }
+  var ql=q.toLowerCase();
+  var found=[];
+
+  // Search calendar events
+  for(var i=0;i<events.length;i++){
+    var ev=events[i];
+    if(ev.name.toLowerCase().indexOf(ql)!==-1){
+      found.push({type:'Event',title:ev.name,date:ev.startDate+(ev.endDate&&ev.endDate!==ev.startDate?' → '+ev.endDate:''),color:ev.color,id:ev.id,kind:'event'});
+    }
+  }
+
+  // Search weekly events
+  for(var i=0;i<weeklyEvents.length;i++){
+    var wev=weeklyEvents[i];
+    if(wev.name.toLowerCase().indexOf(ql)!==-1){
+      found.push({type:'Weekly Event',title:wev.name,date:wev.date,color:wev.color,id:wev.id,kind:'wevent'});
+    }
+  }
+
+  // Search week notes
+  var noteData=loadData('lp_week_notes',{});
+  for(var k in noteData){
+    if(noteData[k]&&noteData[k].toLowerCase().indexOf(ql)!==-1){
+      found.push({type:'Note',title:noteData[k].substring(0,80)+(noteData[k].length>80?'…':''),date:'Week of '+k,color:'#86b1df',id:k,kind:'note'});
+    }
+  }
+
+  if(!found.length){
+    res.innerHTML='<div class="search-empty">No results for "'+q+'"</div>';
+    return;
+  }
+
+  for(var i=0;i<found.length;i++){
+    (function(item){
+      var div=document.createElement('div'); div.className='search-result-item';
+      var dot=item.color?'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+item.color+';margin-right:5px;vertical-align:middle;"></span>':'';
+      div.innerHTML='<div class="sr-type">'+item.type+'</div>'
+        +'<div class="sr-title">'+dot+highlight(item.title,q)+'</div>'
+        +'<div class="sr-date">'+item.date+'</div>';
+      if(item.kind==='event'){
+        div.onclick=function(){ openDetail(item.id); };
+      }
+      res.appendChild(div);
+    })(found[i]);
+  }
 }
 
 /* ---- INIT ---- */
