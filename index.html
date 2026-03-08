@@ -255,7 +255,7 @@ h2.unav-title{margin:0;min-width:unset}
 
 
 /* WEEKLY NOTES */
-.week-notes-section{margin-top:16px;border-top:2px dashed #d5ceeb;padding-top:12px;position:relative}
+.week-notes-section{position:relative;}
 .week-notes-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px}
 .week-notes-section{position:relative}
 .week-notes-textarea{
@@ -541,6 +541,54 @@ h2.unav-title{margin:0;min-width:unset}
 .sr-highlight{background:#fff3a3;border-radius:2px;padding:0 1px;}
 .search-empty{color:#86b1df;font-size:.8rem;text-align:center;padding:20px 0;}
 
+
+.search-row{display:flex;gap:8px;align-items:center;}
+.search-input{flex:1;}
+.search-filter{
+  flex-shrink:0;
+  border:1.5px solid #d5ceeb;border-radius:20px;
+  padding:7px 12px;font-size:.8rem;color:#1a3a6b;
+  background:#f5f0e8;outline:none;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2386b1df'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  padding-right:26px;
+  transition:border .15s;
+}
+.search-filter:focus{border-color:#87dbfd;}
+
+
+/* BUDGET SECTION */
+.week-bottom-row{display:flex;gap:16px;margin-top:16px;border-top:2px dashed #d5ceeb;padding-top:12px;align-items:flex-start;}
+.week-notes-section{flex:1;min-width:0;}
+.week-notes-section .week-notes-label,.week-budget-section .week-notes-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px;}
+.week-budget-section{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
+.budget-add-row{display:flex;gap:6px;align-items:center;}
+.budget-name-input{flex:1;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.75rem;color:#1a3a6b;background:#f5f0e8;outline:none;}
+.budget-amt-input{width:72px;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.75rem;color:#1a3a6b;background:#f5f0e8;outline:none;text-align:right;}
+.budget-add-btn{background:#87dbfd;color:#fff;border:none;border-radius:8px;width:28px;height:28px;font-size:1rem;font-weight:800;cursor:pointer;flex-shrink:0;line-height:1;}
+.budget-add-btn:hover{background:#4aabf7;}
+.budget-lists-row{display:flex;gap:8px;}
+.budget-col{flex:1;min-width:0;}
+.budget-col-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
+.budget-pos-col .budget-col-label{color:#3db86b;}
+.budget-neg-col .budget-col-label{color:#e05555;}
+.budget-list{max-height:96px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+.budget-entry{display:flex;align-items:center;justify-content:space-between;font-size:.72rem;padding:2px 4px;border-radius:5px;gap:4px;}
+.budget-entry:hover{background:#f0f4ff;}
+.budget-entry:hover .budget-entry-del{opacity:1;}
+.budget-entry-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#1a3a6b;}
+.budget-entry-amt{font-weight:700;flex-shrink:0;}
+.budget-pos-col .budget-entry-amt{color:#3db86b;}
+.budget-neg-col .budget-entry-amt{color:#e05555;}
+.budget-entry-del{background:none;border:none;cursor:pointer;font-size:.65rem;opacity:0;transition:opacity .15s;padding:0 2px;flex-shrink:0;}
+.budget-totals-row{display:flex;align-items:center;gap:8px;padding-top:6px;border-top:1px solid #d5ceeb;}
+.budget-total{font-size:.8rem;font-weight:800;}
+.budget-total-pos{color:#3db86b;}
+.budget-total-neg{color:#e05555;}
+.budget-net{}
+.budget-total-sep{color:#d5ceeb;font-size:.8rem;}
+
 </style>
 </head>
 <body>
@@ -625,10 +673,40 @@ h2.unav-title{margin:0;min-width:unset}
     <div class="week-grid" id="weekGrid"></div>
     <div class="habit-section" id="habitSection"><div class="habit-grid" id="habitGrid"></div></div>
   </div>
-  <!-- WEEKLY NOTES -->
-  <div class="week-notes-section">
-    <div class="week-notes-label">📝 NOTE</div>
-    <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
+  <!-- WEEKLY NOTES + BUDGET -->
+  <div class="week-bottom-row">
+    <div class="week-notes-section">
+      <div class="week-notes-label">📝 NOTE</div>
+      <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
+    </div>
+    <div class="week-budget-section">
+      <div class="week-notes-label">💰 BUDGET</div>
+      <!-- Row 1: Add entry -->
+      <div class="budget-add-row">
+        <input type="text" id="budgetItemName" class="budget-name-input" placeholder="Item description..."/>
+        <input type="number" id="budgetItemAmt" class="budget-amt-input" placeholder="±$" step="0.01"/>
+        <button class="budget-add-btn" onclick="addBudgetEntry()">+</button>
+      </div>
+      <!-- Row 2: Positive / Negative lists -->
+      <div class="budget-lists-row">
+        <div class="budget-col budget-pos-col">
+          <div class="budget-col-label">Income</div>
+          <div class="budget-list" id="budgetPosList"></div>
+        </div>
+        <div class="budget-col budget-neg-col">
+          <div class="budget-col-label">Expenses</div>
+          <div class="budget-list" id="budgetNegList"></div>
+        </div>
+      </div>
+      <!-- Row 3: Totals -->
+      <div class="budget-totals-row">
+        <span id="budgetPosTotal" class="budget-total budget-total-pos">+$0.00</span>
+        <span class="budget-total-sep">/</span>
+        <span id="budgetNegTotal" class="budget-total budget-total-neg">-$0.00</span>
+        <span class="budget-total-sep">|</span>
+        <span id="budgetNet" class="budget-total budget-net">$0.00</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -636,7 +714,14 @@ h2.unav-title{margin:0;min-width:unset}
 <div id="page-search" class="page">
   <div class="search-section">
     <div class="search-bar-wrap">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search events, notes..." oninput="runSearch()"/>
+      <div class="search-row">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search events, notes..." oninput="runSearch()"/>
+        <select id="searchFilter" class="search-filter" onchange="runSearch()">
+          <option value="all">All</option>
+          <option value="event">Events</option>
+          <option value="note">Notes</option>
+        </select>
+      </div>
     </div>
     <div id="searchResults" class="search-results"></div>
   </div>
@@ -1724,6 +1809,7 @@ function renderWeek(){
   loadWeekNotes();
   showWeightTracker(true);
   renderWeightTracker();
+  renderBudget();
 }
 
 
@@ -2070,6 +2156,7 @@ function highlight(text, query){
 
 function runSearch(){
   var q=document.getElementById('searchInput').value.trim();
+  var filter=document.getElementById('searchFilter').value;
   var res=document.getElementById('searchResults');
   res.innerHTML='';
   if(!q){ res.innerHTML='<div class="search-empty">Type to search events and notes.</div>'; return; }
@@ -2077,26 +2164,29 @@ function runSearch(){
   var found=[];
 
   // Search calendar events
-  for(var i=0;i<events.length;i++){
-    var ev=events[i];
-    if(ev.name.toLowerCase().indexOf(ql)!==-1){
-      found.push({type:'Event',title:ev.name,date:ev.startDate+(ev.endDate&&ev.endDate!==ev.startDate?' → '+ev.endDate:''),color:ev.color,id:ev.id,kind:'event'});
+  if(filter==='all'||filter==='event'){
+    for(var i=0;i<events.length;i++){
+      var ev=events[i];
+      if(ev.name.toLowerCase().indexOf(ql)!==-1){
+        found.push({type:'Event',title:ev.name,date:ev.startDate+(ev.endDate&&ev.endDate!==ev.startDate?' → '+ev.endDate:''),color:ev.color,id:ev.id,kind:'event'});
+      }
     }
-  }
-
-  // Search weekly events
-  for(var i=0;i<weeklyEvents.length;i++){
-    var wev=weeklyEvents[i];
-    if(wev.name.toLowerCase().indexOf(ql)!==-1){
-      found.push({type:'Weekly Event',title:wev.name,date:wev.date,color:wev.color,id:wev.id,kind:'wevent'});
+    // Search weekly events
+    for(var i=0;i<weeklyEvents.length;i++){
+      var wev=weeklyEvents[i];
+      if(wev.name.toLowerCase().indexOf(ql)!==-1){
+        found.push({type:'Weekly Event',title:wev.name,date:wev.date,color:wev.color,id:wev.id,kind:'wevent'});
+      }
     }
   }
 
   // Search week notes
-  var noteData=loadData('lp_week_notes',{});
-  for(var k in noteData){
-    if(noteData[k]&&noteData[k].toLowerCase().indexOf(ql)!==-1){
-      found.push({type:'Note',title:noteData[k].substring(0,80)+(noteData[k].length>80?'…':''),date:'Week of '+k,color:'#86b1df',id:k,kind:'note'});
+  if(filter==='all'||filter==='note'){
+    var noteData=loadData('lp_week_notes',{});
+    for(var k in noteData){
+      if(noteData[k]&&noteData[k].toLowerCase().indexOf(ql)!==-1){
+        found.push({type:'Note',title:noteData[k].substring(0,80)+(noteData[k].length>80?'…':''),date:'Week of '+k,color:'#86b1df',id:k,kind:'note'});
+      }
     }
   }
 
@@ -2118,6 +2208,72 @@ function runSearch(){
       res.appendChild(div);
     })(found[i]);
   }
+}
+
+
+/* ---- BUDGET ---- */
+var budgetEntries = loadData('lp_budget', []);
+
+function saveBudget(){
+  localStorage.setItem('lp_budget', JSON.stringify(budgetEntries));
+}
+
+function addBudgetEntry(){
+  var name = document.getElementById('budgetItemName').value.trim();
+  var amt  = parseFloat(document.getElementById('budgetItemAmt').value);
+  if(!name || isNaN(amt)) return;
+  budgetEntries.unshift({id:'bgt_'+Date.now(), name:name, amt:amt});
+  saveBudget();
+  document.getElementById('budgetItemName').value='';
+  document.getElementById('budgetItemAmt').value='';
+  renderBudget();
+}
+
+function renderBudget(){
+  var posList = document.getElementById('budgetPosList');
+  var negList = document.getElementById('budgetNegList');
+  if(!posList||!negList) return;
+  posList.innerHTML=''; negList.innerHTML='';
+
+  var posTotal=0, negTotal=0;
+  var posEntries=budgetEntries.filter(function(e){return e.amt>=0;});
+  var negEntries=budgetEntries.filter(function(e){return e.amt<0;});
+
+  posEntries.forEach(function(e){
+    posTotal+=e.amt;
+    var row=document.createElement('div'); row.className='budget-entry';
+    row.innerHTML='<span class="budget-entry-name" title="'+e.name+'">'+e.name+'</span>'
+      +'<span class="budget-entry-amt">+$'+e.amt.toFixed(2)+'</span>'
+      +'<button class="budget-entry-del" title="Remove" onclick="removeBudgetEntry(\''+e.id+'\')">✕</button>';
+    posList.appendChild(row);
+  });
+
+  negEntries.forEach(function(e){
+    negTotal+=e.amt;
+    var row=document.createElement('div'); row.className='budget-entry';
+    row.innerHTML='<span class="budget-entry-name" title="'+e.name+'">'+e.name+'</span>'
+      +'<span class="budget-entry-amt">-$'+Math.abs(e.amt).toFixed(2)+'</span>'
+      +'<button class="budget-entry-del" title="Remove" onclick="removeBudgetEntry(\''+e.id+'\')">✕</button>';
+    negList.appendChild(row);
+  });
+
+  document.getElementById('budgetPosTotal').textContent='+$'+posTotal.toFixed(2);
+  document.getElementById('budgetNegTotal').textContent='-$'+Math.abs(negTotal).toFixed(2);
+
+  var net = posTotal + negTotal;
+  var netEl = document.getElementById('budgetNet');
+  netEl.textContent=(net>=0?'+':'')+('$'+Math.abs(net).toFixed(2));
+  netEl.style.color = net>0?'#3db86b':net<0?'#e05555':'#86b1df';
+
+  // Allow Enter key on amount input
+  document.getElementById('budgetItemAmt').onkeydown=function(e){if(e.key==='Enter') addBudgetEntry();};
+  document.getElementById('budgetItemName').onkeydown=function(e){if(e.key==='Enter') document.getElementById('budgetItemAmt').focus();};
+}
+
+function removeBudgetEntry(id){
+  budgetEntries=budgetEntries.filter(function(e){return e.id!==id;});
+  saveBudget();
+  renderBudget();
 }
 
 /* ---- INIT ---- */
