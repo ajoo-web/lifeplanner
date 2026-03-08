@@ -310,6 +310,20 @@ h2.unav-title{margin:0;min-width:unset}
   .wday-num{font-size:1.1rem}
 }
 
+
+/* Week multi-day banner */
+.week-multiday-row{grid-column:1/-1;position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-height:28px;border-bottom:1.5px solid #d5ceeb;background:#f5f9ff;}
+.week-md-slot{min-height:28px;}
+.wk-multiday-bar{position:absolute;top:4px;height:20px;border-radius:0;color:#fff;font-size:.68rem;font-weight:700;padding:0 6px;display:flex;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:opacity .15s;}
+.wk-multiday-bar:hover{opacity:.85;}
+.wk-multiday-bar.wk-md-start{border-radius:10px 0 0 10px;}
+.wk-multiday-bar.wk-md-end{border-radius:0 10px 10px 0;}
+.wk-multiday-bar.wk-md-start.wk-md-end{border-radius:10px;}
+/* Inline add input */
+.wday-add-area{padding:0 4px 4px;}
+.wday-inline-input{width:100%;box-sizing:border-box;border:1.5px solid #4aabf7;border-radius:6px;padding:3px 6px;font-size:.75rem;outline:none;background:#f5f9ff;color:#1a3a6b;margin-top:3px;}
+.wday-inline-input::placeholder{color:#b0c8e8;}
+
 </style>
 </head>
 <body>
@@ -904,8 +918,10 @@ function openDetail(id){
   for(var i=0;i<events.length;i++){if(events[i].id===id){ev=events[i];break;}}
   if(!ev)return;
   document.getElementById('dTitle').textContent=ev.name;
-  document.getElementById('dDate').textContent='&#128197; '+ev.startDate+(ev.endDate&&ev.endDate!==ev.startDate?' \u2192 '+ev.endDate:'');
-  document.getElementById('dTime').textContent=ev.startTime?('\uD83D\uDD50 '+ev.startTime+(ev.endTime?' \u2013 '+ev.endTime:'')):'';
+  var dateStr='📅 '+ev.startDate+(ev.endDate&&ev.endDate!==ev.startDate?' → '+ev.endDate:'');
+  document.getElementById('dDate').textContent=dateStr;
+  document.getElementById('dTime').textContent=ev.startTime?('🕐 '+ev.startTime+(ev.endTime?' – '+ev.endTime:'')):
+'';
   openOverlay('detailModal');
 }
 
@@ -929,7 +945,7 @@ function deleteEvent(){
   var newEvs=[];
   for(var i=0;i<events.length;i++){if(events[i].id!==detailId)newEvs.push(events[i]);}
   events=newEvs;
-  save();renderCalendar();closeOverlay('detailModal');
+  save();renderCalendar();if(document.getElementById('weekPage')&&document.getElementById('weekPage').style.display!=='none')renderWeek();closeOverlay('detailModal');
 }
 
 function saveEvent(){
@@ -949,7 +965,7 @@ function saveEvent(){
   } else {
     events.push(ev);
   }
-  save();renderCalendar();closeOverlay('evModal');
+  save();renderCalendar();if(document.getElementById('weekPage')&&document.getElementById('weekPage').style.display!=='none')renderWeek();closeOverlay('evModal');
 }
 
 function openOverlay(id){document.getElementById(id).classList.add('open');}
@@ -1308,7 +1324,8 @@ function openWeekEventDetail(id){
   for(var i=0;i<weeklyEvents.length;i++){if(weeklyEvents[i].id===id){wev=weeklyEvents[i];break;}}
   if(!wev)return;
   document.getElementById('wevDName').textContent=wev.name;
-  document.getElementById('wevDDate').textContent='📅 '+wev.date+(wev.time?' 🕐 '+wev.time:'');
+  document.getElementById('wevDDate').textContent='📅 '+wev.date;
+  document.getElementById('wevDTime').textContent=wev.time?('🕐 '+wev.time):'';
   openOverlay('wevDetailModal');
 }
 
@@ -1320,6 +1337,19 @@ function saveWeekEvent(){
   if(editingWeekId){for(var i=0;i<weeklyEvents.length;i++){if(weeklyEvents[i].id===editingWeekId){weeklyEvents[i]=wev;break;}}}
   else weeklyEvents.push(wev);
   saveWeek();renderWeek();closeOverlay('wevModal');
+}
+
+function openWeekEditFromDetail(){
+  var wev=null;
+  for(var i=0;i<weeklyEvents.length;i++){if(weeklyEvents[i].id===detailWeekId){wev=weeklyEvents[i];break;}}
+  if(!wev)return;
+  closeOverlay('wevDetailModal');
+  editingWeekId=detailWeekId;
+  document.getElementById('wevName').value=wev.name;
+  document.getElementById('wevDate').value=wev.date;
+  document.getElementById('wevTime').value=wev.time||'';
+  buildWeekSwatches(wev.color||COLORS[2]);
+  openOverlay('wevModal');
 }
 
 function deleteWeekEvent(){
@@ -1598,8 +1628,10 @@ renderTodo();
   <div class="modal">
     <h3 id="wevDName"></h3>
     <p id="wevDDate" style="margin-top:10px;font-size:.9rem"></p>
+    <p id="wevDTime" style="margin-top:6px;font-size:.9rem"></p>
     <div class="modal-btns">
       <button class="btn-del" onclick="deleteWeekEvent()">Delete</button>
+      <button class="btn-cancel" onclick="openWeekEditFromDetail()">Edit</button>
       <button class="btn-cancel" onclick="closeOverlay('wevDetailModal')">Close</button>
     </div>
   </div>
