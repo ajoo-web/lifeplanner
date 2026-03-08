@@ -389,6 +389,7 @@ h2.unav-title{margin:0;min-width:unset}
   background:#f5f0e8;
   border-right:1.5px solid #d5ceeb;
   border-bottom:1.5px solid #d5ceeb;
+  min-height:80px;
 }
 .wday-head-cell .wday-head{border-bottom:none;}
 .wk-overlay-row{
@@ -407,16 +408,14 @@ h2.unav-title{margin:0;min-width:unset}
 /* Row 3: single-day events - flush, no side margins */
 .wday-row3-cell{
   border-right:1.5px solid #d5ceeb;
-  border-bottom:1.5px solid #d5ceeb;
   background:#fff;
-  padding:4px 0 4px 0;
+  padding:4px 0;
   display:flex;
   flex-direction:column;
   align-items:stretch;
-  justify-content:flex-start;
-  align-self:start;
-  min-height:30px;
+  min-height:60px;
 }
+.wday-row3-cell:last-child{border-right:none;}
 .wday-ev-flush{
   border-radius:0 !important;
   margin:0 0 2px 0 !important;
@@ -427,13 +426,13 @@ h2.unav-title{margin:0;min-width:unset}
 /* Row 4: weekly events */
 .wday-row4-cell{
   border-right:1.5px solid #d5ceeb;
-  border-bottom:1.5px dashed #d5ceeb;
   background:#fff;
   padding:4px 0 2px 0;
   display:flex;
   flex-direction:column;
-  min-height:32px;
+  min-height:56px;
 }
+.wday-row4-cell:last-child{border-right:none;}
 .wday-wev-list{display:flex;flex-direction:column;gap:1px;}
 .wday-wev-row{
   display:flex;
@@ -447,9 +446,8 @@ h2.unav-title{margin:0;min-width:unset}
   font-size:.72rem;
   font-weight:700;
   color:#1a3a6b;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  white-space:normal;
+  word-break:break-word;
   flex:1;
 }
 .wday-wev-trash{
@@ -481,10 +479,14 @@ h2.unav-title{margin:0;min-width:unset}
 /* Row 5: habits */
 .wday-row5-cell{
   border-right:1.5px solid #d5ceeb;
-  border-bottom:1.5px solid #d5ceeb;
   background:#fff;
-  padding:2px 0;
+  padding:4px 0;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
+.wday-row5-cell:last-child{border-right:none;}
 
 
 /* Sub-row wrappers for rows 3-5: internal sub-grids for top-alignment */
@@ -493,17 +495,11 @@ h2.unav-title{margin:0;min-width:unset}
   grid-template-columns:repeat(7,minmax(0,1fr));
   align-items:start;
 }
-.wk-row3{ border-bottom:1.5px solid #d5ceeb; background:#fff; }
-.wk-row4{ border-bottom:1.5px dashed #d5ceeb; background:#fff; }
-.wk-row5{ background:#fff; }
+.wk-row3{ border-bottom:1.5px solid #d5ceeb; }
+.wk-row4{ border-bottom:1.5px dashed #d5ceeb; }
+.wk-row5{ border-bottom:1.5px solid #d5ceeb; }
 
-/* Remove border-bottom from individual cells inside sub-rows (row handles it) */
-.wday-row3-cell{ border-bottom:none; border-right:1.5px solid #d5ceeb; background:#fff; padding:4px 0; display:flex; flex-direction:column; align-items:stretch; }
-.wday-row3-cell:last-child{ border-right:none; }
-.wday-row4-cell{ border-bottom:none; border-right:1.5px solid #d5ceeb; background:#fff; padding:4px 0 2px 0; display:flex; flex-direction:column; }
-.wday-row4-cell:last-child{ border-right:none; }
-.wday-row5-cell{ border-right:1.5px solid #d5ceeb; background:#fff; padding:2px 0; }
-.wday-row5-cell:last-child{ border-right:none; }
+/* row cell borders handled above */
 
 </style>
 </head>
