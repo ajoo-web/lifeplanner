@@ -486,6 +486,25 @@ h2.unav-title{margin:0;min-width:unset}
   padding:2px 0;
 }
 
+
+/* Sub-row wrappers for rows 3-5: internal sub-grids for top-alignment */
+.wk-sub-row{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  align-items:start;
+}
+.wk-row3{ border-bottom:1.5px solid #d5ceeb; background:#fff; }
+.wk-row4{ border-bottom:1.5px dashed #d5ceeb; background:#fff; }
+.wk-row5{ background:#fff; }
+
+/* Remove border-bottom from individual cells inside sub-rows (row handles it) */
+.wday-row3-cell{ border-bottom:none; border-right:1.5px solid #d5ceeb; background:#fff; padding:4px 0; display:flex; flex-direction:column; align-items:stretch; }
+.wday-row3-cell:last-child{ border-right:none; }
+.wday-row4-cell{ border-bottom:none; border-right:1.5px solid #d5ceeb; background:#fff; padding:4px 0 2px 0; display:flex; flex-direction:column; }
+.wday-row4-cell:last-child{ border-right:none; }
+.wday-row5-cell{ border-right:1.5px solid #d5ceeb; background:#fff; padding:2px 0; }
+.wday-row5-cell:last-child{ border-right:none; }
+
 </style>
 </head>
 <body>
@@ -1372,7 +1391,7 @@ function renderWeek(){
     }
   }
 
-  // ROW 1: Header cells
+  // ROW 1: Header cells (7 individual cells)
   for(var c=0;c<7;c++){
     (function(col){
       var d=new Date(curWeekStart); d.setDate(d.getDate()+col);
@@ -1410,7 +1429,7 @@ function renderWeek(){
     })(c);
   }
 
-  // ROW 2: Multi-day overlay
+  // ROW 2: Multi-day overlay (single spanning row)
   if(numLanes>0){
     var overlayRow=document.createElement('div');
     overlayRow.className='wk-overlay-row';
@@ -1421,8 +1440,7 @@ function renderWeek(){
     }
     for(var mi=0;mi<multiEvs.length;mi++){
       (function(ev,lane){
-        var evEnd=ev.endDate||ev.startDate;
-        var startCol=-1,endCol=-1;
+        var evEnd=ev.endDate||ev.startDate, startCol=-1, endCol=-1;
         for(var c=0;c<7;c++){
           if(weekDates[c]>=ev.startDate&&weekDates[c]<=evEnd){if(startCol===-1)startCol=c;endCol=c;}
         }
@@ -1433,8 +1451,7 @@ function renderWeek(){
         bar.style.background=ev.color||COLORS[0];
         var showName=isStart||(startCol===0&&!isStart);
         bar.textContent=showName?((ev.startTime?ev.startTime+' ':'')+ev.name):'';
-        bar.style.left=(startCol/7*100)+'%';
-        bar.style.width=((endCol-startCol+1)/7*100)+'%';
+        bar.style.left=(startCol/7*100)+'%'; bar.style.width=((endCol-startCol+1)/7*100)+'%';
         bar.style.top=(lane*(BAR_H+BAR_GAP)+2)+'px';
         bar.style.position='absolute'; bar.style.boxSizing='border-box';
         bar.style.paddingLeft='8px'; bar.style.paddingRight='4px';
@@ -1445,13 +1462,14 @@ function renderWeek(){
     grid.appendChild(overlayRow);
   }
 
-  // ROW 3: Single-day calendar events (flush, no side margins)
+  // ROW 3: Single-day events — single spanning row with internal sub-grid
+  var row3=document.createElement('div');
+  row3.className='wk-sub-row wk-row3';
+  row3.style.gridColumn='1 / 8';
   for(var c=0;c<7;c++){
     (function(col){
       var ds=weekDates[col];
-      var isToday=(new Date(curWeekStart).setDate(new Date(curWeekStart).getDate()+col))===today.getTime();
-      var cell=document.createElement('div');
-      cell.className='wday-row3-cell'+(isToday?' wday-today':'');
+      var cell=document.createElement('div'); cell.className='wday-row3-cell';
       // Spacers for multi-day lanes
       for(var li=0;li<spacerCount[col];li++){
         var sp=document.createElement('div'); sp.className='multi-spacer'; cell.appendChild(sp);
@@ -1459,8 +1477,7 @@ function renderWeek(){
       if(spacerCount[col]>0){var gsp=document.createElement('div');gsp.className='multi-gap';cell.appendChild(gsp);}
       var dayEvs=(singleMap[ds]||[]).slice().sort(function(a,b){
         if(!a.startTime&&!b.startTime) return 0;
-        if(!a.startTime) return -1;
-        if(!b.startTime) return 1;
+        if(!a.startTime) return -1; if(!b.startTime) return 1;
         return a.startTime<b.startTime?-1:a.startTime>b.startTime?1:0;
       });
       for(var ei=0;ei<dayEvs.length;ei++){
@@ -1472,19 +1489,21 @@ function renderWeek(){
           cell.appendChild(tab);
         })(dayEvs[ei]);
       }
-      grid.appendChild(cell);
+      row3.appendChild(cell);
     })(c);
   }
+  grid.appendChild(row3);
 
-  // ROW 4: Weekly events
+  // ROW 4: Weekly events — single spanning row with internal sub-grid
+  var row4=document.createElement('div');
+  row4.className='wk-sub-row wk-row4';
+  row4.style.gridColumn='1 / 8';
   for(var c=0;c<7;c++){
     (function(col){
       var ds=weekDates[col];
       var cell=document.createElement('div'); cell.className='wday-row4-cell';
-
       var wEvList=document.createElement('div'); wEvList.className='wday-wev-list';
       wEvList.id='wev-wrap-'+ds;
-
       function renderWevList(){
         wEvList.innerHTML='';
         var myEvs=weeklyEvents.filter(function(e){return e.date===ds;});
@@ -1493,15 +1512,15 @@ function renderWeek(){
             var row=document.createElement('div'); row.className='wday-wev-row';
             var lbl=document.createElement('span'); lbl.className='wday-wev-lbl';
             lbl.textContent=(wevRef.time?wevRef.time+' ':'')+wevRef.name;
-            var trash=document.createElement('button'); trash.className='wday-wev-trash'; trash.textContent='\uD83D\uDDD1';
+            var trash=document.createElement('button'); trash.className='wday-wev-trash'; trash.innerHTML='&#128465;';
             trash.title='Delete';
-            trash.onclick=(function(id){
+            trash.onclick=(function(id,fn){
               return function(e){
                 e.stopPropagation();
                 weeklyEvents=weeklyEvents.filter(function(x){return x.id!==id;});
-                saveWeek(); renderWevList();
+                saveWeek(); fn();
               };
-            })(wevRef.id);
+            })(wevRef.id, renderWevList);
             row.appendChild(lbl); row.appendChild(trash);
             wEvList.appendChild(row);
           })(myEvs[wi]);
@@ -1509,12 +1528,9 @@ function renderWeek(){
       }
       renderWevList();
       cell.appendChild(wEvList);
-
-      // Add area: input appears ABOVE +add button
       var addArea=document.createElement('div'); addArea.className='wday-add-area';
-      var addBtn=document.createElement('button'); addBtn.className='wday-add';
-      addBtn.textContent='+ add';
-      addBtn.onclick=(function(dStr, areaEl, renderFn){
+      var addBtn=document.createElement('button'); addBtn.className='wday-add'; addBtn.textContent='+ add';
+      addBtn.onclick=(function(dStr,areaEl,renderFn){
         return function(){
           if(areaEl.querySelector('.wday-inline-input')) return;
           var inp=document.createElement('input'); inp.type='text'; inp.className='wday-inline-input';
@@ -1528,21 +1544,23 @@ function renderWeek(){
                 weeklyEvents.push(wev); saveWeek(); renderFn();
               }
               areaEl.removeChild(inp);
-            } else if(e.key==='Escape'){ areaEl.removeChild(inp); }
+            } else if(e.key==='Escape'){areaEl.removeChild(inp);}
           };
           inp.onblur=function(){setTimeout(function(){if(inp.parentElement)areaEl.removeChild(inp);},150);};
-          // Insert BEFORE the add button
-          areaEl.insertBefore(inp, addBtn);
-          inp.focus();
+          areaEl.insertBefore(inp,addBtn); inp.focus();
         };
-      })(ds, addArea, renderWevList);
+      })(ds,addArea,renderWevList);
       addArea.appendChild(addBtn);
       cell.appendChild(addArea);
-      grid.appendChild(cell);
+      row4.appendChild(cell);
     })(c);
   }
+  grid.appendChild(row4);
 
-  // ROW 5: Habit icons
+  // ROW 5: Habits — single spanning row with internal sub-grid
+  var row5=document.createElement('div');
+  row5.className='wk-sub-row wk-row5';
+  row5.style.gridColumn='1 / 8';
   for(var c=0;c<7;c++){
     (function(col){
       var ds=weekDates[col];
@@ -1561,9 +1579,10 @@ function renderWeek(){
         })(hi);
       }
       cell.appendChild(hRow);
-      grid.appendChild(cell);
+      row5.appendChild(cell);
     })(c);
   }
+  grid.appendChild(row5);
 
   loadWeekNotes();
   showWeightTracker(true);
