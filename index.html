@@ -135,7 +135,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 
 .week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #d5ceeb;border-top:1.5px solid #d5ceeb;margin-bottom:0}
-.wday-col{border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:220px;display:flex;flex-direction:column;background:#fff;overflow:hidden;min-width:0}
+.wday-col{border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:220px;display:flex;flex-direction:column;background:#fff;min-width:0;overflow:visible}
 .wday-col.wday-today{background:#e0f2f6}
 .wday-head{padding:6px 7px 4px;border-bottom:1.5px solid #d5ceeb;background:#f5f0e8}
 .wday-dow{font-size:.65rem;font-weight:800;color:#86b1df;text-transform:uppercase;letter-spacing:.5px}
@@ -143,7 +143,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .wday-col.wday-today .wday-date{color:#4aabf7}
 .weather-btn{font-size:1.3rem;cursor:pointer;background:none;border:none;padding:2px;border-radius:6px;transition:transform .15s;display:block;margin:0 auto 2px}
 .weather-btn:hover{transform:scale(1.25)}
-.wday-events{padding:4px 5px;display:flex;flex-direction:column;gap:2px;flex:1}
+.wday-events{padding:4px 5px 4px 5px;display:flex;flex-direction:column;flex:1}
 .wday-sep{border:none;border-top:1.5px dashed #d5ceeb;margin:4px 5px}
 .wday-week-events{padding:2px 5px;display:flex;flex-direction:column;gap:2px}
 .wday-add{background:none;border:none;cursor:pointer;color:#87dbfd;font-size:.8rem;font-weight:800;padding:3px 5px;text-align:left;width:100%;transition:color .15s}
@@ -303,7 +303,7 @@ h2.unav-title{margin:0;min-width:unset}
 .right-col{display:flex;flex-direction:column;gap:12px;flex-shrink:0;flex-basis:260px;width:260px;align-self:flex-start}
 .todo-panel{width:100%;position:static}
 .weight-panel{width:100%;background:#fff;border:1.5px solid #d5ceeb;border-radius:14px;padding:14px 16px;box-sizing:border-box}
-.week-scroll-wrap{overflow-x:auto;width:100%}
+.week-scroll-wrap{overflow-x:auto;width:100%;overflow-x:auto;}
 
 @media(max-width:480px){
   .habit-icon-btn{font-size:.6rem;padding:0}
@@ -349,17 +349,38 @@ h2.unav-title{margin:0;min-width:unset}
 .wk-inline-multi{
   border-radius:0 !important;
   margin-bottom:2px;
-  opacity:1;
+  margin-left:-5px;
+  margin-right:-5px;
+  padding-left:5px;
+  padding-right:0;
+  position:relative;
+  z-index:2;
 }
-.wk-inline-multi.span-start{ border-radius:20px 0 0 20px !important; }
-.wk-inline-multi.span-end{ border-radius:0 20px 20px 0 !important; }
-.wk-inline-multi.span-start.span-end{ border-radius:20px !important; }
+.wk-inline-multi.span-start{
+  border-radius:20px 0 0 20px !important;
+  margin-left:2px;
+  padding-left:8px;
+}
+.wk-inline-multi.span-end{
+  border-radius:0 20px 20px 0 !important;
+  margin-right:2px;
+  padding-right:6px;
+}
+.wk-inline-multi.span-start.span-end{
+  border-radius:20px !important;
+  margin-left:2px;
+  margin-right:2px;
+  padding-left:8px;
+  padding-right:6px;
+}
 .wk-lane-empty{
   background:transparent !important;
   border:none;
   margin-bottom:2px;
   pointer-events:none;
   visibility:hidden;
+  margin-left:-5px;
+  margin-right:-5px;
 }
 
 </style>
@@ -1326,7 +1347,8 @@ function renderWeek(){
                 +(!isStart&&!isEnd?' span-mid':'');
               bar.style.background=evRef.color||COLORS[0];
               // Only show text on start day
-              bar.textContent=isStart?(evRef.startTime?evRef.startTime+' ':'')+evRef.name:'';
+              var showName=isStart||(col===0&&!isStart);
+              bar.textContent=showName?(evRef.startTime?evRef.startTime+' ':'')+evRef.name:'';
               bar.onclick=function(e){e.stopPropagation();openDetail(evRef.id);};
               evWrap.appendChild(bar);
             })(laneMap[li], li);
