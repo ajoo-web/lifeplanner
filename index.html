@@ -74,6 +74,11 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .add-btn:hover{color:#4aabf7}
 .day-log-btn{position:absolute;bottom:3px;left:4px;font-size:1rem;background:none;border:none;cursor:pointer;z-index:3;padding:0;line-height:1;user-select:none;transition:transform .1s;}
 .day-log-btn:hover{transform:scale(1.3);}
+.health-subsection{margin-top:8px;border-top:1px solid #d5ceeb;padding-top:8px;}
+.health-sub-title{font-size:.7rem;font-weight:800;color:#4aabf7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.cycle-row{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:#1a3a6b;margin-bottom:3px;}
+.cycle-val{font-weight:700;color:#1a3a6b;}
+.cycle-days-till{text-align:center;margin-top:6px;font-size:.78rem;color:#e06090;font-weight:700;}
 
 /* EVENT BARS in cells (single-day or first/mid/last of multi) */
 .events-wrap{display:flex;flex-direction:column;gap:1px;position:relative;z-index:2}
@@ -487,8 +492,9 @@ h2.unav-title{margin:0;min-width:unset}
   padding:4px 0;
   min-height:44px;
   display:flex;
+  flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
 }
 .wday-row5-cell:last-child{border-right:none;}
 
@@ -745,14 +751,21 @@ h2.unav-title{margin:0;min-width:unset}
     <div class="todo-lines" id="todoLines"></div>
   </div>
   <div class="weight-panel" id="weightTracker" style="display:none">
-    <h2 class="weight-title">🩺 WEIGHT</h2>
-    <div class="weight-date-row">
-      <span id="weightDate" class="weight-date"></span>
+    <h2 class="weight-title">🩺 HEALTH</h2>
+    <div class="health-subsection">
+      <div class="health-sub-title">Weight</div>
+      <div class="weight-date-row"><span id="weightDate" class="weight-date"></span></div>
+      <div class="weight-input-row">
+        <input type="number" id="weightInput" class="weight-input" placeholder="lbs" step="0.1" min="0" oninput="calcWeight()"/>
+      </div>
+      <div id="weightDelta" class="weight-delta"></div>
     </div>
-    <div class="weight-input-row">
-      <input type="number" id="weightInput" class="weight-input" placeholder="lbs" step="0.1" min="0" oninput="calcWeight()"/>
+    <div class="health-subsection" id="cycleSection">
+      <div class="health-sub-title">Cycle</div>
+      <div class="cycle-row"><span>Last Cycle</span><span class="cycle-val" id="cycleLastLen">—</span></div>
+      <div class="cycle-row"><span>Avg Cycle</span><span class="cycle-val" id="cycleAvgLen">—</span></div>
+      <div class="cycle-days-till" id="cycleDaysTill"></div>
     </div>
-    <div id="weightDelta" class="weight-delta"></div>
   </div>
 </div>
 
@@ -951,41 +964,19 @@ function getEffectiveEvents(rangeStart,rangeEnd){
   for(var i=0;i<events.length;i++){
     var ev=events[i];
     if(ev.recurYearly){
-      var base=new Date(ev.startDate+'T00:00:00');
-      var rs=new Date(rangeStart+'T00:00:00');
-      var re=new Date(rangeEnd+'T00:00:00');
+      var base=new Date(ev.startDate+'T00:00:00'),rs=new Date(rangeStart+'T00:00:00'),re=new Date(rangeEnd+'T00:00:00');
       for(var yr=rs.getFullYear();yr<=re.getFullYear();yr++){
         var d=new Date(yr,base.getMonth(),base.getDate());
-        if(d>=rs&&d<=re){
-          var ds=d.toISOString().slice(0,10);
-          var clone={}; for(var k in ev) clone[k]=ev[k];
-          clone.startDate=ds; clone.endDate=ds;
-          clone.id=ev.id+'_'+ds;
-          clone.name='🎂 '+ev.name;
-          result.push(clone);
-        }
+        if(d>=rs&&d<=re){ var ds=d.toISOString().slice(0,10); var clone={}; for(var k in ev) clone[k]=ev[k]; clone.startDate=ds; clone.endDate=ds; clone.id=ev.id+'_'+ds; clone.name='🎂 '+ev.name; result.push(clone); }
       }
     } else if(!ev.recurEvery){
       var evEnd=ev.endDate||ev.startDate;
       if(ev.startDate<=rangeEnd&&evEnd>=rangeStart) result.push(ev);
     } else {
-      var interval=ev.recurEvery*7;
-      var base=new Date(ev.startDate+'T00:00:00');
+      var interval=ev.recurEvery*7,base=new Date(ev.startDate+'T00:00:00');
       var rEnd=(ev.recurEndsType==='on'&&ev.recurEndsOn)?new Date(ev.recurEndsOn+'T00:00:00'):new Date('2099-12-31');
-      var rs=new Date(rangeStart+'T00:00:00');
-      var re=new Date(rangeEnd+'T00:00:00');
-      var d=new Date(base);
-      while(d<=re){
-        if(d>=rs&&d<=rEnd){
-          var ds=d.toISOString().slice(0,10);
-          var clone={}; for(var k in ev) clone[k]=ev[k];
-          clone.startDate=ds; clone.endDate=ds;
-          clone.id=ev.id+'_'+ds;
-          result.push(clone);
-        }
-        d.setDate(d.getDate()+interval);
-        if(d>rEnd) break;
-      }
+      var rs=new Date(rangeStart+'T00:00:00'),re=new Date(rangeEnd+'T00:00:00'),d=new Date(base);
+      while(d<=re){ if(d>=rs&&d<=rEnd){ var ds=d.toISOString().slice(0,10); var clone={}; for(var k in ev) clone[k]=ev[k]; clone.startDate=ds; clone.endDate=ds; clone.id=ev.id+'_'+ds; result.push(clone); } d.setDate(d.getDate()+interval); if(d>rEnd) break; }
     }
   }
   return result;
@@ -1130,14 +1121,7 @@ function renderCalendar(){
         numSpan.className='day-num';
         numSpan.textContent=d;
         cell.insertBefore(numSpan,cell.firstChild);
-        (function(dStr){
-          var lb=document.createElement('button');
-          lb.className='day-log-btn';
-          lb.title='Log: cravings 🍫 or period 🦸';
-          updateDayLogBtn(lb, dayLog[dStr]||'none');
-          lb.onclick=function(e){ e.stopPropagation(); cycleDayLog(dStr,lb); };
-          cell.appendChild(lb);
-        })(ds);
+        (function(dStr){ var lb=document.createElement('button'); lb.className='day-log-btn'; lb.title='Log: cravings or period'; updateDayLogBtn(lb,dayLog[dStr]||'none'); lb.onclick=function(e){ e.stopPropagation(); cycleDayLog(dStr,lb); }; cell.appendChild(lb); })(ds);
         var wrap=document.createElement('div');
         wrap.className='events-wrap';
         wrap.id='ewrap_'+ds;
@@ -1485,49 +1469,45 @@ var dayLog={};
 function loadDayLog(){ try{ dayLog=JSON.parse(localStorage.getItem(DAY_LOG_KEY)||'{}'); }catch(e){ dayLog={}; } }
 function saveDayLog(){ localStorage.setItem(DAY_LOG_KEY,JSON.stringify(dayLog)); }
 var DAY_LOG_STATES=['none','choc','period'];
-var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'🦸'};
-function cycleDayLog(ds,btn){
+var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'\uD83E\uDDB8'};
+function cycleDayLog(ds,btn){ loadDayLog(); var cur=dayLog[ds]||'none'; var idx=DAY_LOG_STATES.indexOf(cur); var next=DAY_LOG_STATES[(idx+1)%DAY_LOG_STATES.length]; if(next==='none'){ delete dayLog[ds]; } else { dayLog[ds]=next; } saveDayLog(); updateDayLogBtn(btn,next); renderCycleStats(); }
+function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'1.1rem'; }
+
+function renderCycleStats(){
+  var lastEl=document.getElementById('cycleLastLen');
+  var avgEl=document.getElementById('cycleAvgLen');
+  var tillEl=document.getElementById('cycleDaysTill');
+  if(!lastEl) return;
   loadDayLog();
-  var cur=dayLog[ds]||'none';
-  var idx=DAY_LOG_STATES.indexOf(cur);
-  var next=DAY_LOG_STATES[(idx+1)%DAY_LOG_STATES.length];
-  if(next==='none'){ delete dayLog[ds]; } else { dayLog[ds]=next; }
-  saveDayLog();
-  updateDayLogBtn(btn,next);
-}
-function updateDayLogBtn(btn,state){
-  var s=state||'none';
-  btn.textContent=DAY_LOG_ICONS[s];
-  btn.style.opacity=s==='none'?'0.2':'1';
-  btn.style.fontSize=s==='none'?'0.72rem':'1.05rem';
-}
-
-function onStartDateChange(){
-  var sd=document.getElementById('evStart').value;
-  var edEl=document.getElementById('evEnd');
-  edEl.min=sd||'';
-  if(sd&&(!edEl.value||edEl.value<sd)) edEl.value=sd;
-}
-
-function toggleBirthdayMode(){
-  var cb=document.getElementById('evBirthday');
-  document.getElementById('evRecurSection').style.display=cb.checked?'none':'block';
-}
-
-function toggleRecurEnd(){
-  var t=document.getElementById('evRecurEndsType').value;
-  document.getElementById('evRecurEndsOn').style.display=t==='on'?'inline-block':'none';
+  var periodDates=[];
+  for(var k in dayLog){ if(dayLog[k]==='period') periodDates.push(k); }
+  periodDates.sort();
+  var lengths=[];
+  for(var i=1;i<periodDates.length;i++){
+    var a=new Date(periodDates[i-1]+'T00:00:00');
+    var b=new Date(periodDates[i]+'T00:00:00');
+    var diff=Math.round((b-a)/(1000*60*60*24));
+    if(diff>=14&&diff<=60) lengths.push(diff);
+  }
+  var lastLen=lengths.length>0?lengths[lengths.length-1]:null;
+  var avgLen=lengths.length>0?Math.round(lengths.reduce(function(a,b){return a+b;},0)/lengths.length):null;
+  lastEl.textContent=lastLen?lastLen+' days':'—';
+  avgEl.textContent=avgLen?avgLen+' days':'—';
+  if(avgLen&&periodDates.length>0){
+    var lastStart=new Date(periodDates[periodDates.length-1]+'T00:00:00');
+    var nextStart=new Date(lastStart); nextStart.setDate(nextStart.getDate()+avgLen);
+    var today=new Date(); today.setHours(0,0,0,0);
+    var diff=Math.round((nextStart-today)/(1000*60*60*24));
+    if(diff>0) tillEl.textContent='🦸 Next period in '+diff+' day'+(diff===1?'':'s');
+    else if(diff===0) tillEl.textContent='🦸 Period expected today';
+    else tillEl.textContent='🦸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago';
+  } else { tillEl.textContent=''; }
 }
 
-function deleteEventFromEdit(){
-  if(!editingId)return;
-  var newEvs=[];
-  for(var i=0;i<events.length;i++){if(events[i].id!==editingId)newEvs.push(events[i]);}
-  events=newEvs; save();
-  if(document.getElementById('page-week').classList.contains('active'))renderWeek();
-  else renderCalendar();
-  closeOverlay('evModal');
-}
+function onStartDateChange(){ var sd=document.getElementById('evStart').value; var edEl=document.getElementById('evEnd'); edEl.min=sd||''; if(sd&&(!edEl.value||edEl.value<sd)) edEl.value=sd; }
+function toggleBirthdayMode(){ var cb=document.getElementById('evBirthday'); document.getElementById('evRecurSection').style.display=cb.checked?'none':'block'; }
+function toggleRecurEnd(){ var t=document.getElementById('evRecurEndsType').value; document.getElementById('evRecurEndsOn').style.display=t==='on'?'inline-block':'none'; }
+function deleteEventFromEdit(){ if(!editingId)return; var newEvs=[]; for(var i=0;i<events.length;i++){if(events[i].id!==editingId)newEvs.push(events[i]);} events=newEvs; save(); if(document.getElementById('page-week').classList.contains('active'))renderWeek(); else renderCalendar(); closeOverlay('evModal'); }
 
 function deleteEvent(){
   var newEvs=[];
@@ -1979,6 +1959,17 @@ function renderWeek(){
         })(hi);
       }
       cell.appendChild(hRow);
+      (function(dStr){
+        var logRow=document.createElement('div');
+        logRow.style.cssText='display:flex;justify-content:center;align-items:center;width:100%;padding:3px 0 2px;border-top:1px solid #e8e2f5;margin-top:2px;';
+        var wlb=document.createElement('button');
+        wlb.style.cssText='font-size:1.1rem;background:none;border:none;cursor:pointer;padding:0;line-height:1;';
+        wlb.title='Log: cravings or period';
+        updateDayLogBtn(wlb,dayLog[dStr]||'none');
+        wlb.onclick=function(e){ e.stopPropagation(); cycleDayLog(dStr,wlb); };
+        logRow.appendChild(wlb);
+        cell.appendChild(logRow);
+      })(ds);
       row5.appendChild(cell);
     })(c);
   }
@@ -2283,7 +2274,8 @@ function renderWeightTracker(){
     dateEl.textContent='Week of '+MONTHS[d.getMonth()].substring(0,3)+' '+d.getDate()+', '+d.getFullYear();
   }
   inp.value = weightData[wk]!==undefined ? weightData[wk] : '';
-  calcWeight(); // show live delta immediately
+  calcWeight();
+  renderCycleStats();
 }
 
 
