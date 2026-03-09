@@ -625,6 +625,74 @@ h2.unav-title{margin:0;min-width:unset}
 .budget-toggle-pos{background:#e8faf0;color:#3db86b;border-color:#3db86b;}
 .budget-toggle-neg{background:#fef0f0;color:#e05555;border-color:#e05555;}
 .budget-net-spacer{flex:1;min-width:8px;}
+
+/* PRINT PAGE */
+.tab-print{background:#f0e8ff;color:#6a3aab;font-size:1rem;padding:4px 10px;border-radius:8px;}
+.tab-print.active{background:#9b59b6;color:#fff;}
+#page-print{padding:12px 16px;}
+.print-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.print-controls select{border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 10px;font-size:.88rem;color:#1a3a6b;background:#f5f0e8;outline:none;cursor:pointer;}
+.print-controls select:focus{border-color:#4aabf7;}
+.print-btn{background:#1a3a6b;color:#fff;border:none;border-radius:20px;padding:7px 20px;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .2s;}
+.print-btn:hover{background:#4aabf7;}
+.print-preview-label{font-size:.72rem;color:#86b1df;font-weight:700;letter-spacing:.4px;}
+/* PRINTABLE DASHBOARD */
+.print-dashboard{background:#fff;width:100%;max-width:780px;margin:0 auto;font-family:'Segoe UI',Georgia,sans-serif;color:#0d2340;}
+.pd-title{font-size:2rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;color:#0d2340;}
+.pd-body{display:flex;flex-direction:column;gap:0;}
+.pd-week-row{display:grid;grid-template-columns:1fr 180px 160px;border-bottom:1.5px solid #d5ceeb;min-height:110px;}
+.pd-week-row:last-of-type{border-bottom:none;}
+.pd-cal-col{border-right:1.5px solid #d5ceeb;padding:4px 6px;}
+.pd-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);height:100%;}
+.pd-cal-cell{border-right:1px solid #ece8f4;padding:3px 3px 2px;min-height:90px;display:flex;flex-direction:column;gap:2px;position:relative;}
+.pd-cal-cell:last-child{border-right:none;}
+.pd-day-num{font-size:.78rem;font-weight:800;color:#1a3a6b;line-height:1;}
+.pd-day-num.dim{color:#c0b8d8;}
+.pd-day-num.today-mark{color:#0d6eb5;}
+.pd-ev-bar{font-size:.52rem;font-weight:700;color:#fff;border-radius:20px;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px;line-height:1.5;}
+.pd-wev-bar{font-size:.52rem;color:#1a3a6b;padding:1px 3px 1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2.5px solid #87dbfd;margin-bottom:1px;line-height:1.5;}
+.pd-emoji-row{display:flex;flex-wrap:wrap;gap:1px;margin-top:auto;padding-top:2px;}
+.pd-emoji{font-size:.6rem;line-height:1;}
+.pd-photos-col{border-right:1.5px solid #d5ceeb;padding:4px;}
+.pd-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+.pd-photo-slot{background:#ece8f4;border-radius:4px;overflow:hidden;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#aaa;}
+.pd-photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.pd-notes-col{padding:6px 8px;display:flex;flex-direction:column;}
+.pd-notes-label{font-size:.6rem;font-weight:800;color:#86b1df;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.pd-notes-text{font-size:.7rem;color:#1a3a6b;line-height:1.5;flex:1;word-break:break-word;white-space:pre-wrap;}
+.pd-notes-lines{flex:1;display:flex;flex-direction:column;justify-content:space-around;}
+.pd-note-line{border-bottom:1px solid #d5ceeb;min-height:14px;}
+.pd-bottom{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:2px solid #d5ceeb;margin-top:0;}
+.pd-budget-col{border-right:1.5px solid #d5ceeb;padding:8px 10px;}
+.pd-health-col{padding:8px 10px;}
+.pd-section-title{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:#1a3a6b;margin-bottom:6px;border-bottom:1px solid #d5ceeb;padding-bottom:3px;}
+.pd-budget-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pd-b-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}
+.pd-b-inc{color:#3db86b;}.pd-b-exp{color:#e05555;}
+.pd-b-item{display:flex;justify-content:space-between;font-size:.62rem;padding:1px 0;border-bottom:1px solid #f0eef8;color:#1a3a6b;}
+.pd-b-item span:last-child{font-weight:700;}
+.pd-b-total{font-size:.72rem;font-weight:800;margin-top:4px;padding-top:3px;border-top:1.5px solid #d5ceeb;}
+.pd-b-net{color:#1a3a6b;}.pd-b-net.pos{color:#3db86b;}.pd-b-net.neg{color:#e05555;}
+.pd-savings-row{font-size:.72rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;}
+.pd-weight-stats{font-size:.65rem;color:#1a3a6b;margin-bottom:4px;line-height:1.7;}
+.pd-w-stat{display:flex;gap:6px;}
+.pd-w-key{color:#86b1df;font-weight:700;min-width:70px;}
+.pd-sparkline{width:100%;height:60px;margin-top:4px;}
+.pd-cycle-stats{font-size:.65rem;color:#1a3a6b;line-height:1.7;margin-top:6px;border-top:1px solid #d5ceeb;padding-top:4px;}
+.pd-brain-col{border-top:2px solid #d5ceeb;padding:0;}
+.pd-brain-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.pd-brain-section{padding:8px 10px;}
+.pd-brain-section:first-child{border-right:1.5px solid #d5ceeb;}
+.pd-brain-lines{display:flex;flex-direction:column;gap:0;margin-top:4px;}
+.pd-brain-line{border-bottom:1px solid #d5ceeb;min-height:18px;}
+@media print {
+  body > *{display:none !important;}
+  #page-print{display:block !important;padding:0 !important;}
+  .print-controls{display:none !important;}
+  .print-dashboard{max-width:100%;width:100%;}
+  @page{size:letter portrait;margin:0.45in;}
+}
+</style>
 </style>
 </head>
 <body>
@@ -649,6 +717,7 @@ h2.unav-title{margin:0;min-width:unset}
     <span class="tab-divider"></span>
     <button class="tab-btn tab-archive" id="tab-archive" onclick="showPage('archive',this)">🗂</button>
     <button class="tab-btn tab-search" id="tab-search" onclick="showPage('search',this)">🔎</button>
+    <button class="tab-btn tab-print" id="tab-print" onclick="showPage('print',this)">🖨️</button>
   </div>
 </div>
 
@@ -774,6 +843,17 @@ h2.unav-title{margin:0;min-width:unset}
     <p class="empty-msg" id="archiveEmpty" style="display:none">No archived tasks yet.</p>
   </div>
 </div><!-- end page-archive -->
+
+<!-- PRINT DASHBOARD PAGE -->
+<div id="page-print" class="page">
+  <div class="print-controls">
+    <select id="printMonthSel" onchange="renderPrintDashboard()"></select>
+    <select id="printYearSel" onchange="renderPrintDashboard()"></select>
+    <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+    <span class="print-preview-label">Preview updates instantly · Print at month end</span>
+  </div>
+  <div class="print-dashboard" id="printDashboard"></div>
+</div>
 </div><!-- end pages-area -->
 
 <!-- PERSISTENT TODO PANEL (hidden on archive) -->
@@ -907,6 +987,7 @@ function showPage(name,btn){
   if(btn) btn.classList.add('active');
   if(name==='archive'){ renderArchive(); showTodo(false); showWeightTracker(false); showPhotoPanel(false); }
   else if(name==='search'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); document.getElementById('searchInput').focus(); runSearch(); }
+  else if(name==='print'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); initPrintSelectors(); renderPrintDashboard(); }
   else{ showTodo(true); showWeightTracker(false); showPhotoPanel(false); }
 }
 
@@ -2567,6 +2648,296 @@ function removeBudgetEntry(id){
 archiveExpiredTodos();
 initCalendar();
 renderTodo();
+
+
+/* ---- PRINT DASHBOARD ---- */
+function initPrintSelectors(){
+  var ms=document.getElementById('printMonthSel');
+  var ys=document.getElementById('printYearSel');
+  if(ms.options.length===0){
+    MONTHS.forEach(function(m,i){
+      var o=document.createElement('option');
+      o.value=i; o.textContent=m; ms.appendChild(o);
+    });
+  }
+  if(ys.options.length===0){
+    for(var y=2020;y<=2040;y++){
+      var o=document.createElement('option');
+      o.value=y; o.textContent=y; ys.appendChild(o);
+    }
+  }
+  ms.value=curMonth;
+  ys.value=curYear;
+}
+
+function renderPrintDashboard(){
+  var month=parseInt(document.getElementById('printMonthSel').value);
+  var year=parseInt(document.getElementById('printYearSel').value);
+  var dash=document.getElementById('printDashboard');
+  if(isNaN(month)||isNaN(year)){dash.innerHTML='';return;}
+
+  var today=new Date(); today.setHours(0,0,0,0);
+  var todayStr=mkDateStr(today.getFullYear(),today.getMonth(),today.getDate());
+  var firstDow=new Date(year,month,1).getDay();
+  var daysInMonth=new Date(year,month+1,0).getDate();
+
+  // Build cells array (Sun–Sat grid, pad with prev/next month days)
+  var cells=[];
+  var prevMo=month===0?11:month-1, prevYr=month===0?year-1:year;
+  var dipsm=new Date(prevYr,prevMo+1,0).getDate();
+  for(var e=0;e<firstDow;e++) cells.push({d:dipsm-firstDow+1+e,type:'prev',mo:prevMo,yr:prevYr});
+  for(var d=1;d<=daysInMonth;d++) cells.push({d:d,type:'cur',mo:month,yr:year});
+  var nextMo=month===11?0:month+1, nextYr=month===11?year+1:year;
+  var nd=1; while(cells.length%7!==0) cells.push({d:nd++,type:'next',mo:nextMo,yr:nextYr});
+  var numWeeks=cells.length/7;
+
+  // Events for the month range
+  var rangeStart=mkDateStr(year,month,1);
+  var rangeEnd=mkDateStr(year,month,daysInMonth);
+  var monthEvents=getEffectiveEvents ? getEffectiveEvents(rangeStart,rangeEnd) : [];
+
+  // Weekly-only events
+  var wevAll=loadData('lp_wev',[]);
+
+  // Load persisted data stores
+  loadDayLog();
+  loadPcData();
+  var wNotes=loadData('lp_week_notes',{});
+  var wData=loadData('lp_weight',{});
+  var wthData=loadData('lp_weather',{});
+  var hData=loadData('lp_habits',{});
+
+  // Collect only emojis actually used this month
+  var usedWeather={}, usedHabit={};
+  Object.keys(wthData).forEach(function(k){
+    var kd=new Date(k+'T00:00:00');
+    if(kd.getFullYear()===year&&kd.getMonth()===month) usedWeather[wthData[k]]=true;
+  });
+  Object.keys(hData).forEach(function(k){
+    var parts=k.split('_h');
+    if(parts.length===2&&hData[k]){
+      var kd=new Date(parts[0]+'T00:00:00');
+      if(kd.getFullYear()===year&&kd.getMonth()===month) usedHabit[parseInt(parts[1])]=true;
+    }
+  });
+
+  // Weight entries for the month
+  var weightEntries=[];
+  Object.keys(wData).forEach(function(k){
+    var kd=new Date(k+'T00:00:00');
+    if(kd.getFullYear()===year&&kd.getMonth()===month&&wData[k]!==undefined&&wData[k]!==null&&wData[k]!=='')
+      weightEntries.push({date:k,val:parseFloat(wData[k])});
+  });
+  weightEntries.sort(function(a,b){return a.date<b.date?-1:1;});
+  var wHigh=weightEntries.length?Math.max.apply(null,weightEntries.map(function(x){return x.val;})):null;
+  var wLow=weightEntries.length?Math.min.apply(null,weightEntries.map(function(x){return x.val;})):null;
+
+  // Cycle stats from DOM (already computed by health panel)
+  var lastCycleLen=(document.getElementById('cycleLastLen')||{}).textContent||'--';
+  var avgCycleLen=(document.getElementById('cycleAvgLen')||{}).textContent||'--';
+  var lastPeriodDay='--';
+  Object.keys(dayLog).forEach(function(dk){
+    var dkd=new Date(dk+'T00:00:00');
+    if(dkd.getFullYear()===year&&dkd.getMonth()===month&&dayLog[dk]==='period')
+      if(lastPeriodDay==='--'||dk>lastPeriodDay) lastPeriodDay=dk;
+  });
+
+  // Budget for the month
+  var allBudget=loadData('lp_budget_'+year,[]);
+  var monthBudget=allBudget.filter(function(e){
+    if(!e.date) return true; // legacy entries without date: show all
+    var bd=new Date(e.date+'T00:00:00');
+    return bd.getFullYear()===year&&bd.getMonth()===month;
+  });
+  if(allBudget.length>0&&monthBudget.length===0) monthBudget=allBudget; // fallback
+  var incItems=monthBudget.filter(function(e){return parseFloat(e.amt)>0;});
+  var expItems=monthBudget.filter(function(e){return parseFloat(e.amt)<0;});
+  var totalInc=incItems.reduce(function(s,e){return s+parseFloat(e.amt);},0);
+  var totalExp=expItems.reduce(function(s,e){return s+parseFloat(e.amt);},0);
+  var netSavings=totalInc+totalExp;
+
+  // Sparkline SVG builder
+  function buildSparkline(entries){
+    if(entries.length<2) return '<div style="font-size:.6rem;color:#86b1df;padding:4px 0;">No weight data yet</div>';
+    var vals=entries.map(function(e){return e.val;});
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+    var W=180,H=55,pad=8;
+    if(mx===mn){mn-=1;mx+=1;}
+    var pts=vals.map(function(v,i){
+      return [(pad+(W-2*pad)*(i/(vals.length-1))).toFixed(1),
+              (H-pad-(H-2*pad)*((v-mn)/(mx-mn))).toFixed(1)];
+    });
+    var lines='';
+    for(var i=1;i<pts.length;i++)
+      lines+='<line x1="'+pts[i-1][0]+'" y1="'+pts[i-1][1]+'" x2="'+pts[i][0]+'" y2="'+pts[i][1]+'" stroke="#4aabf7" stroke-width="1.5"/>';
+    var dots=pts.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="2" fill="#1a3a6b"/>';}).join('');
+    // axis labels
+    var lblHi='<text x="'+(W-pad+1)+'" y="'+pad+'" font-size="7" fill="#86b1df">'+mx+'</text>';
+    var lblLo='<text x="'+(W-pad+1)+'" y="'+(H-2)+'" font-size="7" fill="#86b1df">'+mn+'</text>';
+    return '<svg class="pd-sparkline" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+
+      '<line x1="'+pad+'" y1="'+(H-pad)+'" x2="'+(W-pad)+'" y2="'+(H-pad)+'" stroke="#d5ceeb" stroke-width="1"/>'+
+      '<text x="0" y="'+H+'" font-size="7" fill="#86b1df">wk</text>'+
+      lines+dots+lblHi+lblLo+'</svg>';
+  }
+
+  // Helper: week key from Sunday date object
+  function getWK(sunDate){
+    return sunDate.getFullYear()+'-'+pad2(sunDate.getMonth()+1)+'-'+pad2(sunDate.getDate());
+  }
+
+  // ── Build HTML ──
+  var H='<div class="pd-title">'+MONTHS[month]+'&nbsp;'+year+'</div><div class="pd-body">';
+
+  // DOW header row
+  H+='<div class="pd-week-row" style="min-height:20px;">';
+  H+='<div class="pd-cal-col"><div class="pd-cal-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(d){
+    H+='<div style="font-size:.55rem;font-weight:800;color:#86b1df;text-align:center;text-transform:uppercase;padding:2px 0;">'+d+'</div>';
+  });
+  H+='</div></div>';
+  H+='<div class="pd-photos-col" style="display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;color:#86b1df;text-transform:uppercase;">Photos</div>';
+  H+='<div class="pd-notes-col" style="display:flex;align-items:center;font-size:.55rem;font-weight:800;color:#86b1df;text-transform:uppercase;">Notes</div>';
+  H+='</div>';
+
+  for(var w=0;w<numWeeks;w++){
+    var weekCells=cells.slice(w*7,(w+1)*7);
+    var sunCell=weekCells[0];
+    var sunDate=new Date(sunCell.yr,sunCell.mo,sunCell.d);
+    var wkKey=getWK(sunDate);
+    var satCell=weekCells[6];
+    var satDate=new Date(satCell.yr,satCell.mo,satCell.d);
+    var wkNote=wNotes[wkKey]||'';
+    var weekPhotos=(pcData&&pcData[wkKey])||[];
+
+    H+='<div class="pd-week-row">';
+
+    // Calendar column
+    H+='<div class="pd-cal-col"><div class="pd-cal-grid">';
+    for(var c=0;c<7;c++){
+      var cell=weekCells[c];
+      var ds=mkDateStr(cell.yr,cell.mo,cell.d);
+      var isDim=cell.type!=='cur';
+      var isToday=(ds===todayStr&&!isDim);
+      H+='<div class="pd-cal-cell">';
+      H+='<span class="pd-day-num'+(isDim?' dim':isToday?' today-mark':'')+'">'+cell.d+'</span>';
+
+      // Multi/single day events
+      var dayEvs=monthEvents.filter(function(ev){
+        var end=ev.endDate||ev.startDate;
+        return ev.startDate<=ds&&ds<=end;
+      });
+      dayEvs.slice(0,2).forEach(function(ev){
+        H+='<div class="pd-ev-bar" style="background:'+(ev.color||'#1a3a6b')+'">'+
+          (ev.startTime?ev.startTime+' ':'')+escHtml(ev.name)+'</div>';
+      });
+
+      // Weekly-only events
+      wevAll.filter(function(e){return e.date===ds;}).slice(0,1).forEach(function(wev){
+        H+='<div class="pd-wev-bar">'+(wev.time?wev.time+' ':'')+escHtml(wev.name)+'</div>';
+      });
+
+      // Emojis (only used ones)
+      var emojis=[];
+      if(wthData[ds]!==undefined) emojis.push(WEATHER_ICONS[wthData[ds]]);
+      if(dayLog[ds]&&dayLog[ds]!=='none'){
+        var dlMap={choc:'🍫',period:'🩸'};
+        if(dlMap[dayLog[ds]]) emojis.push(dlMap[dayLog[ds]]);
+      }
+      HABITS.forEach(function(h,hi){
+        if(hData[ds+'_h'+hi]) emojis.push(h.icon);
+      });
+      if(emojis.length)
+        H+='<div class="pd-emoji-row">'+emojis.map(function(em){return '<span class="pd-emoji">'+em+'</span>';}).join('')+'</div>';
+
+      H+='</div>'; // pd-cal-cell
+    }
+    H+='</div></div>'; // pd-cal-grid, pd-cal-col
+
+    // Photos column (first 6)
+    H+='<div class="pd-photos-col"><div class="pd-photo-grid">';
+    for(var pi=0;pi<6;pi++){
+      var photo=weekPhotos[pi];
+      if(photo&&photo.data)
+        H+='<div class="pd-photo-slot"><img src="'+photo.data+'" alt=""/></div>';
+      else
+        H+='<div class="pd-photo-slot">'+(pi+1)+'</div>';
+    }
+    H+='</div></div>';
+
+    // Notes column
+    H+='<div class="pd-notes-col"><div class="pd-notes-label">Notes</div>';
+    if(wkNote)
+      H+='<div class="pd-notes-text">'+escHtml(wkNote)+'</div>';
+    else{
+      H+='<div class="pd-notes-lines">';
+      for(var nl=0;nl<6;nl++) H+='<div class="pd-note-line"></div>';
+      H+='</div>';
+    }
+    H+='</div>';
+
+    H+='</div>'; // pd-week-row
+  }
+  H+='</div>'; // pd-body
+
+  // Bottom: Budget | Health
+  H+='<div class="pd-bottom">';
+
+  // Budget column
+  H+='<div class="pd-budget-col"><div class="pd-section-title">Budget</div>';
+  H+='<div class="pd-budget-cols">';
+  H+='<div><div class="pd-b-label pd-b-inc">Revenue</div>';
+  incItems.slice(0,10).forEach(function(e){
+    H+='<div class="pd-b-item"><span>'+escHtml(e.name)+'</span><span>+$'+Math.abs(parseFloat(e.amt)).toFixed(2)+'</span></div>';
+  });
+  H+='<div class="pd-b-total" style="color:#3db86b">+$'+totalInc.toFixed(2)+'</div></div>';
+  H+='<div><div class="pd-b-label pd-b-exp">Expense</div>';
+  expItems.slice(0,10).forEach(function(e){
+    H+='<div class="pd-b-item"><span>'+escHtml(e.name)+'</span><span>-$'+Math.abs(parseFloat(e.amt)).toFixed(2)+'</span></div>';
+  });
+  H+='<div class="pd-b-total" style="color:#e05555">-$'+Math.abs(totalExp).toFixed(2)+'</div></div>';
+  H+='</div>';
+  H+='<div class="pd-savings-row" style="color:'+(netSavings>=0?'#3db86b':'#e05555')+'">Savings &nbsp; $'+netSavings.toFixed(2)+'</div>';
+  H+='</div>';
+
+  // Health column
+  H+='<div class="pd-health-col"><div class="pd-section-title">Health</div>';
+  H+=buildSparkline(weightEntries);
+  H+='<div class="pd-weight-stats" style="margin-top:4px;">';
+  H+='<div class="pd-w-stat"><span class="pd-w-key">High</span><span>'+(wHigh!==null?wHigh+' lbs':'--')+'</span></div>';
+  H+='<div class="pd-w-stat"><span class="pd-w-key">Low</span><span>'+(wLow!==null?wLow+' lbs':'--')+'</span></div>';
+  H+='</div>';
+  H+='<div class="pd-cycle-stats">';
+  H+='<div class="pd-w-stat"><span class="pd-w-key">Last Day 1</span><span>'+lastPeriodDay+'</span></div>';
+  H+='<div class="pd-w-stat"><span class="pd-w-key">Last Cycle</span><span>'+lastCycleLen+'</span></div>';
+  H+='<div class="pd-w-stat"><span class="pd-w-key">Avg Cycle</span><span>'+avgCycleLen+'</span></div>';
+  H+='</div>';
+  // Emoji legend (only used this month)
+  var usedW=Object.keys(usedWeather).map(function(i){return WEATHER_ICONS[parseInt(i)];});
+  var usedHa=Object.keys(usedHabit).map(function(i){return HABITS[parseInt(i)]?HABITS[parseInt(i)].icon:'';}).filter(Boolean);
+  var allUsed=usedW.concat(usedHa);
+  if(allUsed.length)
+    H+='<div style="margin-top:5px;font-size:.65rem;color:#86b1df;border-top:1px solid #d5ceeb;padding-top:3px;">'+allUsed.join('&nbsp;')+'</div>';
+  H+='</div>'; // pd-health-col
+  H+='</div>'; // pd-bottom
+
+  // Brain dump
+  H+='<div class="pd-brain-col"><div class="pd-brain-grid">';
+  H+='<div class="pd-brain-section"><div class="pd-section-title">Brain Dump</div><div class="pd-brain-lines">';
+  for(var bl=0;bl<12;bl++) H+='<div class="pd-brain-line"></div>';
+  H+='</div></div>';
+  H+='<div class="pd-brain-section"><div class="pd-section-title">&nbsp;</div><div class="pd-brain-lines">';
+  for(var bl2=0;bl2<12;bl2++) H+='<div class="pd-brain-line"></div>';
+  H+='</div></div>';
+  H+='</div></div>';
+
+  dash.innerHTML=H;
+}
+
+function escHtml(s){
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 </script>
 
 <!-- Year Picker Overlay -->
