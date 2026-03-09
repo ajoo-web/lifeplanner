@@ -1473,38 +1473,42 @@ var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'\uD83E\uDDB8'};
 function cycleDayLog(ds,btn){ loadDayLog(); var cur=dayLog[ds]||'none'; var idx=DAY_LOG_STATES.indexOf(cur); var next=DAY_LOG_STATES[(idx+1)%DAY_LOG_STATES.length]; if(next==='none'){ delete dayLog[ds]; } else { dayLog[ds]=next; } saveDayLog(); updateDayLogBtn(btn,next); renderCycleStats(); }
 function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'1.1rem'; }
 
-/*
- * Cycle length definition:
- *   Count from Day 1 of period A  →  Day 1 of period B.
- *   e.g. Jan 1 → Feb 5  =  35 days  (Jan 1 through Feb 4 inclusive = 35 days).
- *   Formula: (date_B - date_A) in whole days  ← no off-by-one needed.
- *   The user logs the FIRST DAY of each period as 🩸.
- */
+/* Extract only the FIRST day of each consecutive 🩸 cluster */
+function getPeriodStarts(){
+  var all=[];
+  for(var k in dayLog){ if(dayLog[k]==='period') all.push(k); }
+  all.sort();
+  if(all.length===0) return [];
+  var starts=[all[0]];
+  for(var i=1;i<all.length;i++){
+    var prev=new Date(all[i-1]+'T00:00:00');
+    var cur=new Date(all[i]+'T00:00:00');
+    var gap=Math.round((cur-prev)/(1000*60*60*24));
+    if(gap>1) starts.push(all[i]); // gap >1 day = new cluster
+  }
+  return starts;
+}
+
 function renderCycleStats(){
   var lastEl=document.getElementById('cycleLastLen');
   var avgEl=document.getElementById('cycleAvgLen');
   var tillEl=document.getElementById('cycleDaysTill');
   if(!lastEl) return;
   loadDayLog();
-  // Collect FIRST DAY of each period (all days logged as 'period')
-  var periodDates=[];
-  for(var k in dayLog){ if(dayLog[k]==='period') periodDates.push(k); }
-  periodDates.sort(); // ascending ISO strings = chronological
-  // Cycle length = Day1(next) - Day1(this) in days
+  var starts=getPeriodStarts();
   var lengths=[];
-  for(var i=1;i<periodDates.length;i++){
-    var a=new Date(periodDates[i-1]+'T00:00:00');
-    var b=new Date(periodDates[i]+'T00:00:00');
+  for(var i=1;i<starts.length;i++){
+    var a=new Date(starts[i-1]+'T00:00:00');
+    var b=new Date(starts[i]+'T00:00:00');
     var diff=Math.round((b-a)/(1000*60*60*24));
-    if(diff>=14&&diff<=60) lengths.push(diff); // sanity: skip obvious data errors
+    if(diff>=14&&diff<=60) lengths.push(diff);
   }
   var lastLen=lengths.length>0?lengths[lengths.length-1]:null;
   var avgLen=lengths.length>0?Math.round(lengths.reduce(function(a,b){return a+b;},0)/lengths.length):null;
   lastEl.textContent=lastLen?lastLen+' days':'—';
   avgEl.textContent=avgLen?avgLen+' days':'—';
-  // Predict next period: lastPeriodStart + avgLen
-  if(avgLen&&periodDates.length>0){
-    var lastStart=new Date(periodDates[periodDates.length-1]+'T00:00:00');
+  if(avgLen&&starts.length>0){
+    var lastStart=new Date(starts[starts.length-1]+'T00:00:00');
     var nextStart=new Date(lastStart); nextStart.setDate(nextStart.getDate()+avgLen);
     var today=new Date(); today.setHours(0,0,0,0);
     var diff=Math.round((nextStart-today)/(1000*60*60*24));
