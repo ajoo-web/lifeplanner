@@ -72,7 +72,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .holiday-lbl{font-size:.58rem;font-weight:800;color:#1a3a6b;text-align:center;display:block;margin-bottom:2px;line-height:1.2;letter-spacing:.2px}
 .add-btn{position:absolute;bottom:2px;right:4px;font-size:.85rem;color:#87dbfd;background:none;border:none;cursor:pointer;z-index:2;padding:0;font-weight:700;line-height:1}
 .add-btn:hover{color:#4aabf7}
-.day-log-btn{position:absolute;bottom:3px;left:4px;font-size:1rem;background:none;border:none;cursor:pointer;z-index:3;padding:0;line-height:1;user-select:none;transition:transform .1s;}
+.day-log-btn{position:absolute;bottom:3px;left:4px;font-size:0.65rem;background:none;border:none;cursor:pointer;z-index:3;padding:0;line-height:1;user-select:none;transition:transform .1s;}
 .day-log-btn:hover{transform:scale(1.3);}
 .health-subsection{margin-top:8px;border-top:1px solid #d5ceeb;padding-top:8px;}
 .health-sub-title{font-size:.7rem;font-weight:800;color:#4aabf7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
@@ -184,7 +184,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 /* HABIT ICONS IN COLUMN */
 .habit-icons-row{display:flex;flex-wrap:wrap;justify-content:center;padding:4px 2px 5px;gap:1px}
-.habit-icon-btn{background:none;border:none;cursor:pointer;font-size:clamp(.65rem,2.5vw,1rem);filter:grayscale(100%) opacity(0.3);transition:filter .18s,transform .15s;padding:1px;line-height:1}
+.habit-icon-btn{background:none;border:none;cursor:pointer;font-size:clamp(.42rem,1.6vw,.65rem);filter:grayscale(100%) opacity(0.3);transition:filter .18s,transform .15s;padding:1px;line-height:1}
 .habit-icon-btn:hover{filter:grayscale(30%) opacity(0.7);transform:scale(1.2)}
 .habit-colored{filter:grayscale(0%) opacity(1) !important;transform:scale(1.1)}
 
@@ -628,17 +628,6 @@ h2.unav-title{margin:0;min-width:unset}
 .budget-toggle-pos{background:#e8faf0;color:#3db86b;border-color:#3db86b;}
 .budget-toggle-neg{background:#fef0f0;color:#e05555;border-color:#e05555;}
 .budget-net-spacer{flex:1;min-width:8px;}
-
-/* HABIT EDITOR SECTION */
-.habit-editor-row{display:flex;align-items:center;gap:6px;}
-.habit-ed-input{flex:1;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.82rem;color:#1a3a6b;background:#f5f0e8;outline:none;}
-.habit-ed-input:focus{border-color:#7b6faa;}
-.emoji-quick-picker{position:fixed !important;}
-
-/* HABIT EDITOR SECTION */
-#weekTodayBtn:hover{background:#1a3a6b;}
-#weekTodayBtn.current-week{opacity:.35;cursor:default;pointer-events:none;}
-
 </style>
 </head>
 <body>
@@ -681,17 +670,11 @@ h2.unav-title{margin:0;min-width:unset}
           <span class="mw-opt" id="vt-week-m" onclick="switchView('week', this)">W</span>
         </div>
       </div>
-      <div class="unav-center" style="grid-template-columns:32px 1fr 32px;display:grid;align-items:center;gap:6px;">
-      <button class="cal-nav-btn" onclick="changeWeek(-1)">&#8249;</button>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-        <span id="weekRange" class="unav-title"></span>
-        <button id="weekTodayBtn" onclick="jumpWeekToToday()"
-          style="background:#4aabf7;color:#fff;border:none;border-radius:20px;padding:3px 14px;font-size:.7rem;font-weight:800;cursor:pointer;letter-spacing:.4px;text-transform:uppercase;transition:background .18s;">
-          Today
-        </button>
-       </div>
-        <button class="cal-nav-btn" onclick="changeWeek(1)">&#8250;</button>
-</div>
+      <div class="unav-center">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <h2 id="calTitle" class="unav-title">Loading...</h2>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+      </div>
       <div class="unav-right"><!-- placeholder --></div>
     </div>
     <div class="cal-grid" id="calGrid"></div>
@@ -890,18 +873,6 @@ h2.unav-title{margin:0;min-width:unset}
   </div>
 </div>
 
-<!-- Week Today Modal -->
-function jumpWeekToToday(){
-  var now = new Date();
-  curWeekStart = getWeekStart(now);
-  curYear  = now.getFullYear();
-  curMonth = now.getMonth();
-  document.getElementById('tab-year').textContent = curYear;
-  highlightMonthTab(curMonth);
-  miniCalYear = null; miniCalMonth = null;
-  renderWeek();
-}
-  
 <script>
 var COLORS = ['#1a3a6b','#4aabf7','#87dbfd','#7b6faa','#e53935','#fb8c00','#43a047','#0d6eb5','#f06292'];
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1543,7 +1514,7 @@ function saveDayLog(){ localStorage.setItem(DAY_LOG_KEY,JSON.stringify(dayLog));
 var DAY_LOG_STATES=['none','choc','period'];
 var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'🩸'};
 function cycleDayLog(ds,btn){ loadDayLog(); var cur=dayLog[ds]||'none'; var idx=DAY_LOG_STATES.indexOf(cur); var next=DAY_LOG_STATES[(idx+1)%DAY_LOG_STATES.length]; if(next==='none'){ delete dayLog[ds]; } else { dayLog[ds]=next; } saveDayLog(); updateDayLogBtn(btn,next); renderCycleStats(); }
-function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'1.1rem'; }
+function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'0.715rem'; }
 function getPeriodStarts(){ var all=[]; for(var k in dayLog){ if(dayLog[k]==='period') all.push(k); } all.sort(); if(!all.length) return []; var starts=[all[0]]; for(var i=1;i<all.length;i++){ var gap=Math.round((new Date(all[i]+'T00:00:00')-new Date(all[i-1]+'T00:00:00'))/864e5); if(gap>1) starts.push(all[i]); } return starts; }
 function renderCycleStats(){ var lastEl=document.getElementById('cycleLastLen'),avgEl=document.getElementById('cycleAvgLen'),tillEl=document.getElementById('cycleDaysTill'); if(!lastEl) return; loadDayLog(); var starts=getPeriodStarts(),lengths=[]; for(var i=1;i<starts.length;i++){ var diff=Math.round((new Date(starts[i]+'T00:00:00')-new Date(starts[i-1]+'T00:00:00'))/864e5); if(diff>=14&&diff<=60) lengths.push(diff); } var lastLen=lengths.length?lengths[lengths.length-1]:null; var avgLen=lengths.length?Math.round(lengths.reduce(function(a,b){return a+b;},0)/lengths.length):null; lastEl.textContent=lastLen?lastLen+' days':'—'; avgEl.textContent=avgLen?avgLen+' days':'—'; if(avgLen&&starts.length){ var nextStart=new Date(starts[starts.length-1]+'T00:00:00'); nextStart.setDate(nextStart.getDate()+avgLen); var today=new Date(); today.setHours(0,0,0,0); var diff=Math.round((nextStart-today)/864e5); tillEl.textContent=diff>0?'🩸 Next period in '+diff+' day'+(diff===1?'':'s'):diff===0?'🩸 Period expected today':'🩸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago'; } else { tillEl.textContent=''; } }
 
@@ -1640,7 +1611,7 @@ function deleteEvent(){
   var newEvs=[];
   for(var i=0;i<events.length;i++){if(events[i].id!==detailId)newEvs.push(events[i]);}
   events=newEvs;
-  save();renderCalendar();if(document.getElementById('page-week')&&document.getElementById('page-week').classList.contains('active'));closeOverlay('detailModal');
+  save();renderCalendar();if(document.getElementById('page-week')&&document.getElementById('page-week').classList.contains('active'))renderWeek();closeOverlay('detailModal');
 }
 
 function saveEvent(){
@@ -1666,7 +1637,7 @@ function saveEvent(){
   } else {
     events.push(ev);
   }
-  save();renderCalendar();if(document.getElementById('page-week')&&document.getElementById('page-week').classList.contains('active'));closeOverlay('evModal');
+  save();renderCalendar();if(document.getElementById('page-week')&&document.getElementById('page-week').classList.contains('active'))renderWeek();closeOverlay('evModal');
 }
 
 function openOverlay(id){document.getElementById(id).classList.add('open');}
@@ -1782,23 +1753,18 @@ var curWeekStart = null; // Date object for Sunday of current week
 var weeklyEvents = loadData('lp_wev', []); // week-only events
 var weatherData  = loadData('lp_weather', {}); // key: dateStr, val: icon index
 var habitData    = loadData('lp_habits', {});  // key: 'dateStr_habitIdx', val: bool
-var HABITS_DEFAULT = [
+var HABITS = [
   {icon:'🤸🏻', label:'Stretch'},
   {icon:'💛', label:'Positive'},
   {icon:'🏋🏻‍♀️', label:'Workout'},
   {icon:'📖', label:'Read'}
 ];
-var HABITS = loadData('lp_habits_def', null) || HABITS_DEFAULT;
 
 function saveWeek(){
   localStorage.setItem('lp_wev', JSON.stringify(weeklyEvents));
   localStorage.setItem('lp_weather', JSON.stringify(weatherData));
   localStorage.setItem('lp_habits', JSON.stringify(habitData));
 }
-function saveHabitDefs(){
-  localStorage.setItem('lp_habits_def', JSON.stringify(HABITS));
-}
-
 
 function getWeekStart(date){
   var d = new Date(date);
@@ -1838,15 +1804,6 @@ function changeWeek(d){
 
 function renderWeek(){
   var wn = getWeekNumber(curWeekStart);
-    // Highlight/dim Today button based on whether we're on current week
-  var todayBtn = document.getElementById('weekTodayBtn');
-  if(todayBtn){
-    var nowD = new Date(); nowD.setHours(0,0,0,0);
-    var thisWeekSun = getWeekStart(nowD);
-    var isThisWeek = (curWeekStart.getTime() === thisWeekSun.getTime());
-    todayBtn.classList.toggle('current-week', isThisWeek);
-  }
-
   document.getElementById('weekNum').textContent = 'Week ' + wn;
 
   var endDate = new Date(curWeekStart); endDate.setDate(endDate.getDate()+6);
@@ -2129,19 +2086,6 @@ function renderHabitTracker(){
   var hGrid = document.getElementById('habitGrid');
   hGrid.innerHTML='';
 
-  // Title bar with edit button
-  var titleBar = document.createElement('div');
-  titleBar.className = 'habit-title';
-  titleBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;';
-  titleBar.innerHTML = '<span>Habits</span>';
-  var editHabitBtn = document.createElement('button');
-  editHabitBtn.textContent = '✏️';
-  editHabitBtn.title = 'Edit habits';
-  editHabitBtn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:.85rem;padding:0 2px;line-height:1;opacity:.8;';
-  editHabitBtn.onclick = openHabitEditor;
-  titleBar.appendChild(editHabitBtn);
-  hGrid.appendChild(titleBar);
-
   // Header row with day initials
   var headerRow = document.createElement('div'); headerRow.className='habit-header-row';
   var emptyHead = document.createElement('div'); emptyHead.className='habit-day-head hd-first';
@@ -2160,10 +2104,7 @@ function renderHabitTracker(){
     (function(hIdx){
       var row=document.createElement('div'); row.className='habit-row';
       var lbl=document.createElement('div'); lbl.className='habit-label';
-      // Emoji only — label as tooltip
-      lbl.textContent = HABITS[hIdx].icon;
-      lbl.title = HABITS[hIdx].label;
-      lbl.style.cssText = 'font-size:1.1rem;cursor:default;display:flex;align-items:center;justify-content:center;';
+      lbl.textContent=HABITS[hIdx].icon+' '+HABITS[hIdx].label;
       row.appendChild(lbl);
       for(var c=0;c<7;c++){
         (function(col){
@@ -2184,81 +2125,6 @@ function renderHabitTracker(){
       hGrid.appendChild(row);
     })(hi);
   }
-}
-
-/* ---- HABIT EDITOR ---- */
-function openHabitEditor(){
-  var list = document.getElementById('habitEditorList');
-  list.innerHTML = '';
-  HABITS.forEach(function(h, i){
-    var row = document.createElement('div');
-    row.className = 'habit-editor-row';
-    row.dataset.idx = i;
-    row.innerHTML =
-      '<span class="habit-ed-emoji" onclick="openEmojiPicker(this,'+i+')" title="Click to change emoji" style="font-size:1.3rem;cursor:pointer;padding:0 4px;user-select:none;">'+h.icon+'</span>'+
-      '<input type="text" class="habit-ed-input" value="'+h.label.replace(/"/g,'&quot;')+'" placeholder="Habit name" maxlength="20"/>'+
-      '<button onclick="removeHabitRow(this)" style="background:none;border:none;cursor:pointer;color:#c0392b;font-size:.9rem;padding:0 4px;" title="Remove">✕</button>';
-    list.appendChild(row);
-  });
-  document.getElementById('newHabitName').value='';
-  document.getElementById('newHabitEmoji').value='';
-  document.getElementById('habitEditorModal').classList.add('open');
-}
-
-function openEmojiPicker(spanEl, idx){
-  // Remove any existing picker
-  document.querySelectorAll('.emoji-quick-picker').forEach(function(p){p.remove();});
-  var EMOJI_LIST = ['🤸🏻','💛','🏋🏻‍♀️','📖','💧','🧘','🥗','😴','💊','🚴','🎵','✍️','🧹','🛁','🏃','🌿','☀️','🧴','🦷','🍎','🏊','🧠','🎯','🙏'];
-  var picker = document.createElement('div');
-  picker.className = 'emoji-quick-picker';
-  picker.style.cssText = 'position:absolute;background:#fff;border:1.5px solid #d5ceeb;border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:4px;z-index:600;box-shadow:0 4px 18px rgba(26,58,107,.18);max-width:220px;';
-  EMOJI_LIST.forEach(function(em){
-    var btn = document.createElement('button');
-    btn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:1.2rem;padding:2px;border-radius:6px;transition:background .12s;';
-    btn.textContent = em;
-    btn.onmouseover = function(){ btn.style.background='#f0f4ff'; };
-    btn.onmouseout = function(){ btn.style.background='none'; };
-    btn.onclick = function(e){
-      e.stopPropagation();
-      spanEl.textContent = em;
-      picker.remove();
-    };
-    picker.appendChild(btn);
-  });
-  var rect = spanEl.getBoundingClientRect();
-  picker.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-  picker.style.left = rect.left + 'px';
-  document.body.appendChild(picker);
-  setTimeout(function(){
-    document.addEventListener('click', function handler(){
-      picker.remove();
-      document.removeEventListener('click', handler);
-    });
-  }, 0);
-}
-
-function removeHabitRow(btn){
-  btn.closest('.habit-editor-row').remove();
-}
-
-function saveHabitEditor(){
-  var rows = document.querySelectorAll('#habitEditorList .habit-editor-row');
-  var newHabits = [];
-  rows.forEach(function(row){
-    var icon = row.querySelector('.habit-ed-emoji').textContent.trim();
-    var name = row.querySelector('.habit-ed-input').value.trim();
-    if(name) newHabits.push({icon: icon || '⭐', label: name});
-  });
-  // Add new habit if filled
-  var newEmoji = document.getElementById('newHabitEmoji').value.trim();
-  var newName  = document.getElementById('newHabitName').value.trim();
-  if(newName) newHabits.push({icon: newEmoji || '⭐', label: newName});
-
-  HABITS.length = 0;
-  newHabits.forEach(function(h){ HABITS.push(h); });
-  saveHabitDefs();
-  closeOverlay('habitEditorModal');
-  renderHabitTracker();
 }
 
 /* ---- WEEK-ONLY EVENTS ---- */
@@ -2699,91 +2565,6 @@ function removeBudgetEntry(id){
 archiveExpiredTodos();
 initCalendar();
 renderTodo();
-
-/* ---- KEYBOARD SHORTCUTS ---- */
-(function(){
-  var toast = null;
-  function showKbToast(msg){
-    if(!toast){
-      toast = document.createElement('div');
-      toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(50px);background:rgba(26,58,107,.92);color:#fff;border-radius:10px;padding:7px 18px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;transition:transform .22s,opacity .22s;opacity:0;white-space:nowrap;';
-      document.body.appendChild(toast);
-    }
-    toast.textContent = msg;
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-    toast.style.opacity = '1';
-    clearTimeout(toast._t);
-    toast._t = setTimeout(function(){
-      toast.style.transform = 'translateX(-50%) translateY(50px)';
-      toast.style.opacity = '0';
-    }, 1500);
-  }
-
-  document.addEventListener('keydown', function(e){
-    // Don't fire when user is typing
-    if(['INPUT','TEXTAREA','SELECT'].indexOf(e.target.tagName) > -1) return;
-    if(e.metaKey || e.ctrlKey || e.altKey) return;
-
-    switch(e.key){
-      case 'n': case 'N':
-        // Open new event modal with today's date pre-filled
-        if(typeof openAddModal === 'function'){
-          openAddModal();
-          showKbToast('n — new event');
-        }
-        break;
-
-      case 't': case 'T':
-        if(typeof goHome === 'function'){
-          goHome();
-          showKbToast('t — today');
-        }
-        break;
-
-      case 'ArrowLeft':
-        e.preventDefault();
-        if(document.getElementById('page-week') &&
-           document.getElementById('page-week').classList.contains('active')){
-          if(typeof changeWeek === 'function'){ changeWeek(-1); showKbToast('← prev week'); }
-        } else {
-          if(typeof changeMonth === 'function'){ changeMonth(-1); showKbToast('← prev month'); }
-        }
-        break;
-
-      case 'ArrowRight':
-        e.preventDefault();
-        if(document.getElementById('page-week') &&
-           document.getElementById('page-week').classList.contains('active')){
-          if(typeof changeWeek === 'function'){ changeWeek(1); showKbToast('→ next week'); }
-        } else {
-          if(typeof changeMonth === 'function'){ changeMonth(1); showKbToast('→ next month'); }
-        }
-        break;
-
-      case 'm': case 'M':
-        if(typeof switchView === 'function'){
-          var mBtn = document.querySelector('[id^="vt-month"]');
-          switchView('month', mBtn);
-          showKbToast('m — month view');
-        }
-        break;
-
-      case 'w': case 'W':
-        if(typeof switchView === 'function'){
-          var wBtn = document.querySelector('[id^="vt-week"]');
-          switchView('week', wBtn);
-          showKbToast('w — week view');
-        }
-        break;
-
-      case '?':
-        showKbToast('n=new  t=today  m/w=view  ←/→=prev/next');
-        break;
-    }
-  });
-})();
-
-  
 </script>
 
 <!-- Year Picker Overlay -->
@@ -2850,26 +2631,5 @@ renderTodo();
     </div>
   </div>
 </div>
-  
-<!-- Habit Editor Modal -->
-<div class="overlay" id="habitEditorModal" onclick="if(event.target===this)closeOverlay('habitEditorModal')">
-  <div class="modal" style="border-top-color:#7b6faa;">
-    <h3 style="color:#7b6faa;">✏️ Edit Habits</h3>
-    <p style="font-size:.72rem;color:#86b1df;margin-bottom:10px;">Click emoji to change it. Label shows as tooltip only.</p>
-    <div id="habitEditorList" style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px;max-height:260px;overflow-y:auto;"></div>
-    <div style="display:flex;gap:6px;align-items:center;border-top:1px solid #d5ceeb;padding-top:10px;">
-      <input type="text" id="newHabitEmoji" placeholder="emoji" maxlength="4"
-             style="width:48px;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 6px;font-size:.88rem;background:#f5f0e8;color:#1a3a6b;outline:none;text-align:center;"/>
-      <input type="text" id="newHabitName" placeholder="Add new habit…" maxlength="20"
-             style="flex:1;border:1.5px solid #d5ceeb;border-radius:8px;padding:5px 8px;font-size:.82rem;background:#f5f0e8;color:#1a3a6b;outline:none;"/>
-      <button onclick="saveHabitEditor()" class="btn-save" style="padding:5px 10px;font-size:.8rem;">+ Add & Save</button>
-    </div>
-    <div class="modal-btns" style="margin-top:12px;">
-      <button class="btn-save" onclick="saveHabitEditor()">Save</button>
-      <button class="btn-cancel" onclick="closeOverlay('habitEditorModal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
