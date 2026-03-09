@@ -279,7 +279,6 @@ h2.unav-title{margin:0;min-width:unset}
   line-height:1.6;
   background-color:#f5f0e8;
   background-image:none;
-  background-attachment:local;
   resize:vertical;
   box-sizing:border-box;
   outline:none;
@@ -289,26 +288,41 @@ h2.unav-title{margin:0;min-width:unset}
 }
 .week-notes-textarea:focus{border-color:#4aabf7}
 
-/* PHOTO CAROUSEL */
+/* PHOTO STACK CAROUSEL */
 .photo-carousel-section{margin-top:10px;}
-.photo-carousel-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between;}
-.photo-carousel-wrap{position:relative;width:100%;background:#f0ecf8;border:1.5px solid #d5ceeb;border-radius:10px;overflow:hidden;}
-.photo-carousel-track-outer{overflow:hidden;width:100%;}
-.photo-carousel-track{display:flex;transition:transform .3s ease;will-change:transform;}
-.photo-carousel-slide{flex:0 0 100%;width:100%;position:relative;aspect-ratio:16/9;background:#e8e4f4;display:flex;align-items:center;justify-content:center;}
-.photo-carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
-.photo-carousel-del{position:absolute;top:6px;right:6px;background:rgba(192,57,43,.85);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;}
-.photo-carousel-del:hover{background:#c0392b;}
-.photo-carousel-empty{color:#b0b8d8;font-size:.8rem;text-align:center;padding:22px 0;font-style:italic;}
-.photo-carousel-nav{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:#f5f0e8;border-top:1px solid #d5ceeb;}
-.pc-nav-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:#4aabf7;font-weight:800;padding:2px 6px;line-height:1;border-radius:6px;transition:background .15s;}
-.pc-nav-btn:hover{background:#d5ceeb;}
-.pc-nav-btn:disabled{color:#d5ceeb;cursor:default;}
-.pc-dots{display:flex;gap:5px;align-items:center;}
-.pc-dot{width:7px;height:7px;border-radius:50%;background:#d5ceeb;cursor:pointer;transition:background .15s;}
-.pc-dot.active{background:#4aabf7;}
+.photo-carousel-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:8px;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between;}
 .pc-add-btn{background:#4aabf7;color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:.72rem;font-weight:800;cursor:pointer;letter-spacing:.3px;}
 .pc-add-btn:hover{background:#1a3a6b;}
+/* Stack wrapper */
+.pc-stack-wrap{position:relative;width:100%;padding-bottom:8px;min-height:54px;}
+/* Each card */
+.pc-card{position:relative;width:200px;height:200px;border-radius:12px;overflow:hidden;border:2.5px solid #d5ceeb;background:#e8e4f4;box-shadow:0 2px 8px rgba(26,58,107,.13);display:inline-block;cursor:pointer;flex-shrink:0;}
+.pc-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.pc-card-del{position:absolute;top:5px;right:5px;background:rgba(192,57,43,.88);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.72rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;font-weight:800;}
+.pc-card-del:hover{background:#c0392b;}
+.pc-card-num{position:absolute;bottom:5px;left:7px;background:rgba(26,58,107,.65);color:#fff;font-size:.6rem;font-weight:800;border-radius:8px;padding:1px 6px;letter-spacing:.3px;}
+/* Horizontal scroll row */
+.pc-scroll-row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin;scrollbar-color:#d5ceeb transparent;}
+.pc-scroll-row::-webkit-scrollbar{height:4px;}
+.pc-scroll-row::-webkit-scrollbar-thumb{background:#d5ceeb;border-radius:4px;}
+.pc-empty{color:#b0b8d8;font-size:.78rem;text-align:center;padding:16px 0;font-style:italic;border:1.5px dashed #d5ceeb;border-radius:10px;}
+/* CROP MODAL */
+.crop-overlay{display:none;position:fixed;inset:0;background:rgba(13,35,64,.72);z-index:300;align-items:center;justify-content:center;}
+.crop-overlay.open{display:flex;}
+.crop-modal{background:#fff;border-radius:16px;padding:20px;width:340px;max-width:96vw;box-shadow:0 12px 40px rgba(26,58,107,.25);border-top:4px solid #4aabf7;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.crop-modal h3{font-size:.9rem;font-weight:800;color:#1a3a6b;text-transform:uppercase;letter-spacing:.5px;margin:0;}
+.crop-hint{font-size:.7rem;color:#86b1df;text-align:center;margin-top:-6px;}
+/* Square viewport */
+.crop-viewport{width:280px;height:280px;border-radius:12px;overflow:hidden;position:relative;border:2.5px solid #4aabf7;background:#111;cursor:grab;touch-action:none;}
+.crop-viewport:active{cursor:grabbing;}
+.crop-img-el{position:absolute;transform-origin:0 0;user-select:none;-webkit-user-drag:none;}
+/* Zoom slider */
+.crop-zoom-row{display:flex;align-items:center;gap:8px;width:100%;}
+.crop-zoom-row label{font-size:.7rem;color:#86b1df;font-weight:700;white-space:nowrap;}
+.crop-zoom-slider{flex:1;accent-color:#4aabf7;}
+.crop-btns{display:flex;gap:8px;width:100%;}
+.crop-btns .btn-cancel{flex:1;text-align:center;}
+.crop-btns .btn-save{flex:1;text-align:center;}
 
 
 /* WEIGHT PANEL */
@@ -711,16 +725,7 @@ h2.unav-title{margin:0;min-width:unset}
         <span>📷 Week Photos</span>
         <button class="pc-add-btn" onclick="pcAddPhoto()">+ Add Photo</button>
       </div>
-      <div class="photo-carousel-wrap" id="pcWrap">
-        <div class="photo-carousel-track-outer" id="pcOuter">
-          <div class="photo-carousel-track" id="pcTrack"></div>
-        </div>
-        <div class="photo-carousel-nav" id="pcNav">
-          <button class="pc-nav-btn" id="pcPrev" onclick="pcMove(-1)">&#8249;</button>
-          <div class="pc-dots" id="pcDots"></div>
-          <button class="pc-nav-btn" id="pcNext" onclick="pcMove(1)">&#8250;</button>
-        </div>
-      </div>
+      <div id="pcScrollRow" class="pc-scroll-row"></div>
     </div>
     <input type="file" id="pcFileInput" accept="image/*" style="display:none" onchange="pcHandleFile(event)"/>
     </div>
@@ -1514,117 +1519,154 @@ function cycleDayLog(ds,btn){ loadDayLog(); var cur=dayLog[ds]||'none'; var idx=
 function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'1.1rem'; }
 
 function getPeriodStarts(){
-  var all=[];
-  for(var k in dayLog){ if(dayLog[k]==='period') all.push(k); }
-  all.sort();
-  if(all.length===0) return [];
+  var all=[]; for(var k in dayLog){ if(dayLog[k]==='period') all.push(k); } all.sort();
+  if(!all.length) return [];
   var starts=[all[0]];
   for(var i=1;i<all.length;i++){
-    var prev=new Date(all[i-1]+'T00:00:00');
-    var cur=new Date(all[i]+'T00:00:00');
-    var gap=Math.round((cur-prev)/(1000*60*60*24));
+    var gap=Math.round((new Date(all[i]+'T00:00:00')-new Date(all[i-1]+'T00:00:00'))/(864e5));
     if(gap>1) starts.push(all[i]);
   }
   return starts;
 }
 
 function renderCycleStats(){
-  var lastEl=document.getElementById('cycleLastLen');
-  var avgEl=document.getElementById('cycleAvgLen');
-  var tillEl=document.getElementById('cycleDaysTill');
+  var lastEl=document.getElementById('cycleLastLen'),avgEl=document.getElementById('cycleAvgLen'),tillEl=document.getElementById('cycleDaysTill');
   if(!lastEl) return;
   loadDayLog();
-  var starts=getPeriodStarts();
-  var lengths=[];
+  var starts=getPeriodStarts(), lengths=[];
   for(var i=1;i<starts.length;i++){
-    var a=new Date(starts[i-1]+'T00:00:00');
-    var b=new Date(starts[i]+'T00:00:00');
-    var diff=Math.round((b-a)/(1000*60*60*24));
+    var diff=Math.round((new Date(starts[i]+'T00:00:00')-new Date(starts[i-1]+'T00:00:00'))/(864e5));
     if(diff>=14&&diff<=60) lengths.push(diff);
   }
-  var lastLen=lengths.length>0?lengths[lengths.length-1]:null;
-  var avgLen=lengths.length>0?Math.round(lengths.reduce(function(a,b){return a+b;},0)/lengths.length):null;
+  var lastLen=lengths.length?lengths[lengths.length-1]:null;
+  var avgLen=lengths.length?Math.round(lengths.reduce(function(a,b){return a+b;},0)/lengths.length):null;
   lastEl.textContent=lastLen?lastLen+' days':'—';
   avgEl.textContent=avgLen?avgLen+' days':'—';
-  if(avgLen&&starts.length>0){
-    var lastStart=new Date(starts[starts.length-1]+'T00:00:00');
-    var nextStart=new Date(lastStart); nextStart.setDate(nextStart.getDate()+avgLen);
+  if(avgLen&&starts.length){
+    var nextStart=new Date(starts[starts.length-1]+'T00:00:00'); nextStart.setDate(nextStart.getDate()+avgLen);
     var today=new Date(); today.setHours(0,0,0,0);
-    var diff=Math.round((nextStart-today)/(1000*60*60*24));
-    if(diff>0) tillEl.textContent='🩸 Next period in '+diff+' day'+(diff===1?'':'s');
-    else if(diff===0) tillEl.textContent='🩸 Period expected today';
-    else tillEl.textContent='🩸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago';
+    var diff=Math.round((nextStart-today)/864e5);
+    tillEl.textContent=diff>0?'🩸 Next period in '+diff+' day'+(diff===1?'':'s'):diff===0?'🩸 Period expected today':'🩸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago';
   } else { tillEl.textContent=''; }
 }
 
-/* ---- PHOTO CAROUSEL ---- */
-var PC_KEY='lp_photos';
-var pcData={};
-var pcIdx=0;
+/* ======== PHOTO STACK + CROP ======== */
+var PC_KEY='lp_photos'; var pcData={};
 function loadPcData(){ try{ pcData=JSON.parse(localStorage.getItem(PC_KEY)||'{}'); }catch(e){ pcData={}; } }
 function savePcData(){ localStorage.setItem(PC_KEY,JSON.stringify(pcData)); }
 function pcKey(){ return getWeekKey(); }
 function pcPhotos(){ loadPcData(); return pcData[pcKey()]||[]; }
 function pcAddPhoto(){ document.getElementById('pcFileInput').click(); }
+
+/* ---- Crop state ---- */
+var _cropSrc='', _cropOx=0, _cropOy=0, _cropScale=1;
+var _cropDragging=false, _cropLast={x:0,y:0};
+
 function pcHandleFile(e){
   var file=e.target.files[0]; if(!file) return;
   var reader=new FileReader();
-  reader.onload=function(ev){
-    loadPcData();
-    var k=pcKey(); if(!pcData[k]) pcData[k]=[];
-    pcData[k].push({id:'pc'+Date.now(),dataUrl:ev.target.result});
-    savePcData();
-    pcIdx=pcData[k].length-1;
-    renderCarousel();
-  };
+  reader.onload=function(ev){ openCropModal(ev.target.result); };
   reader.readAsDataURL(file);
   e.target.value='';
 }
+
+function openCropModal(src){
+  _cropSrc=src; _cropOx=0; _cropOy=0; _cropScale=1;
+  var img=document.getElementById('cropImg');
+  var vp=document.getElementById('cropViewport');
+  img.src=src;
+  document.getElementById('cropZoom').value=1;
+  img.onload=function(){
+    var vpW=vp.offsetWidth||280;
+    /* fit smallest dimension to viewport */
+    var s=vpW/Math.min(img.naturalWidth,img.naturalHeight);
+    _cropScale=s; document.getElementById('cropZoom').min=s; document.getElementById('cropZoom').value=s;
+    _cropOx=-(img.naturalWidth*s-vpW)/2; _cropOy=-(img.naturalHeight*s-vpW)/2;
+    applyCropTransform();
+  };
+  document.getElementById('cropOverlay').classList.add('open');
+  bindCropEvents();
+}
+
+function closeCropModal(){ document.getElementById('cropOverlay').classList.remove('open'); }
+
+function applyCropTransform(){
+  var img=document.getElementById('cropImg');
+  var vp=document.getElementById('cropViewport');
+  var vpW=vp.offsetWidth||280;
+  var iw=img.naturalWidth*_cropScale, ih=img.naturalHeight*_cropScale;
+  _cropOx=Math.min(0,Math.max(vpW-iw,_cropOx));
+  _cropOy=Math.min(0,Math.max(vpW-ih,_cropOy));
+  img.style.width=iw+'px'; img.style.height=ih+'px';
+  img.style.left=_cropOx+'px'; img.style.top=_cropOy+'px';
+}
+
+function cropZoomChange(){
+  var vp=document.getElementById('cropViewport');
+  var vpW=vp.offsetWidth||280;
+  var img=document.getElementById('cropImg');
+  var oldS=_cropScale;
+  _cropScale=parseFloat(document.getElementById('cropZoom').value);
+  /* zoom toward center */
+  var cx=vpW/2, cy=vpW/2;
+  _cropOx=cx-(_cropScale/oldS)*(cx-_cropOx);
+  _cropOy=cy-(_cropScale/oldS)*(cy-_cropOy);
+  applyCropTransform();
+}
+
+function bindCropEvents(){
+  var vp=document.getElementById('cropViewport');
+  vp.onmousedown=function(e){ _cropDragging=true; _cropLast={x:e.clientX,y:e.clientY}; e.preventDefault(); };
+  window.onmousemove=function(e){ if(!_cropDragging) return; _cropOx+=e.clientX-_cropLast.x; _cropOy+=e.clientY-_cropLast.y; _cropLast={x:e.clientX,y:e.clientY}; applyCropTransform(); };
+  window.onmouseup=function(){ _cropDragging=false; };
+  vp.ontouchstart=function(e){ _cropLast={x:e.touches[0].clientX,y:e.touches[0].clientY}; e.preventDefault(); },{passive:false};
+  vp.ontouchmove=function(e){ _cropOx+=e.touches[0].clientX-_cropLast.x; _cropOy+=e.touches[0].clientY-_cropLast.y; _cropLast={x:e.touches[0].clientX,y:e.touches[0].clientY}; applyCropTransform(); e.preventDefault(); },{passive:false};
+}
+
+function cropConfirm(){
+  var vp=document.getElementById('cropViewport');
+  var img=document.getElementById('cropImg');
+  var vpW=vp.offsetWidth||280;
+  /* Render to 400x400 canvas */
+  var OUT=400;
+  var ratio=OUT/vpW;
+  var canvas=document.createElement('canvas'); canvas.width=OUT; canvas.height=OUT;
+  var ctx=canvas.getContext('2d');
+  ctx.drawImage(img, -_cropOx*ratio/(_cropScale*img.naturalWidth/img.naturalWidth), -_cropOy*ratio/(_cropScale*img.naturalHeight/img.naturalHeight),
+    img.naturalWidth*_cropScale*ratio, img.naturalHeight*_cropScale*ratio);
+  var dataUrl=canvas.toDataURL('image/jpeg',0.88);
+  loadPcData();
+  var k=pcKey(); if(!pcData[k]) pcData[k]=[];
+  pcData[k].push({id:'pc'+Date.now(),dataUrl:dataUrl});
+  savePcData();
+  closeCropModal();
+  renderPhotoStack();
+}
+
 function pcDeletePhoto(id){
   loadPcData(); var k=pcKey();
   pcData[k]=(pcData[k]||[]).filter(function(p){return p.id!==id;});
   if(!pcData[k].length) delete pcData[k];
-  savePcData();
-  pcIdx=Math.max(0,pcIdx-1);
-  renderCarousel();
+  savePcData(); renderPhotoStack();
 }
-function pcMove(dir){
+
+function renderPhotoStack(){
+  var row=document.getElementById('pcScrollRow'); if(!row) return;
   var photos=pcPhotos();
-  pcIdx=Math.max(0,Math.min(photos.length-1,pcIdx+dir));
-  renderCarousel();
-}
-function renderCarousel(){
-  var track=document.getElementById('pcTrack');
-  var dotsEl=document.getElementById('pcDots');
-  var prevBtn=document.getElementById('pcPrev');
-  var nextBtn=document.getElementById('pcNext');
-  var nav=document.getElementById('pcNav');
-  if(!track) return;
-  var photos=pcPhotos();
-  track.innerHTML=''; dotsEl.innerHTML='';
-  if(photos.length===0){
-    track.innerHTML='<div class="photo-carousel-empty">No photos yet — tap + Add Photo</div>';
-    if(nav) nav.style.display='none'; return;
+  row.innerHTML='';
+  if(!photos.length){
+    row.innerHTML='<div class="pc-empty">No photos yet — tap + Add Photo</div>';
+    return;
   }
-  if(nav) nav.style.display='flex';
-  if(pcIdx>=photos.length) pcIdx=photos.length-1;
   photos.forEach(function(p,i){
-    var slide=document.createElement('div'); slide.className='photo-carousel-slide';
-    var img=document.createElement('img'); img.src=p.dataUrl; img.alt='Week photo';
-    var delBtn=document.createElement('button'); delBtn.className='photo-carousel-del';
-    delBtn.innerHTML='&#10005;'; delBtn.title='Remove photo';
-    delBtn.onclick=(function(pid){ return function(e){ e.stopPropagation(); pcDeletePhoto(pid); }; })(p.id);
-    slide.appendChild(img); slide.appendChild(delBtn); track.appendChild(slide);
-    var dot=document.createElement('div'); dot.className='pc-dot'+(i===pcIdx?' active':'');
-    dot.onclick=(function(ii){ return function(){ pcIdx=ii; renderCarousel(); }; })(i);
-    dotsEl.appendChild(dot);
+    var card=document.createElement('div'); card.className='pc-card';
+    var img=document.createElement('img'); img.src=p.dataUrl; img.alt='Photo '+(i+1);
+    var del=document.createElement('button'); del.className='pc-card-del'; del.innerHTML='&#10005;'; del.title='Remove';
+    del.onclick=(function(pid){ return function(e){ e.stopPropagation(); if(confirm('Remove this photo?')) pcDeletePhoto(pid); }; })(p.id);
+    var num=document.createElement('div'); num.className='pc-card-num'; num.textContent=(i+1)+'/'+photos.length;
+    card.appendChild(img); card.appendChild(del); card.appendChild(num);
+    row.appendChild(card);
   });
-  track.style.transform='translateX(-'+pcIdx+'00%)';
-  prevBtn.disabled=(pcIdx===0);
-  nextBtn.disabled=(pcIdx===photos.length-1);
-  var outer=document.getElementById('pcOuter');
-  outer.ontouchstart=function(e){ outer._tx=e.touches[0].clientX; };
-  outer.ontouchend=function(e){ var dx=e.changedTouches[0].clientX-(outer._tx||0); if(Math.abs(dx)>40) pcMove(dx<0?1:-1); };
 }
 
 function onStartDateChange(){ var sd=document.getElementById('evStart').value; var edEl=document.getElementById('evEnd'); edEl.min=sd||''; if(sd&&(!edEl.value||edEl.value<sd)) edEl.value=sd; }
@@ -2099,7 +2141,7 @@ function renderWeek(){
   grid.appendChild(row5);
 
   loadWeekNotes();
-  pcIdx=0; renderCarousel();
+  renderPhotoStack();
   showWeightTracker(true);
   renderWeightTracker();
   renderBudget();
@@ -2636,5 +2678,24 @@ renderTodo();
   </div>
 </div>
 
+
+<!-- CROP MODAL -->
+<div class="crop-overlay" id="cropOverlay">
+  <div class="crop-modal">
+    <h3>📷 Move & Crop</h3>
+    <p class="crop-hint">Drag to reposition · slider to zoom</p>
+    <div class="crop-viewport" id="cropViewport">
+      <img class="crop-img-el" id="cropImg" src="" alt=""/>
+    </div>
+    <div class="crop-zoom-row">
+      <label>🔍</label>
+      <input type="range" class="crop-zoom-slider" id="cropZoom" min="1" max="4" step="0.01" value="1" oninput="cropZoomChange()"/>
+    </div>
+    <div class="crop-btns">
+      <button class="btn-cancel" onclick="closeCropModal()">Cancel</button>
+      <button class="btn-save" onclick="cropConfirm()">Use Photo</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
