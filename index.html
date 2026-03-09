@@ -55,7 +55,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 /* Week row wrapper for spanning events */
 .week-row{display:contents}
 
-.cal-cell{background:#fff;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:90px;padding:5px 5px 22px 5px;position:relative;cursor:pointer;transition:background .15s;overflow:hidden;min-width:0;}
+.cal-cell{background:#fff;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:90px;padding:5px 5px 22px 5px;position:relative;cursor:pointer;transition:background .15s;}
 .cal-cell:hover{background:#f0f8ff}
 .cal-cell.empty{background:#f9f6f0;cursor:default}
 .cal-cell.empty:hover{background:#f9f6f0}
@@ -267,7 +267,9 @@ h2.unav-title{margin:0;min-width:unset}
 .week-notes-section{position:relative}
 .week-notes-textarea{
   width:100%;
-  min-height:224px;
+  height:112px;
+  min-height:60px;
+  max-height:300px;
   border:1.5px solid #d5ceeb;
   border-radius:10px;
   padding:6px 12px 10px 14px;
@@ -282,10 +284,32 @@ h2.unav-title{margin:0;min-width:unset}
   box-sizing:border-box;
   outline:none;
   transition:border-color .2s;
-  overflow:auto;
+  overflow-y:auto;
   vertical-align:bottom;
 }
 .week-notes-textarea:focus{border-color:#4aabf7}
+
+/* PHOTO CAROUSEL */
+.photo-carousel-section{margin-top:10px;}
+.photo-carousel-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between;}
+.photo-carousel-wrap{position:relative;width:100%;background:#f0ecf8;border:1.5px solid #d5ceeb;border-radius:10px;overflow:hidden;}
+.photo-carousel-track-outer{overflow:hidden;width:100%;}
+.photo-carousel-track{display:flex;transition:transform .3s ease;will-change:transform;}
+.photo-carousel-slide{flex:0 0 100%;width:100%;position:relative;aspect-ratio:16/9;background:#e8e4f4;display:flex;align-items:center;justify-content:center;}
+.photo-carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-carousel-del{position:absolute;top:6px;right:6px;background:rgba(192,57,43,.85);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;}
+.photo-carousel-del:hover{background:#c0392b;}
+.photo-carousel-empty{color:#b0b8d8;font-size:.8rem;text-align:center;padding:22px 0;font-style:italic;}
+.photo-carousel-nav{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:#f5f0e8;border-top:1px solid #d5ceeb;}
+.pc-nav-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:#4aabf7;font-weight:800;padding:2px 6px;line-height:1;border-radius:6px;transition:background .15s;}
+.pc-nav-btn:hover{background:#d5ceeb;}
+.pc-nav-btn:disabled{color:#d5ceeb;cursor:default;}
+.pc-dots{display:flex;gap:5px;align-items:center;}
+.pc-dot{width:7px;height:7px;border-radius:50%;background:#d5ceeb;cursor:pointer;transition:background .15s;}
+.pc-dot.active{background:#4aabf7;}
+.pc-add-btn{background:#4aabf7;color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:.72rem;font-weight:800;cursor:pointer;letter-spacing:.3px;}
+.pc-add-btn:hover{background:#1a3a6b;}
+
 
 /* WEIGHT PANEL */
 
@@ -492,9 +516,8 @@ h2.unav-title{margin:0;min-width:unset}
   padding:4px 0;
   min-height:44px;
   display:flex;
-  flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
+  justify-content:center;
 }
 .wday-row5-cell:last-child{border-right:none;}
 
@@ -683,6 +706,23 @@ h2.unav-title{margin:0;min-width:unset}
     <div class="week-notes-section">
       <div class="week-notes-label">📝 NOTE</div>
       <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
+    <div class="photo-carousel-section">
+      <div class="photo-carousel-label">
+        <span>📷 Week Photos</span>
+        <button class="pc-add-btn" onclick="pcAddPhoto()">+ Add Photo</button>
+      </div>
+      <div class="photo-carousel-wrap" id="pcWrap">
+        <div class="photo-carousel-track-outer" id="pcOuter">
+          <div class="photo-carousel-track" id="pcTrack"></div>
+        </div>
+        <div class="photo-carousel-nav" id="pcNav">
+          <button class="pc-nav-btn" id="pcPrev" onclick="pcMove(-1)">&#8249;</button>
+          <div class="pc-dots" id="pcDots"></div>
+          <button class="pc-nav-btn" id="pcNext" onclick="pcMove(1)">&#8250;</button>
+        </div>
+      </div>
+    </div>
+    <input type="file" id="pcFileInput" accept="image/*" style="display:none" onchange="pcHandleFile(event)"/>
     </div>
     <div class="week-budget-section">
       <div class="week-notes-label">💰 <span id="budgetYearLabel">2026</span> Budget</div>
@@ -1469,11 +1509,10 @@ var dayLog={};
 function loadDayLog(){ try{ dayLog=JSON.parse(localStorage.getItem(DAY_LOG_KEY)||'{}'); }catch(e){ dayLog={}; } }
 function saveDayLog(){ localStorage.setItem(DAY_LOG_KEY,JSON.stringify(dayLog)); }
 var DAY_LOG_STATES=['none','choc','period'];
-var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'\uD83E\uDDB8'};
+var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'🩸'};
 function cycleDayLog(ds,btn){ loadDayLog(); var cur=dayLog[ds]||'none'; var idx=DAY_LOG_STATES.indexOf(cur); var next=DAY_LOG_STATES[(idx+1)%DAY_LOG_STATES.length]; if(next==='none'){ delete dayLog[ds]; } else { dayLog[ds]=next; } saveDayLog(); updateDayLogBtn(btn,next); renderCycleStats(); }
 function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'1.1rem'; }
 
-/* Extract only the FIRST day of each consecutive 🩸 cluster */
 function getPeriodStarts(){
   var all=[];
   for(var k in dayLog){ if(dayLog[k]==='period') all.push(k); }
@@ -1484,7 +1523,7 @@ function getPeriodStarts(){
     var prev=new Date(all[i-1]+'T00:00:00');
     var cur=new Date(all[i]+'T00:00:00');
     var gap=Math.round((cur-prev)/(1000*60*60*24));
-    if(gap>1) starts.push(all[i]); // gap >1 day = new cluster
+    if(gap>1) starts.push(all[i]);
   }
   return starts;
 }
@@ -1512,10 +1551,80 @@ function renderCycleStats(){
     var nextStart=new Date(lastStart); nextStart.setDate(nextStart.getDate()+avgLen);
     var today=new Date(); today.setHours(0,0,0,0);
     var diff=Math.round((nextStart-today)/(1000*60*60*24));
-    if(diff>0) tillEl.textContent='🦸 Next period in '+diff+' day'+(diff===1?'':'s');
-    else if(diff===0) tillEl.textContent='🦸 Period expected today';
-    else tillEl.textContent='🦸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago';
+    if(diff>0) tillEl.textContent='🩸 Next period in '+diff+' day'+(diff===1?'':'s');
+    else if(diff===0) tillEl.textContent='🩸 Period expected today';
+    else tillEl.textContent='🩸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago';
   } else { tillEl.textContent=''; }
+}
+
+/* ---- PHOTO CAROUSEL ---- */
+var PC_KEY='lp_photos';
+var pcData={};
+var pcIdx=0;
+function loadPcData(){ try{ pcData=JSON.parse(localStorage.getItem(PC_KEY)||'{}'); }catch(e){ pcData={}; } }
+function savePcData(){ localStorage.setItem(PC_KEY,JSON.stringify(pcData)); }
+function pcKey(){ return getWeekKey(); }
+function pcPhotos(){ loadPcData(); return pcData[pcKey()]||[]; }
+function pcAddPhoto(){ document.getElementById('pcFileInput').click(); }
+function pcHandleFile(e){
+  var file=e.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    loadPcData();
+    var k=pcKey(); if(!pcData[k]) pcData[k]=[];
+    pcData[k].push({id:'pc'+Date.now(),dataUrl:ev.target.result});
+    savePcData();
+    pcIdx=pcData[k].length-1;
+    renderCarousel();
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+function pcDeletePhoto(id){
+  loadPcData(); var k=pcKey();
+  pcData[k]=(pcData[k]||[]).filter(function(p){return p.id!==id;});
+  if(!pcData[k].length) delete pcData[k];
+  savePcData();
+  pcIdx=Math.max(0,pcIdx-1);
+  renderCarousel();
+}
+function pcMove(dir){
+  var photos=pcPhotos();
+  pcIdx=Math.max(0,Math.min(photos.length-1,pcIdx+dir));
+  renderCarousel();
+}
+function renderCarousel(){
+  var track=document.getElementById('pcTrack');
+  var dotsEl=document.getElementById('pcDots');
+  var prevBtn=document.getElementById('pcPrev');
+  var nextBtn=document.getElementById('pcNext');
+  var nav=document.getElementById('pcNav');
+  if(!track) return;
+  var photos=pcPhotos();
+  track.innerHTML=''; dotsEl.innerHTML='';
+  if(photos.length===0){
+    track.innerHTML='<div class="photo-carousel-empty">No photos yet — tap + Add Photo</div>';
+    if(nav) nav.style.display='none'; return;
+  }
+  if(nav) nav.style.display='flex';
+  if(pcIdx>=photos.length) pcIdx=photos.length-1;
+  photos.forEach(function(p,i){
+    var slide=document.createElement('div'); slide.className='photo-carousel-slide';
+    var img=document.createElement('img'); img.src=p.dataUrl; img.alt='Week photo';
+    var delBtn=document.createElement('button'); delBtn.className='photo-carousel-del';
+    delBtn.innerHTML='&#10005;'; delBtn.title='Remove photo';
+    delBtn.onclick=(function(pid){ return function(e){ e.stopPropagation(); pcDeletePhoto(pid); }; })(p.id);
+    slide.appendChild(img); slide.appendChild(delBtn); track.appendChild(slide);
+    var dot=document.createElement('div'); dot.className='pc-dot'+(i===pcIdx?' active':'');
+    dot.onclick=(function(ii){ return function(){ pcIdx=ii; renderCarousel(); }; })(i);
+    dotsEl.appendChild(dot);
+  });
+  track.style.transform='translateX(-'+pcIdx+'00%)';
+  prevBtn.disabled=(pcIdx===0);
+  nextBtn.disabled=(pcIdx===photos.length-1);
+  var outer=document.getElementById('pcOuter');
+  outer.ontouchstart=function(e){ outer._tx=e.touches[0].clientX; };
+  outer.ontouchend=function(e){ var dx=e.changedTouches[0].clientX-(outer._tx||0); if(Math.abs(dx)>40) pcMove(dx<0?1:-1); };
 }
 
 function onStartDateChange(){ var sd=document.getElementById('evStart').value; var edEl=document.getElementById('evEnd'); edEl.min=sd||''; if(sd&&(!edEl.value||edEl.value<sd)) edEl.value=sd; }
@@ -1990,6 +2099,7 @@ function renderWeek(){
   grid.appendChild(row5);
 
   loadWeekNotes();
+  pcIdx=0; renderCarousel();
   showWeightTracker(true);
   renderWeightTracker();
   renderBudget();
