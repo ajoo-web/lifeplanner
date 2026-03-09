@@ -72,7 +72,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .holiday-lbl{font-size:.58rem;font-weight:800;color:#1a3a6b;text-align:center;display:block;margin-bottom:2px;line-height:1.2;letter-spacing:.2px}
 .add-btn{position:absolute;bottom:2px;right:4px;font-size:.85rem;color:#87dbfd;background:none;border:none;cursor:pointer;z-index:2;padding:0;font-weight:700;line-height:1}
 .add-btn:hover{color:#4aabf7}
-.day-log-btn{position:absolute;bottom:3px;left:4px;font-size:0.65rem;background:none;border:none;cursor:pointer;z-index:3;padding:0;line-height:1;user-select:none;transition:transform .1s;}
+.day-log-btn{position:absolute;bottom:3px;left:4px;font-size:1rem;background:none;border:none;cursor:pointer;z-index:3;padding:0;line-height:1;user-select:none;transition:transform .1s;}
 .day-log-btn:hover{transform:scale(1.3);}
 .health-subsection{margin-top:8px;border-top:1px solid #d5ceeb;padding-top:8px;}
 .health-sub-title{font-size:.7rem;font-weight:800;color:#4aabf7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
@@ -184,7 +184,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 /* HABIT ICONS IN COLUMN */
 .habit-icons-row{display:flex;flex-wrap:wrap;justify-content:center;padding:4px 2px 5px;gap:1px}
-.habit-icon-btn{background:none;border:none;cursor:pointer;font-size:clamp(.42rem,1.6vw,.65rem);filter:grayscale(100%) opacity(0.3);transition:filter .18s,transform .15s;padding:1px;line-height:1}
+.habit-icon-btn{background:none;border:none;cursor:pointer;font-size:clamp(.65rem,2.5vw,1rem);filter:grayscale(100%) opacity(0.3);transition:filter .18s,transform .15s;padding:1px;line-height:1}
 .habit-icon-btn:hover{filter:grayscale(30%) opacity(0.7);transform:scale(1.2)}
 .habit-colored{filter:grayscale(0%) opacity(1) !important;transform:scale(1.1)}
 
@@ -289,19 +289,16 @@ h2.unav-title{margin:0;min-width:unset}
 .week-notes-textarea:focus{border-color:#4aabf7}
 
 /* PHOTO STACK */
-.photo-carousel-section{margin-top:10px;}
+.photo-carousel-section{margin-top:0;width:100%;}
 .photo-carousel-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between;}
-.pc-add-btn{background:#4aabf7;color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:.72rem;font-weight:800;cursor:pointer;letter-spacing:.3px;}
-.pc-add-btn:hover{background:#1a3a6b;}
-.pc-gallery{border:1.5px solid #d5ceeb;border-radius:10px;padding:8px;background:#faf8ff;}
-.pc-card{position:relative;width:150px;height:150px;border-radius:10px;overflow:hidden;border:2px solid #d5ceeb;background:#e8e4f4;box-shadow:0 2px 8px rgba(26,58,107,.13);display:inline-block;flex-shrink:0;}
+.pc-gallery{background:transparent;border:none;padding:4px 0;width:100%;}
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;}
+.pc-card{position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:2px solid #d5ceeb;background:#e8e4f4;box-shadow:0 2px 8px rgba(26,58,107,.08);}
 .pc-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
-.pc-card-del{position:absolute;top:4px;right:4px;background:rgba(192,57,43,.88);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;font-weight:800;}
-.pc-card-del:hover{background:#c0392b;}
-.pc-card-num{position:absolute;bottom:4px;left:6px;background:rgba(26,58,107,.65);color:#fff;font-size:.55rem;font-weight:800;border-radius:6px;padding:1px 5px;}
-.pc-scroll-row{display:flex;gap:10px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin;scrollbar-color:#d5ceeb transparent;}
-.pc-scroll-row::-webkit-scrollbar{height:4px;}
-.pc-scroll-row::-webkit-scrollbar-thumb{background:#d5ceeb;border-radius:4px;}
+.pc-card-del{position:absolute;top:4px;right:4px;background:rgba(192,57,43,.88);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;font-weight:800;opacity:0;transition:opacity .18s;}
+.pc-card-del:hover{background:#c0392b;}.pc-card:hover .pc-card-del{opacity:1;}
+.pc-slot-empty{width:100%;aspect-ratio:1/1;border-radius:10px;border:2px dashed #d5ceeb;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#d5ceeb;transition:border-color .18s,color .18s;}
+.pc-slot-empty:hover{border-color:#4aabf7;color:#4aabf7;}
 .pc-empty{color:#b0b8d8;font-size:.78rem;text-align:center;padding:14px 0;font-style:italic;}
 /* CROP MODAL */
 .crop-overlay{display:none;position:fixed;inset:0;background:rgba(13,35,64,.72);z-index:300;align-items:center;justify-content:center;}
@@ -716,15 +713,7 @@ h2.unav-title{margin:0;min-width:unset}
     <div class="week-notes-section">
       <div class="week-notes-label">📝 NOTE</div>
       <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
-    <div class="photo-carousel-section">
-      <div class="photo-carousel-label">
-        <span>📷 Photos</span>
-        <button class="pc-add-btn" onclick="pcAddPhoto()">+ Add Photo</button>
-      </div>
-      <div class="pc-gallery">
-        <div id="pcScrollRow" class="pc-scroll-row"></div>
-      </div>
-    </div>
+
     <input type="file" id="pcFileInput" accept="image/*" style="display:none" onchange="pcHandleFile(event)"/>
     </div>
     <div class="week-budget-section">
@@ -792,6 +781,10 @@ h2.unav-title{margin:0;min-width:unset}
   <div class="todo-panel" id="todoPanelGlobal">
     <h2>&#9998; To-Do</h2>
     <div class="todo-lines" id="todoLines"></div>
+  </div>
+  <div class="photo-carousel-section" id="photoCarouselRight" style="display:none">
+    <div class="photo-carousel-label"><span>📷 Photos</span></div>
+    <div class="pc-gallery"><div id="pcGrid" class="pc-grid"></div></div>
   </div>
   <div class="weight-panel" id="weightTracker" style="display:none">
     <h2 class="weight-title">🩺 HEALTH</h2>
@@ -912,9 +905,9 @@ function showPage(name,btn){
   clearTabActive();
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(name==='archive'){ renderArchive(); showTodo(false); showWeightTracker(false); }
-  else if(name==='search'){ showTodo(false); showWeightTracker(false); document.getElementById('searchInput').focus(); runSearch(); }
-  else{ showTodo(true); showWeightTracker(false); }
+  if(name==='archive'){ renderArchive(); showTodo(false); showWeightTracker(false); showPhotoPanel(false); }
+  else if(name==='search'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); document.getElementById('searchInput').focus(); runSearch(); }
+  else{ showTodo(true); showWeightTracker(false); showPhotoPanel(false); }
 }
 
 /* ---- CALENDAR ---- */
@@ -943,7 +936,7 @@ function goHome(btn){
   highlightMonthTab(curMonth);
   renderCalendar();
   showTodo(true);
-  showWeightTracker(false);
+  showWeightTracker(false); showPhotoPanel(false);
 }
 
 function goMonth(m, btn){
@@ -970,7 +963,7 @@ function goMonth(m, btn){
     document.querySelectorAll('[id^="vt-month"]').forEach(function(b){ b.classList.add('mw-active'); });
     curMonth=m;
     renderCalendar();
-    showWeightTracker(false);
+    showWeightTracker(false); showPhotoPanel(false);
     showTodo(true);
   }
 }
@@ -1106,7 +1099,7 @@ function renderCalendar(){
             document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
             document.getElementById('page-week').classList.add('active');
             miniCalYear=null; miniCalMonth=null;
-            renderWeek(); showTodo(true); showWeightTracker(true);
+            renderWeek(); showTodo(true); showWeightTracker(true); showPhotoPanel(true);
           };
         })(prevYr2,prevMo2,prevDay);
       } else if(typeof weekCells[c]==='string'&&weekCells[c].indexOf('next_')===0){
@@ -1130,7 +1123,7 @@ function renderCalendar(){
             document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
             document.getElementById('page-week').classList.add('active');
             miniCalYear=null; miniCalMonth=null;
-            renderWeek(); showTodo(true); showWeightTracker(true);
+            renderWeek(); showTodo(true); showWeightTracker(true); showPhotoPanel(true);
           };
         })(nextYr,nextMo,nextDay);
       } else {
@@ -1150,7 +1143,7 @@ function renderCalendar(){
             miniCalYear=null; miniCalMonth=null;
             renderWeek();
             showTodo(true);
-            showWeightTracker(true);
+            showWeightTracker(true); showPhotoPanel(true);
           };
         })(ds,curYear,curMonth,d);
         var cellDate=new Date(curYear,curMonth,d);
@@ -1514,7 +1507,7 @@ function saveDayLog(){ localStorage.setItem(DAY_LOG_KEY,JSON.stringify(dayLog));
 var DAY_LOG_STATES=['none','choc','period'];
 var DAY_LOG_ICONS={none:'○',choc:'🍫',period:'🩸'};
 function cycleDayLog(ds,btn){ loadDayLog(); var cur=dayLog[ds]||'none'; var idx=DAY_LOG_STATES.indexOf(cur); var next=DAY_LOG_STATES[(idx+1)%DAY_LOG_STATES.length]; if(next==='none'){ delete dayLog[ds]; } else { dayLog[ds]=next; } saveDayLog(); updateDayLogBtn(btn,next); renderCycleStats(); }
-function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'0.715rem'; }
+function updateDayLogBtn(btn,state){ var s=state||'none'; btn.textContent=DAY_LOG_ICONS[s]; btn.style.opacity=s==='none'?'0.2':'1'; btn.style.fontSize=s==='none'?'0.72rem':'1.1rem'; }
 function getPeriodStarts(){ var all=[]; for(var k in dayLog){ if(dayLog[k]==='period') all.push(k); } all.sort(); if(!all.length) return []; var starts=[all[0]]; for(var i=1;i<all.length;i++){ var gap=Math.round((new Date(all[i]+'T00:00:00')-new Date(all[i-1]+'T00:00:00'))/864e5); if(gap>1) starts.push(all[i]); } return starts; }
 function renderCycleStats(){ var lastEl=document.getElementById('cycleLastLen'),avgEl=document.getElementById('cycleAvgLen'),tillEl=document.getElementById('cycleDaysTill'); if(!lastEl) return; loadDayLog(); var starts=getPeriodStarts(),lengths=[]; for(var i=1;i<starts.length;i++){ var diff=Math.round((new Date(starts[i]+'T00:00:00')-new Date(starts[i-1]+'T00:00:00'))/864e5); if(diff>=14&&diff<=60) lengths.push(diff); } var lastLen=lengths.length?lengths[lengths.length-1]:null; var avgLen=lengths.length?Math.round(lengths.reduce(function(a,b){return a+b;},0)/lengths.length):null; lastEl.textContent=lastLen?lastLen+' days':'—'; avgEl.textContent=avgLen?avgLen+' days':'—'; if(avgLen&&starts.length){ var nextStart=new Date(starts[starts.length-1]+'T00:00:00'); nextStart.setDate(nextStart.getDate()+avgLen); var today=new Date(); today.setHours(0,0,0,0); var diff=Math.round((nextStart-today)/864e5); tillEl.textContent=diff>0?'🩸 Next period in '+diff+' day'+(diff===1?'':'s'):diff===0?'🩸 Period expected today':'🩸 Period was '+Math.abs(diff)+' day'+(Math.abs(diff)===1?'':'s')+' ago'; } else { tillEl.textContent=''; } }
 
@@ -1589,17 +1582,22 @@ function cropConfirm(){
 }
 function pcDeletePhoto(id){ loadPcData(); var k=pcKey(); pcData[k]=(pcData[k]||[]).filter(function(p){return p.id!==id;}); if(!pcData[k].length) delete pcData[k]; savePcData(); renderPhotoStack(); }
 function renderPhotoStack(){
-  var row=document.getElementById('pcScrollRow'); if(!row) return;
-  var photos=pcPhotos(); row.innerHTML='';
-  if(!photos.length){ row.innerHTML='<div class="pc-empty">No photos yet — tap + Add Photo</div>'; return; }
+  var grid=document.getElementById('pcGrid'); if(!grid) return;
+  var photos=pcPhotos(); grid.innerHTML='';
+  var MAX=6;
   photos.forEach(function(p,i){
     var card=document.createElement('div'); card.className='pc-card';
     var img=document.createElement('img'); img.src=p.dataUrl; img.alt='Photo '+(i+1);
     var del=document.createElement('button'); del.className='pc-card-del'; del.innerHTML='✕'; del.title='Remove';
     del.onclick=(function(pid){ return function(e){ e.stopPropagation(); if(confirm('Remove this photo?')) pcDeletePhoto(pid); }; })(p.id);
-    var num=document.createElement('div'); num.className='pc-card-num'; num.textContent=(i+1)+'/'+photos.length;
-    card.appendChild(img); card.appendChild(del); card.appendChild(num); row.appendChild(card);
+    card.appendChild(img); card.appendChild(del); grid.appendChild(card);
   });
+  for(var i=photos.length;i<MAX;i++){
+    var slot=document.createElement('button'); slot.className='pc-slot-empty';
+    slot.innerHTML='＋'; slot.title='Add photo';
+    slot.onclick=function(){ document.getElementById('pcFileInput').click(); };
+    grid.appendChild(slot);
+  }
 }
 
 function onStartDateChange(){ var sd=document.getElementById('evStart').value; var edEl=document.getElementById('evEnd'); edEl.min=sd||''; if(sd&&(!edEl.value||edEl.value<sd)) edEl.value=sd; }
@@ -2076,7 +2074,7 @@ function renderWeek(){
 
   loadWeekNotes();
   renderPhotoStack();
-  showWeightTracker(true);
+  showWeightTracker(true); showPhotoPanel(true);
   renderWeightTracker();
   renderBudget();
 }
@@ -2318,7 +2316,7 @@ function switchView(view, btn){
     document.getElementById('page-calendar').classList.add('active');
     renderCalendar();
     showTodo(true);
-    showWeightTracker(false);
+    showWeightTracker(false); showPhotoPanel(false);
   } else {
     var pages=document.querySelectorAll('.page');
     for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
@@ -2361,6 +2359,10 @@ var weightData = loadData('lp_weight', {});  // key: weekKey, val: number
 function showWeightTracker(show){
   var wt=document.getElementById('weightTracker');
   if(wt) wt.style.display=show?'block':'none';
+}
+function showPhotoPanel(show){
+  var pp=document.getElementById('photoCarouselRight');
+  if(pp) pp.style.display=show?'block':'none';
 }
 
 function renderWeightTracker(){
