@@ -49,13 +49,13 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 .cal-nav button{background:#fff;border:2px solid #87dbfd;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;color:#1a3a6b;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .cal-nav button:hover{background:#4aabf7;color:#fff;border-color:#4aabf7}
 
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border-left:1.5px solid #d5ceeb;border-top:1.5px solid #d5ceeb}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #d5ceeb;border-top:1.5px solid #d5ceeb}
 .cal-dow{text-align:center;font-size:.68rem;font-weight:800;color:#86b1df;padding:5px 0;text-transform:uppercase;letter-spacing:.5px;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;background:#f5f0e8}
 
 /* Week row wrapper for spanning events */
 .week-row{display:contents}
 
-.cal-cell{background:#fff;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:90px;padding:5px 5px 22px 5px;position:relative;cursor:pointer;transition:background .15s;}
+.cal-cell{background:#fff;border-right:1.5px solid #d5ceeb;border-bottom:1.5px solid #d5ceeb;min-height:90px;padding:5px 5px 22px 5px;position:relative;cursor:pointer;transition:background .15s;min-width:0;overflow:hidden;width:100%;}
 .cal-cell:hover{background:#f0f8ff}
 .cal-cell.empty{background:#f9f6f0;cursor:default}
 .cal-cell.empty:hover{background:#f9f6f0}
@@ -82,7 +82,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:#f5f0e8;color:#0d2340;
 
 /* EVENT BARS in cells (single-day or first/mid/last of multi) */
 .events-wrap{display:flex;flex-direction:column;gap:1px;position:relative;z-index:2}
-.ev-tab{font-size:.72rem;font-weight:700;color:#fff;border-radius:20px;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;max-width:100%;letter-spacing:.1px;margin-bottom:3px;height:20px;line-height:20px;display:block;box-sizing:border-box;}
+.ev-tab{font-size:.72rem;font-weight:700;color:#fff;border-radius:20px;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;width:100%;max-width:100%;letter-spacing:.1px;margin-bottom:3px;height:20px;line-height:20px;display:block;box-sizing:border-box;}
 /* Multi-day span styles */
 .ev-tab.span-start{border-radius:20px 0 0 20px;}
 .ev-tab.span-mid{border-radius:0;margin:0;padding-left:2px;padding-right:2px;opacity:.9}
@@ -290,18 +290,19 @@ h2.unav-title{margin:0;min-width:unset}
 
 /* PHOTO STACK */
 .photo-carousel-section{margin-top:10px;}
-.photo-carousel-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:8px;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between;}
+.photo-carousel-label{font-size:.75rem;font-weight:800;color:#1a3a6b;margin-bottom:6px;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between;}
 .pc-add-btn{background:#4aabf7;color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:.72rem;font-weight:800;cursor:pointer;letter-spacing:.3px;}
 .pc-add-btn:hover{background:#1a3a6b;}
-.pc-card{position:relative;width:150px;height:150px;border-radius:10px;overflow:hidden;border:2.5px solid #d5ceeb;background:#e8e4f4;box-shadow:0 2px 8px rgba(26,58,107,.13);display:inline-block;flex-shrink:0;}
+.pc-gallery{border:1.5px solid #d5ceeb;border-radius:10px;padding:8px;background:#faf8ff;}
+.pc-card{position:relative;width:150px;height:150px;border-radius:10px;overflow:hidden;border:2px solid #d5ceeb;background:#e8e4f4;box-shadow:0 2px 8px rgba(26,58,107,.13);display:inline-block;flex-shrink:0;}
 .pc-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
 .pc-card-del{position:absolute;top:4px;right:4px;background:rgba(192,57,43,.88);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;font-weight:800;}
 .pc-card-del:hover{background:#c0392b;}
 .pc-card-num{position:absolute;bottom:4px;left:6px;background:rgba(26,58,107,.65);color:#fff;font-size:.55rem;font-weight:800;border-radius:6px;padding:1px 5px;}
-.pc-scroll-row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin;scrollbar-color:#d5ceeb transparent;}
+.pc-scroll-row{display:flex;gap:10px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin;scrollbar-color:#d5ceeb transparent;}
 .pc-scroll-row::-webkit-scrollbar{height:4px;}
 .pc-scroll-row::-webkit-scrollbar-thumb{background:#d5ceeb;border-radius:4px;}
-.pc-empty{color:#b0b8d8;font-size:.78rem;text-align:center;padding:14px 0;font-style:italic;border:1.5px dashed #d5ceeb;border-radius:10px;}
+.pc-empty{color:#b0b8d8;font-size:.78rem;text-align:center;padding:14px 0;font-style:italic;}
 /* CROP MODAL */
 .crop-overlay{display:none;position:fixed;inset:0;background:rgba(13,35,64,.72);z-index:300;align-items:center;justify-content:center;}
 .crop-overlay.open{display:flex;}
@@ -520,11 +521,13 @@ h2.unav-title{margin:0;min-width:unset}
 .wday-row5-cell{
   border-right:1.5px solid #d5ceeb;
   background:#fff;
-  padding:4px 0;
-  min-height:44px;
+  padding:4px 0 2px;
+  min-height:52px;
   display:flex;
+  flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
+  gap:2px;
 }
 .wday-row5-cell:last-child{border-right:none;}
 
@@ -715,10 +718,12 @@ h2.unav-title{margin:0;min-width:unset}
       <textarea id="weekNotesArea" class="week-notes-textarea" placeholder="Write your notes for this week..." oninput="saveWeekNotes()"></textarea>
     <div class="photo-carousel-section">
       <div class="photo-carousel-label">
-        <span>📷 Week Photos</span>
+        <span>📷 Photos</span>
         <button class="pc-add-btn" onclick="pcAddPhoto()">+ Add Photo</button>
       </div>
-      <div id="pcScrollRow" class="pc-scroll-row"></div>
+      <div class="pc-gallery">
+        <div id="pcScrollRow" class="pc-scroll-row"></div>
+      </div>
     </div>
     <input type="file" id="pcFileInput" accept="image/*" style="display:none" onchange="pcHandleFile(event)"/>
     </div>
@@ -1522,7 +1527,6 @@ function pcPhotos(){ loadPcData(); return pcData[pcKey()]||[]; }
 function pcAddPhoto(){ document.getElementById('pcFileInput').click(); }
 function pcHandleFile(e){ var file=e.target.files[0]; if(!file) return; var reader=new FileReader(); reader.onload=function(ev){ openCropModal(ev.target.result); }; reader.readAsDataURL(file); e.target.value=''; }
 
-/* Crop state — offset is top-left of image in viewport px */
 var _cSrc='', _cOx=0, _cOy=0, _cScale=1, _cNW=1, _cNH=1, _cVpW=280;
 var _cDrag=false, _cLx=0, _cLy=0;
 
@@ -1535,30 +1539,22 @@ function openCropModal(src){
     _cNW=img.naturalWidth; _cNH=img.naturalHeight;
     var vp=document.getElementById('cropViewport');
     _cVpW=vp.offsetWidth||280;
-    /* scale so the SHORT side fills the viewport */
     _cScale=_cVpW/Math.min(_cNW,_cNH);
-    /* clamp min so image always covers */
-    var minS=_cVpW/Math.min(_cNW,_cNH);
+    var minS=_cScale;
     var sl=document.getElementById('cropZoom');
     sl.min=minS; sl.max=minS*4; sl.step=minS*0.01; sl.value=_cScale;
-    /* center */
     _cOx=(_cVpW-_cNW*_cScale)/2;
     _cOy=(_cVpW-_cNH*_cScale)/2;
-    _cropClamp();
-    _cropDraw();
+    _cropClamp(); _cropDraw();
   };
   img.src=src;
   _cropBindEvents();
 }
 function closeCropModal(){ document.getElementById('cropOverlay').classList.remove('open'); }
-
 function _cropClamp(){
   var iw=_cNW*_cScale, ih=_cNH*_cScale;
-  /* don't let image edge go inside viewport leaving black */
-  if(iw>=_cVpW){ _cOx=Math.min(0,Math.max(_cVpW-iw,_cOx)); }
-  else { _cOx=(_cVpW-iw)/2; }
-  if(ih>=_cVpW){ _cOy=Math.min(0,Math.max(_cVpW-ih,_cOy)); }
-  else { _cOy=(_cVpW-ih)/2; }
+  if(iw>=_cVpW){ _cOx=Math.min(0,Math.max(_cVpW-iw,_cOx)); } else { _cOx=(_cVpW-iw)/2; }
+  if(ih>=_cVpW){ _cOy=Math.min(0,Math.max(_cVpW-ih,_cOy)); } else { _cOy=(_cVpW-ih)/2; }
 }
 function _cropDraw(){
   var img=document.getElementById('cropImg');
@@ -1566,56 +1562,32 @@ function _cropDraw(){
   img.style.width=(_cNW*_cScale)+'px'; img.style.height=(_cNH*_cScale)+'px';
 }
 function cropApplyZoom(){
-  var sl=document.getElementById('cropZoom');
-  var newS=parseFloat(sl.value);
-  /* zoom toward center of viewport */
+  var newS=parseFloat(document.getElementById('cropZoom').value);
   var cx=_cVpW/2, cy=_cVpW/2;
   _cOx=cx-(newS/_cScale)*(cx-_cOx);
   _cOy=cy-(newS/_cScale)*(cy-_cOy);
-  _cScale=newS;
-  _cropClamp(); _cropDraw();
+  _cScale=newS; _cropClamp(); _cropDraw();
 }
 function _cropBindEvents(){
   var vp=document.getElementById('cropViewport');
-  /* remove old handlers by cloning */
-  var vp2=vp.cloneNode(true);
-  vp.parentNode.replaceChild(vp2,vp);
+  var vp2=vp.cloneNode(true); vp.parentNode.replaceChild(vp2,vp);
   vp2.addEventListener('mousedown',function(e){ _cDrag=true; _cLx=e.clientX; _cLy=e.clientY; e.preventDefault(); });
   document.addEventListener('mousemove',function(e){ if(!_cDrag) return; _cOx+=e.clientX-_cLx; _cOy+=e.clientY-_cLy; _cLx=e.clientX; _cLy=e.clientY; _cropClamp(); _cropDraw(); });
   document.addEventListener('mouseup',function(){ _cDrag=false; });
   vp2.addEventListener('touchstart',function(e){ _cLx=e.touches[0].clientX; _cLy=e.touches[0].clientY; e.preventDefault(); },{passive:false});
   vp2.addEventListener('touchmove',function(e){ _cOx+=e.touches[0].clientX-_cLx; _cOy+=e.touches[0].clientY-_cLy; _cLx=e.touches[0].clientX; _cLy=e.touches[0].clientY; _cropClamp(); _cropDraw(); e.preventDefault(); },{passive:false});
 }
-
 function cropConfirm(){
-  /* 
-   * The viewport shows a _cVpW x _cVpW window.
-   * The image's top-left is at (_cOx, _cOy) in viewport px.
-   * So the source rect in image-natural-px:
-   *   srcX = -_cOx / _cScale
-   *   srcY = -_cOy / _cScale
-   *   srcW = _cVpW / _cScale
-   *   srcH = _cVpW / _cScale
-   */
   var OUT=400;
   var canvas=document.createElement('canvas'); canvas.width=OUT; canvas.height=OUT;
   var ctx=canvas.getContext('2d');
   var img=document.getElementById('cropImg');
-  var srcX=-_cOx/_cScale;
-  var srcY=-_cOy/_cScale;
-  var srcS=_cVpW/_cScale;
-  ctx.drawImage(img, srcX, srcY, srcS, srcS, 0, 0, OUT, OUT);
+  ctx.drawImage(img, -_cOx/_cScale, -_cOy/_cScale, _cVpW/_cScale, _cVpW/_cScale, 0, 0, OUT, OUT);
   var dataUrl=canvas.toDataURL('image/jpeg',0.88);
-  loadPcData();
-  var k=pcKey(); if(!pcData[k]) pcData[k]=[];
-  pcData[k].push({id:'pc'+Date.now(),dataUrl:dataUrl});
-  savePcData();
-  closeCropModal();
-  renderPhotoStack();
+  loadPcData(); var k=pcKey(); if(!pcData[k]) pcData[k]=[]; pcData[k].push({id:'pc'+Date.now(),dataUrl:dataUrl}); savePcData();
+  closeCropModal(); renderPhotoStack();
 }
-
 function pcDeletePhoto(id){ loadPcData(); var k=pcKey(); pcData[k]=(pcData[k]||[]).filter(function(p){return p.id!==id;}); if(!pcData[k].length) delete pcData[k]; savePcData(); renderPhotoStack(); }
-
 function renderPhotoStack(){
   var row=document.getElementById('pcScrollRow'); if(!row) return;
   var photos=pcPhotos(); row.innerHTML='';
@@ -1626,8 +1598,7 @@ function renderPhotoStack(){
     var del=document.createElement('button'); del.className='pc-card-del'; del.innerHTML='✕'; del.title='Remove';
     del.onclick=(function(pid){ return function(e){ e.stopPropagation(); if(confirm('Remove this photo?')) pcDeletePhoto(pid); }; })(p.id);
     var num=document.createElement('div'); num.className='pc-card-num'; num.textContent=(i+1)+'/'+photos.length;
-    card.appendChild(img); card.appendChild(del); card.appendChild(num);
-    row.appendChild(card);
+    card.appendChild(img); card.appendChild(del); card.appendChild(num); row.appendChild(card);
   });
 }
 
@@ -2086,11 +2057,12 @@ function renderWeek(){
         })(hi);
       }
       cell.appendChild(hRow);
+      /* BUG FIX: log row is a separate flex child below habits */
       (function(dStr){
         var logRow=document.createElement('div');
-        logRow.style.cssText='display:flex;justify-content:center;align-items:center;width:100%;padding:3px 0 2px;border-top:1px solid #e8e2f5;margin-top:2px;';
+        logRow.style.cssText='display:flex;justify-content:center;align-items:center;width:100%;padding:2px 0 1px;border-top:1px solid #ede8f8;margin-top:auto;';
         var wlb=document.createElement('button');
-        wlb.style.cssText='font-size:1.1rem;background:none;border:none;cursor:pointer;padding:0;line-height:1;';
+        wlb.style.cssText='font-size:1rem;background:none;border:none;cursor:pointer;padding:0;line-height:1;';
         wlb.title='Log: cravings or period';
         updateDayLogBtn(wlb,dayLog[dStr]||'none');
         wlb.onclick=function(e){ e.stopPropagation(); cycleDayLog(dStr,wlb); };
