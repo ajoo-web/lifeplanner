@@ -640,8 +640,9 @@ h2.unav-title{margin:0;min-width:unset}
 /* Fixed 8.5x11 at screen (748x976 usable at 96dpi, 0.4in margins) */
 .print-dashboard{
   background:#fff;
-  width:748px; min-width:748px; max-width:748px;
-  height:976px; max-height:976px;
+  /* Match print exactly: 7.8in x 10.3in at 96dpi = 748.8 x 988.8px */
+  width:748px; max-width:748px;
+  height:989px; max-height:989px;
   margin:0 auto;
   font-family:'Segoe UI',Georgia,sans-serif;
   color:#0d2340;
@@ -703,6 +704,11 @@ h2.unav-title{margin:0;min-width:unset}
   white-space:normal;word-break:break-word;overflow:hidden;
   margin-bottom:1px;line-height:1.4;display:block;
   flex-shrink:0;
+}
+.pd-more-bar{
+  font-size:.44rem;color:#86b1df;font-weight:700;
+  padding:0 3px;line-height:1.4;display:block;
+  flex-shrink:0;font-style:italic;
 }
 .pd-bottom-emojis{
   display:flex;flex-wrap:wrap;gap:1px;
@@ -792,18 +798,27 @@ h2.unav-title{margin:0;min-width:unset}
 .pd-brain-line{flex:1;}
 
 @media print {
+  @page { size:8.5in 11in; margin:0.35in; }
+  html, body { width:100%; height:100%; margin:0; padding:0; background:#fff !important; }
   .tab-bar,.right-col,.overlay,.crop-overlay,
   #page-calendar,#page-week,#page-archive,#page-search,
-  .print-controls{display:none !important;}
-  .main-wrap{display:block !important;padding:0 !important;}
-  .pages-area{display:block !important;}
-  #page-print{display:block !important;padding:0 !important;}
-  .print-dashboard{
-    width:100% !important; min-width:0 !important; max-width:100% !important;
-    height:100vh !important; max-height:100vh !important;
+  .print-controls { display:none !important; }
+  .main-wrap { display:block !important; margin:0 !important; padding:0 !important; width:100% !important; }
+  .pages-area { display:block !important; margin:0 !important; padding:0 !important; }
+  #page-print { display:block !important; margin:0 !important; padding:0 !important; }
+  .print-dashboard {
+    width:7.8in !important;
+    height:10.3in !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
     border:none !important;
+    overflow:hidden !important;
+    page-break-after:avoid !important;
+    break-after:avoid !important;
   }
-  @page{size:letter portrait;margin:0.4in;}
 }
 </style>
 </head>
@@ -2841,18 +2856,16 @@ function renderPrintDashboard(){
   var wHigh=weightEntries.length?Math.max.apply(null,weightEntries.map(function(x){return x.val;})):null;
   var wLow=weightEntries.length?Math.min.apply(null,weightEntries.map(function(x){return x.val;})):null;
 
-  /* Cycle stats from dayLog */
+  /* Cycle stats — mirrors getPeriodStarts()+renderCycleStats() exactly */
+  loadDayLog();
+  var _allPeriod=[]; for(var k in dayLog){ if(dayLog[k]==='period') _allPeriod.push(k); } _allPeriod.sort();
   var periodStarts=[];
-  Object.keys(dayLog).forEach(function(dk){ if(dayLog[dk]==='period') periodStarts.push(dk); });
-  periodStarts.sort();
+  if(_allPeriod.length){ periodStarts=[_allPeriod[0]]; for(var pi2=1;pi2<_allPeriod.length;pi2++){ var _gap=Math.round((new Date(_allPeriod[pi2]+'T00:00:00')-new Date(_allPeriod[pi2-1]+'T00:00:00'))/864e5); if(_gap>1) periodStarts.push(_allPeriod[pi2]); } }
   var cycleLengths=[];
   for(var ci=1;ci<periodStarts.length;ci++){
-    var d1=new Date(periodStarts[ci-1]+'T00:00:00');
-    var d2=new Date(periodStarts[ci]+'T00:00:00');
-    var diff=Math.round((d2-d1)/(1000*60*60*24));
-    if(diff>0&&diff<90) cycleLengths.push(diff);
+    var diff=Math.round((new Date(periodStarts[ci]+'T00:00:00')-new Date(periodStarts[ci-1]+'T00:00:00'))/864e5);
+    if(diff>=14&&diff<=60) cycleLengths.push(diff);
   }
-  var lastCycleLen=cycleLengths.length?cycleLengths[cycleLengths.length-1]:'--';
   var avgCycleLen=cycleLengths.length?Math.round(cycleLengths.reduce(function(a,b){return a+b;},0)/cycleLengths.length):'--';
   var monthEnd=mkDateStr(year,month,daysInMonth);
   var validStarts=periodStarts.filter(function(dk){return dk<=monthEnd;});
@@ -2918,19 +2931,24 @@ function renderPrintDashboard(){
         weatherEm='<span class="pd-weather-em">'+WEATHER_ICONS[wthData[ds]]+'</span>';
       H2+='<div class="pd-day-header"><span class="pd-day-num'+(isDim?' dim':isToday?' today-mark':'')+'">'+cell.d+'</span>'+weatherEm+'</div>';
 
-      /* All calendar events — ellipsis on overflow */
+      /* Events: cap total to MAX_EVS, show "..." if overflow, always reserve room for emojis */
+      var MAX_EVS=4;
       var dayEvs=monthEvs.filter(function(ev){
         var end=ev.endDate||ev.startDate; return ev.startDate<=ds&&ds<=end;
       });
-      dayEvs.forEach(function(ev){
+      var dayWevs=wevAll.filter(function(e){return e.date===ds;});
+      var totalEvs=dayEvs.length+dayWevs.length;
+      var hasMore=totalEvs>MAX_EVS;
+      var calSlots=hasMore?Math.max(0,MAX_EVS-dayWevs.length):dayEvs.length;
+      var wevSlots=hasMore?Math.min(dayWevs.length,MAX_EVS-calSlots):dayWevs.length;
+      dayEvs.slice(0,calSlots).forEach(function(ev){
         H2+='<div class="pd-ev-bar" style="background:'+(ev.color||'#1a3a6b')+'">'+
           (ev.startTime?ev.startTime+' ':'')+escHtml(ev.name)+'</div>';
       });
-
-      /* All weekly events — ellipsis on overflow */
-      wevAll.filter(function(e){return e.date===ds;}).forEach(function(wev){
+      dayWevs.slice(0,wevSlots).forEach(function(wev){
         H2+='<div class="pd-wev-bar">'+(wev.time?wev.time+' ':'')+escHtml(wev.name)+'</div>';
       });
+      if(hasMore) H2+='<div class="pd-more-bar">+' + (totalEvs-calSlots-wevSlots) + ' more</div>';
 
       /* Bottom: period/craving + habits — KEY FIX: ds+'_'+hi (not '_h') */
       if(!isDim){
