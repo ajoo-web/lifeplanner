@@ -635,57 +635,162 @@ h2.unav-title{margin:0;min-width:unset}
 .print-btn{background:#1a3a6b;color:#fff;border:none;border-radius:20px;padding:7px 20px;cursor:pointer;font-size:.85rem;font-weight:700;}
 .print-btn:hover{background:#4aabf7;}
 .print-preview-label{font-size:.72rem;color:#86b1df;font-weight:700;letter-spacing:.4px;}
-.print-dashboard{background:#fff;width:100%;max-width:800px;margin:0 auto;font-family:'Segoe UI',Georgia,sans-serif;color:#0d2340;border:1.5px solid #d5ceeb;}
-.pd-title{font-size:1.8rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:6px 10px 4px;color:#0d2340;border-bottom:2px solid #d5ceeb;}
-.pd-body{display:flex;flex-direction:column;}
-.pd-week-row{display:grid;grid-template-columns:1fr 168px 150px;border-bottom:1.5px solid #d5ceeb;}
-.pd-week-row.header-row{min-height:18px;}
-.pd-cal-col{border-right:1.5px solid #d5ceeb;padding:0;}
+
+/* === PRINTABLE DASHBOARD === */
+/* Fixed 8.5x11 at screen (748x976 usable at 96dpi, 0.4in margins) */
+.print-dashboard{
+  background:#fff;
+  width:748px; min-width:748px; max-width:748px;
+  height:976px; max-height:976px;
+  margin:0 auto;
+  font-family:'Segoe UI',Georgia,sans-serif;
+  color:#0d2340;
+  border:1.5px solid #d5ceeb;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+
+/* Title bar ~28px */
+.pd-title{
+  font-size:1.5rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 10px 3px;color:#0d2340;border-bottom:2px solid #d5ceeb;
+  flex-shrink:0;line-height:1.2;
+}
+
+/* Calendar body — top ~2/3, flex fills remaining after title and bottom */
+.pd-body{
+  display:flex;flex-direction:column;
+  flex:1; min-height:0; overflow:hidden;
+}
+
+/* Each week row — equal height, 1/numWeeks of pd-body */
+/* We use flex:1 so all rows share space equally */
+.pd-week-row{
+  display:grid;
+  grid-template-columns:1fr 158px 140px;
+  border-bottom:1.5px solid #d5ceeb;
+  flex:1; min-height:0; overflow:hidden;
+}
+.pd-week-row.header-row{
+  flex:0 0 18px; min-height:18px; max-height:18px;
+}
+.pd-cal-col{border-right:1.5px solid #d5ceeb;overflow:hidden;min-height:0;}
 .pd-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);height:100%;}
-.pd-cal-cell{border-right:1px solid #ece8f4;padding:3px 2px 2px;min-height:96px;display:flex;flex-direction:column;overflow:hidden;}
+.pd-cal-cell{
+  border-right:1px solid #ece8f4;
+  padding:2px 2px 1px;
+  display:flex;flex-direction:column;
+  overflow:hidden;height:100%;box-sizing:border-box;
+}
 .pd-cal-cell:last-child{border-right:none;}
-.pd-day-header{display:flex;align-items:center;gap:2px;margin-bottom:2px;}
-.pd-day-num{font-size:.75rem;font-weight:800;color:#1a3a6b;line-height:1;}
+.pd-day-header{display:flex;align-items:center;gap:2px;margin-bottom:1px;flex-shrink:0;}
+.pd-day-num{font-size:.72rem;font-weight:800;color:#1a3a6b;line-height:1;white-space:nowrap;}
 .pd-day-num.dim{color:#c0b8d8;}
 .pd-day-num.today-mark{color:#0d6eb5;}
-.pd-weather-em{font-size:.65rem;line-height:1;}
-.pd-ev-bar{font-size:.5rem;font-weight:700;color:#fff;border-radius:3px;padding:1px 4px;white-space:normal;word-break:break-word;margin-bottom:1px;line-height:1.4;display:block;}
-.pd-wev-bar{font-size:.5rem;color:#1a3a6b;padding:1px 3px;white-space:normal;word-break:break-word;margin-bottom:1px;line-height:1.4;display:block;}
-.pd-bottom-emojis{display:flex;flex-wrap:wrap;gap:1px;margin-top:auto;padding-top:2px;}
-.pd-emoji{font-size:.62rem;line-height:1;}
-.pd-photos-col{border-right:1.5px solid #d5ceeb;padding:3px;}
-.pd-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
-.pd-photo-slot{background:#ece8f4;border-radius:3px;overflow:hidden;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#aaa;}
-.pd-photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
-.pd-notes-col{padding:5px 6px;display:flex;flex-direction:column;overflow:hidden;}
-.pd-notes-label{font-size:.55rem;font-weight:800;color:#86b1df;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-.pd-notes-text{font-size:.68rem;color:#1a3a6b;line-height:1.45;flex:1;word-break:break-word;white-space:pre-wrap;overflow:hidden;}
-.pd-notes-text.shrink{font-size:.58rem;}
-.pd-notes-text.shrink2{font-size:.5rem;}
-.pd-notes-lines{flex:1;display:flex;flex-direction:column;justify-content:space-around;}
-.pd-note-line{border-bottom:1px solid #d5ceeb;min-height:13px;}
-.pd-lower{display:grid;grid-template-columns:1fr 318px;border-top:2px solid #d5ceeb;}
-.pd-left-lower{border-right:1.5px solid #d5ceeb;padding:0;display:flex;flex-direction:column;}
-.pd-budget-area{padding:7px 10px;border-bottom:1.5px solid #d5ceeb;}
-.pd-budget-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pd-b-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}
+.pd-weather-em{font-size:.6rem;line-height:1;}
+/* Event bars — fixed height, overflow ellipsis */
+.pd-ev-bar{
+  font-size:.46rem;font-weight:700;color:#fff;
+  border-radius:2px;padding:0 3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:1px;line-height:1.5;display:block;
+  flex-shrink:0;
+}
+.pd-wev-bar{
+  font-size:.46rem;color:#1a3a6b;
+  padding:0 3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:1px;line-height:1.5;display:block;
+  flex-shrink:0;
+}
+.pd-bottom-emojis{
+  display:flex;flex-wrap:wrap;gap:1px;
+  margin-top:auto;padding-top:1px;flex-shrink:0;
+}
+.pd-emoji{font-size:.6rem;line-height:1;}
+
+/* Photos column */
+.pd-photos-col{border-right:1.5px solid #d5ceeb;padding:2px;overflow:hidden;min-height:0;}
+.pd-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:2px;height:100%;box-sizing:border-box;}
+.pd-photo-slot{
+  background:#ece8f4;border-radius:2px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:.45rem;color:#aaa;
+  width:100%;height:100%;min-height:0;position:relative;
+}
+.pd-photo-slot img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;}
+
+/* Notes column */
+.pd-notes-col{padding:4px 5px;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+.pd-notes-label{font-size:.5rem;font-weight:800;color:#86b1df;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;flex-shrink:0;}
+.pd-notes-text{font-size:.62rem;color:#1a3a6b;line-height:1.4;flex:1;word-break:break-word;white-space:pre-wrap;overflow:hidden;}
+.pd-notes-text.shrink{font-size:.54rem;}
+.pd-notes-text.shrink2{font-size:.46rem;}
+.pd-notes-lines{flex:1;display:flex;flex-direction:column;justify-content:space-around;min-height:0;}
+.pd-note-line{border-bottom:1px solid #d5ceeb;}
+
+/* === BOTTOM THIRD === */
+/* Fixed height ~310px: budget+health on left, brain dump on right */
+.pd-lower{
+  display:grid;
+  grid-template-columns:1fr 298px;
+  border-top:2px solid #d5ceeb;
+  flex:0 0 310px; min-height:0; overflow:hidden;
+}
+.pd-left-lower{
+  border-right:1.5px solid #d5ceeb;
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  min-height:0; overflow:hidden;
+}
+
+/* Budget — top half of left lower */
+.pd-budget-area{
+  padding:5px 8px;border-bottom:1.5px solid #d5ceeb;
+  overflow:hidden;min-height:0;display:flex;flex-direction:column;
+}
+/* Revenue and Expense columns — exactly equal width */
+.pd-budget-cols{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;flex:1;min-height:0;overflow:hidden;
+}
+.pd-b-col{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.pd-b-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:0;}
+.pd-b-label{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px;flex-shrink:0;}
 .pd-b-inc{color:#3db86b;}.pd-b-exp{color:#e05555;}
-.pd-b-item{display:flex;justify-content:space-between;font-size:.6rem;padding:1px 0;border-bottom:1px solid #f0eef8;color:#1a3a6b;gap:4px;}
+.pd-b-item{
+  display:flex;justify-content:space-between;font-size:.58rem;
+  padding:1px 0;border-bottom:1px solid #f0eef8;color:#1a3a6b;gap:4px;
+  flex-shrink:0;
+}
 .pd-b-item span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.pd-b-item span:last-child{font-weight:700;flex-shrink:0;}
-.pd-b-total{font-size:.68rem;font-weight:800;margin-top:4px;padding-top:3px;border-top:1.5px solid #d5ceeb;}
-.pd-savings-row{font-size:.7rem;font-weight:800;margin-top:5px;padding-top:4px;border-top:1.5px solid #d5ceeb;}
-.pd-health-area{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:7px 10px;flex:1;}
-.pd-sparkline-wrap{border-right:1px solid #d5ceeb;padding-right:8px;}
-.pd-section-title{font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#1a3a6b;margin-bottom:5px;border-bottom:1px solid #d5ceeb;padding-bottom:2px;}
-.pd-sparkline{width:100%;height:55px;}
-.pd-health-stats-wrap{padding-left:8px;}
-.pd-w-stat{display:flex;gap:4px;font-size:.62rem;color:#1a3a6b;line-height:1.7;}
-.pd-w-key{color:#86b1df;font-weight:700;min-width:64px;}
-.pd-cycle-stats{margin-top:4px;padding-top:3px;border-top:1px solid #d5ceeb;}
-.pd-brain-col{padding:7px 8px;display:flex;flex-direction:column;}
-.pd-brain-lines{display:flex;flex-direction:column;flex:1;justify-content:space-around;margin-top:4px;}
-.pd-brain-line{border-bottom:1px solid #d5ceeb;min-height:16px;}
+.pd-b-item span:last-child{font-weight:700;flex-shrink:0;white-space:nowrap;}
+.pd-b-total{font-size:.65rem;font-weight:800;margin-top:2px;padding-top:2px;border-top:1.5px solid #d5ceeb;flex-shrink:0;}
+.pd-savings-row{font-size:.65rem;font-weight:800;margin-top:3px;padding-top:3px;border-top:1.5px solid #d5ceeb;flex-shrink:0;}
+
+/* Health — bottom half of left lower */
+.pd-health-area{
+  display:grid;grid-template-columns:1fr 1fr;
+  padding:5px 8px;min-height:0;overflow:hidden;
+}
+.pd-sparkline-wrap{border-right:1px solid #d5ceeb;padding-right:6px;display:flex;flex-direction:column;min-height:0;}
+.pd-health-stats-wrap{padding-left:6px;display:flex;flex-direction:column;min-height:0;}
+.pd-section-title{
+  font-size:.58rem;font-weight:900;text-transform:uppercase;
+  letter-spacing:.5px;color:#1a3a6b;
+  margin-bottom:3px;border-bottom:1px solid #d5ceeb;padding-bottom:1px;flex-shrink:0;
+}
+.pd-sparkline{width:100%;height:50px;flex-shrink:0;}
+.pd-w-stat{display:flex;gap:3px;font-size:.58rem;color:#1a3a6b;line-height:1.65;}
+.pd-w-key{color:#86b1df;font-weight:700;min-width:58px;}
+.pd-cycle-stats{margin-top:3px;padding-top:2px;border-top:1px solid #d5ceeb;}
+
+/* Brain dump — right of lower, full height */
+.pd-brain-col{padding:6px 7px;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.pd-brain-lines{display:flex;flex-direction:column;flex:1;min-height:0;}
+.pd-brain-line{flex:1;}
+
 @media print {
   .tab-bar,.right-col,.overlay,.crop-overlay,
   #page-calendar,#page-week,#page-archive,#page-search,
@@ -693,7 +798,11 @@ h2.unav-title{margin:0;min-width:unset}
   .main-wrap{display:block !important;padding:0 !important;}
   .pages-area{display:block !important;}
   #page-print{display:block !important;padding:0 !important;}
-  .print-dashboard{max-width:100%;width:100%;border:none;}
+  .print-dashboard{
+    width:100% !important; min-width:0 !important; max-width:100% !important;
+    height:100vh !important; max-height:100vh !important;
+    border:none !important;
+  }
   @page{size:letter portrait;margin:0.4in;}
 }
 </style>
@@ -2677,7 +2786,7 @@ function renderPrintDashboard(){
   var firstDow=new Date(year,month,1).getDay();
   var daysInMonth=new Date(year,month+1,0).getDate();
 
-  // Build Sun-Sat grid, pad with prev/next month days
+  /* Build Sun-Sat grid */
   var cells=[];
   var prevMo=month===0?11:month-1, prevYr=month===0?year-1:year;
   var dipsm=new Date(prevYr,prevMo+1,0).getDate();
@@ -2686,13 +2795,12 @@ function renderPrintDashboard(){
   var nextMo=month===11?0:month+1, nextYr=month===11?year+1:year;
   var nd=1; while(cells.length%7!==0) cells.push({d:nd++,type:'next',mo:nextMo,yr:nextYr});
 
-  // Drop last week if it is entirely next-month days
+  /* Always cap at 5 weeks — drop last week if it has no current-month days */
   var numWeeks=cells.length/7;
   if(numWeeks===6){
     var lastWeek=cells.slice(35);
-    if(lastWeek.every(function(c){return c.type==='next';})){
-      cells=cells.slice(0,35); numWeeks=5;
-    }
+    var hasCurrentDays=lastWeek.some(function(c){return c.type==='cur';});
+    if(!hasCurrentDays){ cells=cells.slice(0,35); numWeeks=5; }
   }
 
   var rangeStart=mkDateStr(year,month,1);
@@ -2700,7 +2808,7 @@ function renderPrintDashboard(){
   var monthEvs=getEffectiveEvents?getEffectiveEvents(rangeStart,rangeEnd):[];
   var wevAll=loadData('lp_wev',[]);
 
-  // Load all data fresh from localStorage
+  /* Load all data fresh */
   loadDayLog();
   var allPcData={};
   try{ allPcData=JSON.parse(localStorage.getItem('lp_photos')||'{}'); }catch(ex){ allPcData={}; }
@@ -2709,7 +2817,7 @@ function renderPrintDashboard(){
   var wthData=loadData('lp_weather',{});
   var hData=loadData('lp_habits',{});
 
-  // Budget: filter by month+year stamp when available, else show all for year (legacy)
+  /* Budget — filter by month+year stamp (new) or all for year (legacy) */
   var allBudget=loadData('lp_budget_'+year,[]);
   var hasStamps=allBudget.some(function(e){return e.month!==undefined;});
   var monthBudget=hasStamps
@@ -2721,7 +2829,7 @@ function renderPrintDashboard(){
   var totalExp=expItems.reduce(function(s,e){return s+parseFloat(e.amt);},0);
   var netSavings=totalInc+totalExp;
 
-  // Weight entries for the month
+  /* Weight entries for the month */
   var weightEntries=[];
   Object.keys(wData).forEach(function(k){
     if(wData[k]===null||wData[k]===''||wData[k]===undefined) return;
@@ -2733,11 +2841,9 @@ function renderPrintDashboard(){
   var wHigh=weightEntries.length?Math.max.apply(null,weightEntries.map(function(x){return x.val;})):null;
   var wLow=weightEntries.length?Math.min.apply(null,weightEntries.map(function(x){return x.val;})):null;
 
-  // Cycle stats — computed from dayLog period starts (always fresh, not stale DOM)
+  /* Cycle stats from dayLog */
   var periodStarts=[];
-  Object.keys(dayLog).forEach(function(dk){
-    if(dayLog[dk]==='period') periodStarts.push(dk);
-  });
+  Object.keys(dayLog).forEach(function(dk){ if(dayLog[dk]==='period') periodStarts.push(dk); });
   periodStarts.sort();
   var cycleLengths=[];
   for(var ci=1;ci<periodStarts.length;ci++){
@@ -2752,12 +2858,12 @@ function renderPrintDashboard(){
   var validStarts=periodStarts.filter(function(dk){return dk<=monthEnd;});
   var lastPeriodDay=validStarts.length?validStarts[validStarts.length-1]:'--';
 
-  // Clean sparkline SVG — no text labels
+  /* Sparkline — no labels, no axis text */
   function buildSparkline(entries){
-    if(entries.length<2) return '<div style="font-size:.58rem;color:#86b1df;padding:4px 0;">No data yet</div>';
+    if(entries.length<2) return '<div style="font-size:.52rem;color:#86b1df;padding:2px 0;">No data</div>';
     var vals=entries.map(function(e){return e.val;});
     var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
-    var W=150,H=50,pd=5;
+    var W=130,H=46,pd=4;
     if(mx===mn){mn-=1;mx+=1;}
     var pts=vals.map(function(v,i){
       return [(pd+(W-2*pd)*(i/(vals.length-1))).toFixed(1),
@@ -2771,24 +2877,23 @@ function renderPrintDashboard(){
     return '<svg class="pd-sparkline" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+xAxis+lines+dots+'</svg>';
   }
 
-  function getWK(sunDate){
-    return sunDate.getFullYear()+'-'+pad2(sunDate.getMonth()+1)+'-'+pad2(sunDate.getDate());
-  }
+  function getWK(sd){ return sd.getFullYear()+'-'+pad2(sd.getMonth()+1)+'-'+pad2(sd.getDate()); }
 
-  var H2='<div class="pd-title">'+MONTHS[month]+'&nbsp;'+year+'</div><div class="pd-body">';
+  var H2='<div class="pd-title">'+MONTHS[month]+'&nbsp;'+year+'</div>';
+  H2+='<div class="pd-body">';
 
-  // DOW header row
+  /* DOW header row */
   H2+='<div class="pd-week-row header-row">';
   H2+='<div class="pd-cal-col"><div class="pd-cal-grid">';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(day){
-    H2+='<div style="font-size:.52rem;font-weight:800;color:#86b1df;text-align:center;text-transform:uppercase;padding:2px 0;border-right:1px solid #ece8f4;">'+day+'</div>';
+    H2+='<div style="font-size:.48rem;font-weight:800;color:#86b1df;text-align:center;text-transform:uppercase;padding:1px 0;border-right:1px solid #ece8f4;line-height:1.4;">'+day+'</div>';
   });
   H2+='</div></div>';
-  H2+='<div class="pd-photos-col" style="display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:800;color:#86b1df;text-transform:uppercase;">Photos</div>';
-  H2+='<div class="pd-notes-col" style="display:flex;align-items:center;font-size:.52rem;font-weight:800;color:#86b1df;text-transform:uppercase;">Notes</div>';
+  H2+='<div class="pd-photos-col" style="display:flex;align-items:center;justify-content:center;font-size:.48rem;font-weight:800;color:#86b1df;text-transform:uppercase;">Photos</div>';
+  H2+='<div class="pd-notes-col" style="display:flex;align-items:center;font-size:.48rem;font-weight:800;color:#86b1df;text-transform:uppercase;">Notes</div>';
   H2+='</div>';
 
-  // Week rows
+  /* Week rows */
   for(var w=0;w<numWeeks;w++){
     var weekCells=cells.slice(w*7,(w+1)*7);
     var sunCell=weekCells[0];
@@ -2807,28 +2912,27 @@ function renderPrintDashboard(){
       var isToday=ds===todayStr&&!isDim;
       H2+='<div class="pd-cal-cell">';
 
-      // Day number + weather emoji inline
+      /* Day number + weather inline */
       var weatherEm='';
       if(!isDim&&wthData[ds]!==undefined&&wthData[ds]!==null)
         weatherEm='<span class="pd-weather-em">'+WEATHER_ICONS[wthData[ds]]+'</span>';
       H2+='<div class="pd-day-header"><span class="pd-day-num'+(isDim?' dim':isToday?' today-mark':'')+'">'+cell.d+'</span>'+weatherEm+'</div>';
 
-      // All calendar events for this day
+      /* All calendar events — ellipsis on overflow */
       var dayEvs=monthEvs.filter(function(ev){
-        var end=ev.endDate||ev.startDate;
-        return ev.startDate<=ds&&ds<=end;
+        var end=ev.endDate||ev.startDate; return ev.startDate<=ds&&ds<=end;
       });
       dayEvs.forEach(function(ev){
         H2+='<div class="pd-ev-bar" style="background:'+(ev.color||'#1a3a6b')+'">'+
           (ev.startTime?ev.startTime+' ':'')+escHtml(ev.name)+'</div>';
       });
 
-      // All weekly events for this day
+      /* All weekly events — ellipsis on overflow */
       wevAll.filter(function(e){return e.date===ds;}).forEach(function(wev){
         H2+='<div class="pd-wev-bar">'+(wev.time?wev.time+' ':'')+escHtml(wev.name)+'</div>';
       });
 
-      // Bottom emojis: period/craving + habits (weather already shown at top)
+      /* Bottom: period/craving + habits — KEY FIX: ds+'_'+hi (not '_h') */
       if(!isDim){
         var botEmojis=[];
         if(dayLog[ds]&&dayLog[ds]!=='none'){
@@ -2836,27 +2940,27 @@ function renderPrintDashboard(){
           if(dlMap[dayLog[ds]]) botEmojis.push(dlMap[dayLog[ds]]);
         }
         HABITS.forEach(function(h,hi){
-          if(hData[ds+'_h'+hi]) botEmojis.push(h.icon);
+          if(hData[ds+'_'+hi]) botEmojis.push(h.icon);
         });
         if(botEmojis.length)
           H2+='<div class="pd-bottom-emojis">'+botEmojis.map(function(em){return '<span class="pd-emoji">'+em+'</span>';}).join('')+'</div>';
       }
-      H2+='</div>'; // pd-cal-cell
+      H2+='</div>';
     }
-    H2+='</div></div>'; // pd-cal-grid, pd-cal-col
+    H2+='</div></div>';
 
-    // Photos column — use dataUrl (how cropConfirm stores it)
+    /* Photos — use dataUrl */
     H2+='<div class="pd-photos-col"><div class="pd-photo-grid">';
     for(var pi=0;pi<6;pi++){
       var photo=weekPhotos[pi];
       if(photo&&(photo.dataUrl||photo.data))
         H2+='<div class="pd-photo-slot"><img src="'+(photo.dataUrl||photo.data)+'" alt=""/></div>';
       else
-        H2+='<div class="pd-photo-slot">'+(pi+1)+'</div>';
+        H2+='<div class="pd-photo-slot"></div>';
     }
     H2+='</div></div>';
 
-    // Notes column — shrink font for longer text
+    /* Notes */
     H2+='<div class="pd-notes-col"><div class="pd-notes-label">Notes</div>';
     if(wkNote){
       var nc='pd-notes-text'+(wkNote.length>200?' shrink2':wkNote.length>100?' shrink':'');
@@ -2867,32 +2971,32 @@ function renderPrintDashboard(){
       H2+='</div>';
     }
     H2+='</div>';
-    H2+='</div>'; // pd-week-row
+    H2+='</div>';
   }
-  H2+='</div>'; // pd-body
+  H2+='</div>'; /* pd-body */
 
-  // Lower section: [left: budget + health] [right: brain dump — same width as photos+notes=318px]
+  /* Bottom third: [budget+health | brain dump] */
   H2+='<div class="pd-lower">';
   H2+='<div class="pd-left-lower">';
 
-  // Budget
+  /* Budget */
   H2+='<div class="pd-budget-area"><div class="pd-section-title">Budget</div>';
   H2+='<div class="pd-budget-cols">';
-  H2+='<div><div class="pd-b-label pd-b-inc">Revenue</div>';
-  incItems.slice(0,12).forEach(function(e){
+  H2+='<div class="pd-b-col"><div class="pd-b-label pd-b-inc">Revenue</div><div class="pd-b-list">';
+  incItems.slice(0,10).forEach(function(e){
     H2+='<div class="pd-b-item"><span>'+escHtml(e.name)+'</span><span>+$'+Math.abs(parseFloat(e.amt)).toFixed(2)+'</span></div>';
   });
-  H2+='<div class="pd-b-total" style="color:#3db86b">+$'+totalInc.toFixed(2)+'</div></div>';
-  H2+='<div><div class="pd-b-label pd-b-exp">Expense</div>';
-  expItems.slice(0,12).forEach(function(e){
+  H2+='</div><div class="pd-b-total" style="color:#3db86b">+$'+totalInc.toFixed(2)+'</div></div>';
+  H2+='<div class="pd-b-col"><div class="pd-b-label pd-b-exp">Expense</div><div class="pd-b-list">';
+  expItems.slice(0,10).forEach(function(e){
     H2+='<div class="pd-b-item"><span>'+escHtml(e.name)+'</span><span>-$'+Math.abs(parseFloat(e.amt)).toFixed(2)+'</span></div>';
   });
-  H2+='<div class="pd-b-total" style="color:#e05555">-$'+Math.abs(totalExp).toFixed(2)+'</div></div>';
+  H2+='</div><div class="pd-b-total" style="color:#e05555">-$'+Math.abs(totalExp).toFixed(2)+'</div></div>';
   H2+='</div>';
   H2+='<div class="pd-savings-row" style="color:'+(netSavings>=0?'#3db86b':'#e05555')+'">Savings: $'+netSavings.toFixed(2)+'</div>';
-  H2+='</div>'; // pd-budget-area
+  H2+='</div>';
 
-  // Health: sparkline below revenue col, stats below expense col
+  /* Health */
   H2+='<div class="pd-health-area">';
   H2+='<div class="pd-sparkline-wrap"><div class="pd-section-title">Weight (lbs)</div>'+buildSparkline(weightEntries)+'</div>';
   H2+='<div class="pd-health-stats-wrap"><div class="pd-section-title">Health</div>';
@@ -2900,17 +3004,15 @@ function renderPrintDashboard(){
   H2+='<div class="pd-w-stat"><span class="pd-w-key">Low</span><span>'+(wLow!==null?wLow+' lbs':'--')+'</span></div>';
   H2+='<div class="pd-cycle-stats">';
   H2+='<div class="pd-w-stat"><span class="pd-w-key">Last Day 1</span><span>'+lastPeriodDay+'</span></div>';
-  H2+='<div class="pd-w-stat"><span class="pd-w-key">Last Cycle</span><span>'+lastCycleLen+'</span></div>';
-  H2+='<div class="pd-w-stat"><span class="pd-w-key">Avg Cycle</span><span>'+avgCycleLen+'</span></div>';
+  H2+='<div class="pd-w-stat"><span class="pd-w-key">Avg Cycle</span><span>'+avgCycleLen+' days</span></div>';
   H2+='</div></div>';
-  H2+='</div>'; // pd-health-area
-  H2+='</div>'; // pd-left-lower
+  H2+='</div>';
+  H2+='</div>'; /* pd-left-lower */
 
-  // Brain dump — right column (318px = photos 168px + notes 150px)
+  /* Brain dump */
   H2+='<div class="pd-brain-col"><div class="pd-section-title">Brain Dump</div><div class="pd-brain-lines">';
-  for(var bl=0;bl<20;bl++) H2+='<div class="pd-brain-line"></div>';
   H2+='</div></div>';
-  H2+='</div>'; // pd-lower
+  H2+='</div>'; /* pd-lower */
 
   dash.innerHTML=H2;
 }
