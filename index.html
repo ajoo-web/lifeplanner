@@ -23,6 +23,9 @@ body{font-family:Futura, 'Segoe UI',Georgia,sans-serif;background:#FFFAE6;color:
 .tab-archive{background:#f0fafc;color:#43a047;font-size:1rem;padding:4px 10px;border-radius:8px;}
 .tab-archive.active{background:#a8eef5;color:#0442bf}
 .tab-divider{width:1px;background:#c2edf5;height:28px;margin:0 2px;align-self:center}
+.tab-search{background:#f0fafc;color:#43a047;font-size:1rem;padding:4px 10px;border-radius:8px;}
+.tab-print{background:#f0fafc;color:#0442bf;font-size:1rem;padding:4px 10px;border-radius:8px;}
+.tab-print.active{background:#0442bf;color:#fff;}
 @media(max-width:700px){.tab-btn{padding:5px 8px;font-size:.7rem}.tab-home{padding:6px 10px}}
 
 /* MAIN LAYOUT */
@@ -547,7 +550,6 @@ h2.unav-title{margin:0;min-width:unset}
 
 
 /* SEARCH PAGE */
-.tab-search{background:#f0fafc;color:#43a047;font-size:1rem;padding:4px 10px;border-radius:8px;}
 .search-section{padding:16px 0;}
 .search-bar-wrap{margin-bottom:16px;}
 .search-input{
@@ -624,8 +626,6 @@ h2.unav-title{margin:0;min-width:unset}
 .budget-net-spacer{flex:1;min-width:8px;}
 
 /* PRINT PAGE */
-.tab-print{background:#f0fafc;color:#0442bf;font-size:1rem;padding:4px 10px;border-radius:8px;}
-.tab-print.active{background:#0442bf;color:#fff;}
 #page-print{padding:12px 16px;}
 .print-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
 .print-controls select{border:1.5px solid #c2edf5;border-radius:8px;padding:5px 10px;font-size:.88rem;color:#0442bf;background:#ffffff;outline:none;cursor:pointer;}
@@ -639,7 +639,7 @@ h2.unav-title{margin:0;min-width:unset}
   background:#fff;
   /* Match print exactly: 7.8in x 10.3in at 96dpi = 748.8 x 988.8px */
   width:748px; max-width:748px;
-  height:989px; max-height:989px;
+  height:975px; max-height:975px;
   margin:0 auto;
   font-family:'Segoe UI',Georgia,sans-serif;
   color:#0442bf;
