@@ -82,7 +82,7 @@ body{font-family:Futura, 'Segoe UI',Georgia,sans-serif;background:#FFFAE6;color:
 
 /* EVENT BARS in cells (single-day or first/mid/last of multi) */
 .events-wrap{display:flex;flex-direction:column;gap:1px;position:relative;z-index:2}
-.ev-tab{font-size:.72rem;font-weight:700;color:#fff;border-radius:20px;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;width:100%;max-width:100%;letter-spacing:.1px;margin-bottom:3px;height:20px;line-height:20px;display:block;box-sizing:border-box;}
+.ev-tab{font-size:.72rem;font-weight:700;color:#fff;border-radius:20px;padding:0 8px;/*white-space:nowrap;overflow:hidden;text-overflow:ellipsis;*/flex-wrap:wrap;cursor:pointer;width:100%;max-width:100%;letter-spacing:.1px;margin-bottom:3px;height:20px;line-height:20px;display:block;box-sizing:border-box;}
 /* Multi-day span styles */
 .ev-tab.span-start{border-radius:20px 0 0 20px;}
 .ev-tab.span-mid{border-radius:0;margin:0;padding-left:2px;padding-right:2px;opacity:.9}
