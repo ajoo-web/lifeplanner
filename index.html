@@ -53,7 +53,7 @@ body{font-family:Futura, 'Segoe UI',Georgia,sans-serif;background:#FFFAE6;color:
 .cal-nav button:hover{background:#04d9d9;color:#fff;border-color:#04d9d9}
 
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1.5px solid #0442bf;border-top:1.5px solid #0442bf}
-.cal-dow{text-align:center;font-size:.68rem;font-weight:800;color:#0442bf;padding:5px 0;text-transform:uppercase;letter-spacing:.5px;border-bottom:1.5px solid #0442bf;background:#ffffff}
+.cal-dow{text-align:center;font-size:.68rem;font-weight:800;color:#0442bf;padding:5px 0;text-transform:uppercase;letter-spacing:.5px;border-left:1.5px solid #0442bf;border-right:1.5px solid #0442bf;border-bottom:1.5px solid #0442bf;background:#ffffff}
 
 /* Week row wrapper for spanning events */
 .week-row{display:contents}
@@ -295,7 +295,7 @@ h2.unav-title{margin:0;min-width:unset}
 .pc-gallery{background:transparent;border:none;padding:4px 0;width:100%;}
 .pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;}
 .pc-card{position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:2px solid #c2edf5;background:#e0f7fa;box-shadow:0 2px 8px rgba(4,66,191,.08);}
-.pc-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.pc-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:auto;cursor:pointer;}
 .pc-card-del{position:absolute;top:4px;right:4px;background:rgba(192,57,43,.88);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;line-height:1;font-weight:800;opacity:0;transition:opacity .18s;}
 .pc-card-del:hover{background:#e53935;}.pc-card:hover .pc-card-del{opacity:1;}
 .pc-slot-empty{width:100%;aspect-ratio:1/1;border-radius:10px;border:2px dashed #c2edf5;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#c2edf5;transition:border-color .18s,color .18s;}
@@ -1063,7 +1063,7 @@ body.dark-mode .empty-msg{color:#8b949e !important;}
     <h2>&#9998; To-Do</h2>
     <div class="todo-lines" id="todoLines"></div>
   </div>
-  <div class="ev-legend" id="evLegend" style="display:none">
+  <div class="ev-legend" id="evLegend">
     <div class="ev-legend-title">LEGEND</div>
     <div class="ev-legend-grid">
       <div class="ev-legend-item"><span class="ev-legend-dot"></span>Personal</div>
@@ -3188,6 +3188,7 @@ function toggleDarkMode(btn){
     window.addEventListener('DOMContentLoaded',function(){
       var b=document.getElementById('tab-darkmode');
       if(b) b.textContent='🌙';
+      document.body.classList.add('month-view');
     });
   }
 })();
