@@ -822,6 +822,7 @@ h2.unav-title{margin:0;min-width:unset}
 }
 
 
+#evLegend{display:none;}
 body.week-view #evLegend{display:none !important;}
 body.month-view #evLegend{display:block !important;}
 
@@ -2687,9 +2688,9 @@ function switchView(view, btn){
       curWeekStart=getWeekStart(new Date(curYear,curMonth,1));
       miniCalYear=curYear; miniCalMonth=curMonth;
     }
+    document.body.classList.add('week-view'); document.body.classList.remove('month-view');
     renderWeek();
     showTodo(true);
-    document.body.classList.add('week-view'); document.body.classList.remove('month-view');
   }
 }
 
