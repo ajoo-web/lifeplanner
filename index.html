@@ -96,10 +96,10 @@ body{font-family:Futura, 'Segoe UI',Georgia,sans-serif;background:#FFFAE6;color:
 .todo-panel{background:transparent;border:2px solid #8adde6;border-radius:14px;padding:16px;box-shadow:0 2px 12px rgba(4,66,191,.08)}
 .todo-panel h2{font-size:.85rem;font-weight:800;color:#0442bf;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;border-bottom:2px solid #c2edf5;padding-bottom:8px}
 .todo-lines{display:flex;flex-direction:column;gap:0}
-.todo-line{display:flex;align-items:flex-start;gap:8px;border-bottom:1.5px solid #8adde6;padding:7px 4px;min-height:36px}
+.todo-line{display:flex;align-items:flex-start;gap:8px;border-bottom:1.5px solid #8adde6;padding:7px 4px;min-height:36px;height:auto;}
 .todo-line:first-child{border-top:1.5px solid #04d9d9}
 .todo-cb{width:15px;height:15px;accent-color:#0442bf;cursor:pointer;flex-shrink:0}
-.todo-input{flex:1;background:transparent;border:none;outline:none;font-size:.88rem;color:#0442bf;font-family:inherit;cursor:text;min-width:0;white-space:normal;word-break:break-word;overflow-wrap:break-word}
+.todo-input{flex:1;background:transparent;border:none;outline:none;font-size:.88rem;color:#0442bf;font-family:inherit;cursor:text;min-width:0;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;resize:none;overflow:hidden;line-height:1.4;padding:0;box-sizing:border-box;display:block;height:auto;}
 .todo-input.done-text{text-decoration:line-through;color:#0468bf;flex-wrap:wrap}
 
 /* ARCHIVE */
@@ -887,10 +887,6 @@ body.dark-mode .empty-msg{color:#8b949e !important;}
 .ev-legend-item:nth-child(8) .ev-legend-dot{background:#FFFAE6;}
 
 /* TODO DRAG (disabled for calendar truncation) */
-.todo-drag-handle{cursor:grab;color:#a8eef5;font-size:1rem;padding:0 4px 0 0;flex-shrink:0;user-select:none;line-height:1;}
-.todo-drag-handle:active{cursor:grabbing;}
-.todo-dragging{opacity:0.4;}
-.todo-drag-over{border-top:2.5px solid #04d9d9 !important;}
 
 </style>
 </head>
@@ -1688,6 +1684,11 @@ function fixMultidayBars(){
 
 
 /* ---- TODO (notepad style) ---- */
+function autoResizeTodo(el){
+  el.style.height='auto';
+  el.style.height=el.scrollHeight+'px';
+}
+
 function renderTodo(){
   normalizeTodos();
   var container=document.getElementById('todoLines');
@@ -1701,12 +1702,7 @@ function renderTodo(){
       row.draggable=!isDone;
       row.dataset.idx=idx;
 
-      var handle=document.createElement('span');
-      handle.className='todo-drag-handle';
-      handle.textContent='⠇';
-      handle.title='Drag to reorder';
-      if(isDone) handle.style.visibility='hidden';
-
+            
       var cb=document.createElement('input');
       cb.type='checkbox'; cb.className='todo-cb'; cb.checked=!!isDone;
       cb.onchange=function(){
@@ -1714,42 +1710,27 @@ function renderTodo(){
         else { checkTodo(idx); }
       };
 
-      var inp=document.createElement('input');
-      inp.type='text'; inp.className='todo-input'+(isDone?' done-text':'');
+      var inp=document.createElement('textarea');
+      inp.className='todo-input'+(isDone?' done-text':'');
       inp.value=t.text||''; inp.placeholder='';
+      inp.rows=1;
       inp.setAttribute('data-idx',idx); inp.readOnly=!!isDone;
-      inp.oninput=function(){ todos[idx].text=this.value; save(); };
+      inp.oninput=function(){ todos[idx].text=this.value; save(); autoResizeTodo(this); };
       inp.onkeydown=function(e){
-        if(e.key==='Enter'){ e.preventDefault();
+        if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault();
           var next=document.querySelector('[data-idx="'+(idx+1)+'"]');
-          if(next) next.focus(); }
+          if(next) next.focus(); else inp.blur(); }
       };
 
-      row.addEventListener('dragstart',function(e){
-        e.dataTransfer.effectAllowed='move';
-        e.dataTransfer.setData('text/plain',String(idx));
-        setTimeout(function(){ row.classList.add('todo-dragging'); },0);
-      });
-      row.addEventListener('dragend',function(){
-        row.classList.remove('todo-dragging');
-        document.querySelectorAll('.todo-line').forEach(function(r){ r.classList.remove('todo-drag-over'); });
-      });
-      row.addEventListener('dragover',function(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; row.classList.add('todo-drag-over'); });
-      row.addEventListener('dragleave',function(){ row.classList.remove('todo-drag-over'); });
-      row.addEventListener('drop',function(e){
-        e.preventDefault(); row.classList.remove('todo-drag-over');
-        var fromIdx=parseInt(e.dataTransfer.getData('text/plain'));
-        var toIdx=idx;
-        if(isNaN(fromIdx)||fromIdx===toIdx) return;
-        var moved=todos.splice(fromIdx,1)[0];
-        todos.splice(toIdx,0,moved);
-        save(); renderTodo();
-      });
+      
 
-      row.appendChild(handle); row.appendChild(cb); row.appendChild(inp);
+      row.appendChild(cb); row.appendChild(inp);
       container.appendChild(row);
     })(i);
   }
+  setTimeout(function(){
+    document.querySelectorAll('.todo-input').forEach(function(ta){ autoResizeTodo(ta); });
+  },0);
 }
 
 function checkTodo(idx){
