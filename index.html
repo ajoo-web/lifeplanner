@@ -1699,7 +1699,6 @@ function renderTodo(){
       var isDone=t.done&&t.text;
       var row=document.createElement('div');
       row.className='todo-line'+(isDone?' todo-done-row':'');
-      row.draggable=!isDone;
       row.dataset.idx=idx;
 
             
@@ -1718,8 +1717,10 @@ function renderTodo(){
       inp.oninput=function(){ todos[idx].text=this.value; save(); autoResizeTodo(this); };
       inp.onkeydown=function(e){
         if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault();
-          var next=document.querySelector('[data-idx="'+(idx+1)+'"]');
-          if(next) next.focus(); else inp.blur(); }
+          var allInputs=Array.from(document.querySelectorAll('.todo-input:not([readonly])'));
+          var curPos=allInputs.indexOf(inp);
+          var nextInp=allInputs[curPos+1];
+          if(nextInp) nextInp.focus(); else inp.blur(); }
       };
 
       
