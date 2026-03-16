@@ -263,7 +263,7 @@ h2.unav-title{margin:0;min-width:unset}
 .mw-active{background:#0442bf;color:#fff !important;border-radius:18px}
 
 /* WEEKLY NOTES */
-.week-notes-section{position:relative;}
+.week-notes-section{position:relative;border:2px solid #f38fb3;border-radius:14px;padding:12px 14px;box-sizing:border-box;}
 .week-notes-label{font-size:.75rem;font-weight:800;color:#0442bf;margin-bottom:6px;letter-spacing:.4px}
 .week-notes-section{position:relative}
 .week-notes-textarea{
@@ -765,14 +765,14 @@ h2.unav-title{margin:0;min-width:unset}
 .pd-b-label{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px;flex-shrink:0;}
 .pd-b-inc{color:#43a047;}.pd-b-exp{color:#e53935;}
 .pd-b-item{
-  display:flex;justify-content:space-between;font-size:.58rem;
+  display:flex;justify-content:space-between;font-size:.48rem;
   padding:1px 0;border-bottom:1px solid #f0fafc;color:#0442bf;gap:4px;
   flex-shrink:0;
 }
 .pd-b-item span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .pd-b-item span:last-child{font-weight:700;flex-shrink:0;white-space:nowrap;}
-.pd-b-total{font-size:.65rem;font-weight:800;margin-top:2px;padding-top:2px;border-top:1.5px solid #c2edf5;flex-shrink:0;}
-.pd-savings-row{font-size:.65rem;font-weight:800;margin-top:3px;padding-top:3px;border-top:1.5px solid #c2edf5;flex-shrink:0;}
+.pd-b-total{font-size:.54rem;font-weight:800;margin-top:2px;padding-top:2px;border-top:1.5px solid #c2edf5;flex-shrink:0;}
+.pd-savings-row{font-size:.54rem;font-weight:800;margin-top:3px;padding-top:3px;border-top:1.5px solid #c2edf5;flex-shrink:0;}
 
 /* Health — bottom half of left lower */
 .pd-health-area{
@@ -788,7 +788,7 @@ h2.unav-title{margin:0;min-width:unset}
   margin-bottom:3px;border-bottom:1px solid #c2edf5;padding-bottom:1px;flex-shrink:0;
 }
 .pd-sparkline{width:100%;height:auto;display:block;}
-.pd-w-stat{display:flex;gap:3px;font-size:.58rem;color:#0442bf;line-height:1.65;}
+.pd-w-stat{display:flex;gap:3px;font-size:.50rem;color:#0442bf;line-height:1.65;}
 .pd-w-key{color:#0468bf;font-weight:700;min-width:58px;}
 .pd-cycle-stats{margin-top:3px;padding-top:2px;border-top:1px solid #c2edf5;}
 
@@ -1073,7 +1073,6 @@ body.dark-mode .empty-msg{color:#8b949e !important;}
       <div class="ev-legend-item"><span class="ev-legend-dot"></span>Work</div>
       <div class="ev-legend-item"><span class="ev-legend-dot"></span>Birthdays</div>
       <div class="ev-legend-item"><span class="ev-legend-dot"></span>Special</div>
-      <div class="ev-legend-item"><span class="ev-legend-dot"></span>Etc.</div>
     </div>
   </div>
   <div class="photo-carousel-section" id="photoCarouselRight" style="display:none">
@@ -1161,7 +1160,7 @@ body.dark-mode .empty-msg{color:#8b949e !important;}
 </div>
 
 <script>
-var COLORS = ['#4B5DA9','#8ADDE6','#FFCA05','#f37826','#F38FB3','#cdd629','#2f9e54','#FFFAE6'];
+var COLORS = ['#4B5DA9','#8ADDE6','#FFCA05','#f37826','#F38FB3','#cdd629','#2f9e54'];
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var HOLIDAYS = {
   '01-01':"New Year's Day",'01-19':"MLK Day",'02-17':"Presidents' Day",
