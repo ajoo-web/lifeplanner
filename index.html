@@ -1241,9 +1241,9 @@ function showPage(name,btn){
   clearTabActive();
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(name==='archive'){ renderArchive(); showTodo(false); showWeightTracker(false); showPhotoPanel(false); var _leg=document.getElementById('evLegend');if(_leg)_leg.style.display='none'; }
-  else if(name==='search'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); var _leg=document.getElementById('evLegend');if(_leg)_leg.style.display='none'; document.getElementById('searchInput').focus(); runSearch(); }
-  else if(name==='print'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); var _leg=document.getElementById('evLegend');if(_leg)_leg.style.display='none'; initPrintSelectors(); renderPrintDashboard(); }
+  if(name==='archive'){ renderArchive(); showTodo(false); showWeightTracker(false); showPhotoPanel(false); document.body.classList.remove('month-view'); }
+  else if(name==='search'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); document.body.classList.remove('month-view'); document.getElementById('searchInput').focus(); runSearch(); }
+  else if(name==='print'){ showTodo(false); showWeightTracker(false); showPhotoPanel(false); document.body.classList.remove('month-view'); initPrintSelectors(); renderPrintDashboard(); }
   else{ showTodo(true); showWeightTracker(false); showPhotoPanel(false); }
 }
 
@@ -1255,7 +1255,7 @@ function initCalendar(){
   document.getElementById('tab-year').textContent=curYear;
   highlightMonthTab(curMonth);
   renderCalendar();
-  var _leg=document.getElementById('evLegend'); if(_leg) _leg.style.display='block';
+  document.body.classList.add('month-view'); document.body.classList.remove('week-view');
 }
 
 function goHome(btn){
@@ -1277,7 +1277,7 @@ function goHome(btn){
   renderCalendar();
   showTodo(true);
   showWeightTracker(false); showPhotoPanel(false);
-  var _leg=document.getElementById('evLegend'); if(_leg) _leg.style.display='block';
+  document.body.classList.add('month-view'); document.body.classList.remove('week-view');
 }
 
 function goMonth(m, btn){
@@ -1285,21 +1285,21 @@ function goMonth(m, btn){
   clearTabActive();
   document.getElementById('tab-home').classList.add('active');
   highlightMonthTab(m);
-  document.body.classList.remove('week-view'); document.body.classList.add('month-view');
   if(inWeekMode){
+    // stay in week view, just change the month
+    document.body.classList.add('week-view'); document.body.classList.remove('month-view');
     var now=new Date();
     curMonth = m;
     if(m===now.getMonth() && curYear===now.getFullYear()){
-      curWeekStart=getWeekStart(now);
-      miniCalYear=null; miniCalMonth=null;
+      curWeekStart=getWeekStart(now); miniCalYear=null; miniCalMonth=null;
     } else {
       curWeekStart=getWeekStart(new Date(curYear, m, 1));
       miniCalYear=curYear; miniCalMonth=m;
     }
     renderWeek();
-    var _leg=document.getElementById('evLegend'); if(_leg) _leg.style.display='none';
   } else {
-    document.body.classList.add('week-view'); document.body.classList.remove('month-view');
+    // stay in month view
+    document.body.classList.add('month-view'); document.body.classList.remove('week-view');
     var pages=document.querySelectorAll('.page');
     for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
     document.getElementById('page-calendar').classList.add('active');
@@ -1309,7 +1309,6 @@ function goMonth(m, btn){
     renderCalendar();
     showWeightTracker(false); showPhotoPanel(false);
     showTodo(true);
-    var _leg=document.getElementById('evLegend'); if(_leg) _leg.style.display='block';
   }
 }
 
@@ -1446,7 +1445,7 @@ function renderCalendar(){
             document.getElementById('page-week').classList.add('active');
             document.body.classList.add('week-view');
             miniCalYear=null; miniCalMonth=null;
-            renderWeek(); showTodo(true); showWeightTracker(true); showPhotoPanel(true); var _leg=document.getElementById('evLegend');if(_leg)_leg.style.display='none';
+            renderWeek(); showTodo(true); showWeightTracker(true); showPhotoPanel(true); document.body.classList.remove('month-view');
           };
         })(prevYr2,prevMo2,prevDay);
       } else if(typeof weekCells[c]==='string'&&weekCells[c].indexOf('next_')===0){
@@ -1471,7 +1470,7 @@ function renderCalendar(){
             document.getElementById('page-week').classList.add('active');
             document.body.classList.add('week-view');
             miniCalYear=null; miniCalMonth=null;
-            renderWeek(); showTodo(true); showWeightTracker(true); showPhotoPanel(true); var _leg=document.getElementById('evLegend');if(_leg)_leg.style.display='none';
+            renderWeek(); showTodo(true); showWeightTracker(true); showPhotoPanel(true); document.body.classList.remove('month-view');
           };
         })(nextYr,nextMo,nextDay);
       } else {
@@ -1493,7 +1492,7 @@ function renderCalendar(){
             renderWeek();
             showTodo(true);
             showWeightTracker(true); showPhotoPanel(true);
-            var _leg=document.getElementById('evLegend');if(_leg)_leg.style.display='none';
+            document.body.classList.remove('month-view');
           };
         })(ds,curYear,curMonth,d);
         var cellDate=new Date(curYear,curMonth,d);
@@ -2675,7 +2674,7 @@ function switchView(view, btn){
     renderCalendar();
     showTodo(true);
     showWeightTracker(false); showPhotoPanel(false);
-    var _leg=document.getElementById('evLegend'); if(_leg) _leg.style.display='block';
+    document.body.classList.add('month-view'); document.body.classList.remove('week-view');
   } else {
     var pages=document.querySelectorAll('.page');
     for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
@@ -2690,7 +2689,7 @@ function switchView(view, btn){
     }
     renderWeek();
     showTodo(true);
-    var _leg=document.getElementById('evLegend'); if(_leg) _leg.style.display='none';
+    document.body.classList.add('week-view'); document.body.classList.remove('month-view');
   }
 }
 
